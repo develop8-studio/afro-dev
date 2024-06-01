@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
+import { FormEvent } from 'react';
+
 import { FaGoogle } from "react-icons/fa";
 
 import {
@@ -44,11 +46,11 @@ export default function SignUp() {
   const [error, setError] = useState(null);
   const router = useRouter();
 
-  const handleSignUp = async (e) => {
+  const handleSignUp = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      router.push("/dashboard");
+      router.push("/");
     } catch (error) {
       setError(error.message);
     }
@@ -57,7 +59,7 @@ export default function SignUp() {
   const handleGoogleSignUp = async () => {
     try {
       await signInWithPopup(auth, provider);
-      router.push("/dashboard");
+      router.push("/");
     } catch (error) {
       setError(error.message);
     }
