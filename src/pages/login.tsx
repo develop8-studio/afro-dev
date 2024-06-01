@@ -52,6 +52,7 @@ export default function Dashboard() {
       await signInWithEmailAndPassword(auth, email, password);
       router.push("/");
     } catch (error: any) {
+      setError(null);
       setError((error as Error).message);
     }
   };
@@ -61,17 +62,18 @@ export default function Dashboard() {
       await signInWithPopup(auth, provider);
       router.push("/");
     } catch (error: any) {
+      setError(null);
       setError((error as Error).message);
     }
   };
 
-  const handleForgotPassword = async () => {
-    try {
-      await sendPasswordResetEmail(auth, email);
-    } catch (error) {
-      setError(error.message);
-    }
-  };
+  // const handleForgotPassword = async () => {
+  //   try {
+  //     await sendPasswordResetEmail(auth, email);
+  //   } catch (error) {
+  //     setError(error.message);
+  //   }
+  // };
 
   return (
     <div className="w-full lg:grid lg:grid-cols-2 min-h-screen">
