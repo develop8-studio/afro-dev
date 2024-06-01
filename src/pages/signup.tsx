@@ -51,8 +51,8 @@ export default function SignUp() {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       router.push("/");
-    } catch (error) {
-      setError(error.message);
+    } catch (error: any) {
+      setError((error as Error).message);
     }
   };
 
@@ -60,8 +60,8 @@ export default function SignUp() {
     try {
       await signInWithPopup(auth, provider);
       router.push("/");
-    } catch (error) {
-      setError(error.message);
+    } catch (error: any) {
+      setError((error as Error).message);
     }
   };
 
