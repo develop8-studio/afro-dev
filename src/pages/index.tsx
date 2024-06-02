@@ -96,6 +96,8 @@ import { useRouter } from "next/router";
 import { getAuth, signInWithPopup, signOut } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 
+import { useEffect } from "react";
+
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -111,6 +113,12 @@ const auth = getAuth(app);
 export default function Dashboard() {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    if (!auth.currentUser) {
+        router.push("/login");
+    }
+}, []);
 
   const handleLogout = async () => {
     try {

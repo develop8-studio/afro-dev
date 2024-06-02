@@ -65,6 +65,12 @@ export default function Dashboard() {
         }
     }, []);
 
+    useEffect(() => {
+        if (!auth.currentUser) {
+            router.push("/login");
+        }
+    }, []);
+
     const handleLogout = async () => {
         try {
             await signOut(auth);
