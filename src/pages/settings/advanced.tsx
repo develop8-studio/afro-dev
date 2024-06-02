@@ -133,7 +133,7 @@ export default function Dashboard() {
     return (
         <div className="flex min-h-screen w-full flex-col">
         <Head>
-            <title>Account -Nook.to</title>
+            <title>Security -Nook.to</title>
         </Head>
         <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
             <HeaderList />
@@ -206,28 +206,36 @@ export default function Dashboard() {
             <h1 className="text-3xl font-semibold">Settings</h1>
             </div>
             <div className="mx-auto grid w-full max-w-6xl items-start gap-6 md:grid-cols-[180px_1fr] lg:grid-cols-[250px_1fr]">
-            <SettingsMenu current="account" />
+            <SettingsMenu current="security" />
             <div className="grid gap-6">
-            <Card x-chunk="dashboard-04-chunk-1">
+                {/* <Card x-chunk="dashboard-04-chunk-2">
                 <CardHeader>
-                    <CardTitle>Username</CardTitle>
+                    <CardTitle>Password</CardTitle>
                     <CardDescription>
-                        Update your display name.
+                        Change your password.
                     </CardDescription>
                 </CardHeader>
-                <form onSubmit={handleUsernameChange}>
-                    <CardContent>
-                        <Input
-                            placeholder="New Username"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                        />
-                    </CardContent>
-                    <CardFooter className="border-t px-6 py-4">
-                        <Button type="submit">Save</Button>
-                    </CardFooter>
-                </form>
-                </Card>
+                <form onSubmit={handlePasswordChange}>
+        <CardContent>
+            <Input
+                type="password"
+                placeholder="New Password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                className="mb-4"
+            />
+            <Input
+                type="password"
+                placeholder="Confirm Password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+        </CardContent>
+        <CardFooter className="border-t px-6 py-4">
+            <Button type="submit">Save</Button>
+        </CardFooter>
+    </form>
+                </Card> */}
             </div>
             </div>
         </main>
