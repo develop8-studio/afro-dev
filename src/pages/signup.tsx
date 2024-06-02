@@ -5,11 +5,6 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-
-import { FormEvent } from 'react';
-
-import { FaGoogle } from "react-icons/fa";
-
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,7 +17,9 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-import { useState } from "react";
+import { FaGoogle } from "react-icons/fa";
+
+import { FormEvent, useState } from "react";
 import { useRouter } from "next/router";
 import { getAuth, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { initializeApp } from "firebase/app";
@@ -43,7 +40,7 @@ const provider = new GoogleAuthProvider();
 export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   const handleSignUp = async (e: FormEvent<HTMLFormElement>) => {
@@ -51,8 +48,12 @@ export default function SignUp() {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       router.push("/");
-    } catch (error: any) {
-      setError((error as Error).message);
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("An unknown error occurred");
+      }
     }
   };
 
@@ -60,8 +61,12 @@ export default function SignUp() {
     try {
       await signInWithPopup(auth, provider);
       router.push("/");
-    } catch (error: any) {
-      setError((error as Error).message);
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("An unknown error occurred");
+      }
     }
   };
 

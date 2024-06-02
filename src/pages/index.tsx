@@ -1,3 +1,4 @@
+import Head from "next/head";
 import Image from "next/image"
 import Link from "next/link"
 import {
@@ -77,9 +78,14 @@ import {
   TooltipProvider
 } from "@/components/ui/tooltip"
 
+import { FaRegUser } from "react-icons/fa6";
+
 export default function Dashboard() {
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
+      <Head>
+        <title>Nook.to</title>
+      </Head>
       <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
         <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
           <Link
@@ -267,13 +273,14 @@ export default function Dashboard() {
                 size="icon"
                 className="overflow-hidden rounded-full"
               >
-                <Image
-                  src="/placeholder-user.jpg"
+                {/* <Image
+                  src="/avatar/02.png"
                   width={36}
                   height={36}
                   alt="Avatar"
                   className="overflow-hidden rounded-full"
-                />
+                /> */}
+                <FaRegUser className="w-[15px] h-[15px]" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
