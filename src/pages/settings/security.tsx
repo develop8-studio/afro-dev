@@ -36,7 +36,7 @@ import {
 
 import { FormEvent, useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { getAuth, signOut, updateProfile, updatePassword, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signOut, updateProfile, GoogleAuthProvider, signInWithPopup, reauthenticateWithPopup, deleteUser, EmailAuthProvider, updatePassword } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 
 import HeaderList from "@/components/header";
@@ -56,11 +56,14 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 export default function Dashboard() {
+    const auth = getAuth();
     const [username, setUsername] = useState("");
+    const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
+    const [deleting, setDeleting] = useState(false);
+    const [changingPassword, setChangingPassword] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
@@ -69,32 +72,18 @@ export default function Dashboard() {
         }
     }, []);
 
-    useEffect(() => {
-        if (!auth.currentUser) {
-            router.push("/login");
-        }
-    }, []);
-
-    const handleLogout = async () => {
-        try {
-            await signOut(auth);
-            router.push("/login");
-        } catch (err) {
-            if (err instanceof Error) {
-                setError(err.message);
-            } else {
-                setError("An unknown error occurred");
-            }
-        }
-    };
-
-    const handleUsernameChange = async (event: FormEvent) => {
+    const handlePasswordChange = async (event: FormEvent) => {
         event.preventDefault();
+        setChangingPassword(true);
         try {
-            if (auth.currentUser) {
-                await updateProfile(auth.currentUser, {
-                    displayName: username,
-                });
+            const user = auth.currentUser;
+            if (user && currentPassword && newPassword) {
+                const credential = EmailAuthProvider.credential(
+                    user.email!,
+                    currentPassword
+                );
+                await reauthenticateWithPopup(user, new GoogleAuthProvider());
+                await updatePassword(user, newPassword);
                 setSuccess(true);
             }
         } catch (err) {
@@ -103,30 +92,8 @@ export default function Dashboard() {
             } else {
                 setError("An unknown error occurred");
             }
-        }
-    };
-
-    const handlePasswordChange = async (event: FormEvent) => {
-        event.preventDefault();
-        try {
-            if (!auth.currentUser) {
-                throw new Error("User not authenticated.");
-            }
-            const userEmail = auth.currentUser?.email || "";;
-            if (!auth.currentUser.providerData.some((provider) => provider.providerId === "password")) {
-                await createUserWithEmailAndPassword(auth, userEmail, newPassword);
-            } else {
-                await updatePassword(auth.currentUser, newPassword);
-            }
-            setNewPassword("");
-            setConfirmPassword("");
-            setSuccess(true);
-        } catch (err) {
-            if (err instanceof Error) {
-                setError(err.message);
-            } else {
-                setError("An unknown error occurred");
-            }
+        } finally {
+            setChangingPassword(false);
         }
     };
 
@@ -208,34 +175,38 @@ export default function Dashboard() {
             <div className="mx-auto grid w-full max-w-6xl items-start gap-6 md:grid-cols-[180px_1fr] lg:grid-cols-[250px_1fr]">
             <SettingsMenu current="security" />
             <div className="grid gap-6">
-                {/* <Card x-chunk="dashboard-04-chunk-2">
+            <Card x-chunk="dashboard-04-chunk-1">
                 <CardHeader>
-                    <CardTitle>Password</CardTitle>
+                    <CardTitle>Change Password</CardTitle>
                     <CardDescription>
-                        Change your password.
+                        Update your account password.
                     </CardDescription>
                 </CardHeader>
-                <form onSubmit={handlePasswordChange}>
-        <CardContent>
-            <Input
-                type="password"
-                placeholder="New Password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                className="mb-4"
-            />
-            <Input
-                type="password"
-                placeholder="Confirm Password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-            />
-        </CardContent>
-        <CardFooter className="border-t px-6 py-4">
-            <Button type="submit">Save</Button>
-        </CardFooter>
-    </form>
-                </Card> */}
+                    <form onSubmit={handlePasswordChange}>
+                    <CardContent>
+                        <Input
+                            placeholder="Current Password"
+                            type="password"
+                            value={currentPassword}
+                            onChange={(e) => setCurrentPassword(e.target.value)}
+                            disabled={changingPassword}
+                            className="mb-3"
+                        />
+                        <Input
+                            placeholder="New Password"
+                            type="password"
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                            disabled={changingPassword}
+                        />
+                    </CardContent>
+                    <CardFooter className="border-t px-6 py-4">
+                        <Button type="submit" disabled={changingPassword}>
+                            {changingPassword ? "Changing..." : "Change Password"}
+                        </Button>
+                    </CardFooter>
+                    </form>
+                </Card>
             </div>
             </div>
         </main>

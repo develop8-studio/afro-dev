@@ -40,28 +40,29 @@ import { auth } from "@/firebase/firebaseConfig";
 
 import { FormEvent, useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { getAuth, signOut, updateProfile, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { getAuth, signOut, updateProfile, GoogleAuthProvider, signInWithPopup, reauthenticateWithPopup, deleteUser } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 
 import HeaderList from "@/components/header";
 import UserMenu from "@/components/user";
 import SettingsMenu from "@/components/settings";
-import useAuthRedirect from '@/components/auth/useAuthRedirect';
+import useAuthRedirect from '@/components/useAuthRedirect';
 
 export default function Dashboard() {
     const auth = getAuth();
     const [username, setUsername] = useState("");
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
+    const [deleting, setDeleting] = useState(false);
     const router = useRouter();
+
+    useAuthRedirect();
 
     useEffect(() => {
         if (auth.currentUser) {
             setUsername(auth.currentUser.displayName || "");
         }
     }, []);
-
-    useAuthRedirect();
 
     const GoogleSignInButton = () => {
         const auth = getAuth();
@@ -96,6 +97,27 @@ export default function Dashboard() {
             } else {
                 setError("An unknown error occurred");
             }
+        }
+    };
+
+    const handleDeleteAccount = async () => {
+        setDeleting(true);
+        try {
+            const user = auth.currentUser;
+            if (user) {
+                const provider = new GoogleAuthProvider();
+                await reauthenticateWithPopup(user, provider);
+                await deleteUser(user);
+                router.push("/signup");
+            }
+        } catch (err) {
+            if (err instanceof Error) {
+                setError(err.message);
+            } else {
+                setError("An unknown error occurred");
+            }
+        } finally {
+            setDeleting(false);
         }
     };
 
@@ -206,6 +228,19 @@ export default function Dashboard() {
                 </CardHeader>
                     <CardContent>
                     <GoogleSignInButton />
+                    </CardContent>
+                </Card>
+                <Card x-chunk="dashboard-04-chunk-3">
+                <CardHeader>
+                    <CardTitle>Delete Account</CardTitle>
+                    <CardDescription>
+                        Update your display name.
+                    </CardDescription>
+                </CardHeader>
+                    <CardContent>
+                    <Button variant="destructive" onClick={handleDeleteAccount} disabled={deleting}>
+                            {deleting ? 'Deleting...' : 'Delete your account'}
+                        </Button>
                     </CardContent>
                 </Card>
             </div>

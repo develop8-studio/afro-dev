@@ -46,7 +46,7 @@ import {
 } from "@/components/ui/table"
 
 import UserMenu from "@/components/user";
-import useAuthRedirect from '@/components/auth/useAuthRedirect';
+import useAuthRedirect from '@/components/useAuthRedirect';
 
 export default function Dashboard() {
   useAuthRedirect();

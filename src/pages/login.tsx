@@ -125,7 +125,7 @@ export default function Dashboard() {
       <div className="hidden bg-muted lg:flex lg:w-full lg:h-full items-center justify-center">
         <Image
           src="/sample/one.png"
-          alt="Image"
+          alt=""
           width="1920"
           height="1080"
           className="h-40 w-40 object-cover"

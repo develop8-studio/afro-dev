@@ -2,18 +2,21 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { auth } from '@/firebase/firebaseConfig';
 
-const useAuthRedirect = (redirectTo = '/login') => {
+const useAuthRedirect = () => {
     const router = useRouter();
 
     useEffect(() => {
+        console.log("Rendered");
         const unsubscribe = auth.onAuthStateChanged(user => {
-            if (!user && router.pathname !== redirectTo) {
-                router.push(redirectTo);
+            console.log("User:", user);
+            if (!user && router.pathname !== '/login') {
+                console.log("Redirecting...");
+                router.push("/login");
             }
         });
 
         return () => unsubscribe();
-    }, [router, redirectTo]);
+    }, [router]);
 };
 
 export default useAuthRedirect;

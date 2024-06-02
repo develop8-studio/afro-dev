@@ -27,18 +27,6 @@ import HeaderList from "@/components/header";
 import UserMenu from "@/components/user";
 import SettingsMenu from "@/components/settings";
 
-import {
-    Form,
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from "@/components/ui/form"
-
-import useAuthRedirect from '@/components/auth/useAuthRedirect';
-
 const FormSchema = z.object({
     dark_mode: z.boolean(),
 })

@@ -75,7 +75,7 @@ import {
 import Aside from "@/components/aside";
 import UserMenu from "@/components/user";
 
-import useAuthRedirect from '@/components/auth/useAuthRedirect';
+import useAuthRedirect from '@/components/useAuthRedirect';
 
 export default function Dashboard() {
   useAuthRedirect();

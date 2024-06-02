@@ -45,8 +45,11 @@ import {
 } from "@/components/ui/table"
 
 import UserMenu from "@/components/user";
+import useAuthRedirect from "@/components/useAuthRedirect"
 
 export default function Dashboard() {
+  useAuthRedirect();
+
   return (
     <div className="flex min-h-screen w-full flex-col">
       <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
@@ -109,29 +112,29 @@ export default function Dashboard() {
                 <Package2 className="h-6 w-6" />
                 <span className="sr-only">Acme Inc</span>
               </Link>
-              <Link href="#" className="hover:text-foreground">
+              <Link href="/dashboard" className="hover:text-foreground">
                 Dashboard
               </Link>
               <Link
-                href="#"
+                href="/orders"
                 className="text-muted-foreground hover:text-foreground"
               >
                 Orders
               </Link>
               <Link
-                href="#"
+                href="/products"
                 className="text-muted-foreground hover:text-foreground"
               >
                 Products
               </Link>
               <Link
-                href="#"
+                href="/customers"
                 className="text-muted-foreground hover:text-foreground"
               >
                 Customers
               </Link>
               <Link
-                href="#"
+                href="/analytics"
                 className="text-muted-foreground hover:text-foreground"
               >
                 Analytics

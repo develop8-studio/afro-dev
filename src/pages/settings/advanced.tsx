@@ -44,7 +44,7 @@ import UserMenu from "@/components/user";
 import SettingsMenu from "@/components/settings";
 
 import { auth } from "@/firebase/firebaseConfig";
-import useAuthRedirect from '@/components/auth/useAuthRedirect';
+import useAuthRedirect from '@/components/useAuthRedirect';
 
 export default function Dashboard() {
     const [username, setUsername] = useState("");
