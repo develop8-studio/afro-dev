@@ -118,11 +118,11 @@ export default function SignUp() {
       </div>
       <div className="hidden bg-muted lg:flex lg:w-full lg:h-full items-center justify-center">
         <Image
-          src="/sample/girl.png"
+          src="/sample/one.png"
           alt="Image"
           width="1920"
           height="1080"
-          className="h-40 w-40 object-cover dark:brightness-[0.2] dark:grayscale"
+          className="h-40 w-40 object-cover"
         />
       </div>
       {error && (

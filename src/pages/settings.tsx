@@ -14,14 +14,8 @@ import {
 import { Input } from "@/components/ui/input"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 
-import { useEffect } from "react";
-import { useRouter } from "next/router";
-import { getAuth  } from "firebase/auth";
-import { initializeApp } from "firebase/app";
-
 import { useTheme } from "next-themes";
 import * as React from "react"
-import { MoonIcon, SunIcon } from "@radix-ui/react-icons"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 
@@ -33,49 +27,37 @@ import HeaderList from "@/components/header";
 import UserMenu from "@/components/user";
 import SettingsMenu from "@/components/settings";
 
-const firebaseConfig = {
-    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-    appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-};
+import {
+    Form,
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form"
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+import useAuthRedirect from '@/components/auth/useAuthRedirect';
 
 const FormSchema = z.object({
     dark_mode: z.boolean(),
 })
 
 export default function Dashboard() {
-    const router = useRouter();
     const { setTheme } = useTheme()
 
     const defaultDarkMode = useTheme().theme === "dark";
 
-    useEffect(() => {
-        if (!auth.currentUser) {
-            router.push("/login");
-        }
-    }, []);
-
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
-            // dark_mode: true,
             dark_mode: defaultDarkMode,
         },
     })
 
-    // function onSubmit(data: z.infer<typeof FormSchema>) {
-    //     setTheme(data.dark_mode ? 'dark' : 'light')
-    // }
-
     function onSubmit(data: z.infer<typeof FormSchema>) {
         setTheme(data.dark_mode ? 'dark' : 'light')
-      }
+    }
 
     return (
         <div className="flex min-h-screen w-full flex-col">
@@ -164,7 +146,7 @@ export default function Dashboard() {
                     <CardContent>
                     <Card className="flex flex-row items-center justify-between p-3">
                         <div className="space-y-0.5">
-                        <CardTitle className="text-lg font-semibold">Dark Mode</CardTitle>
+                        <CardTitle className="text-md font-medium">Dark Mode</CardTitle>
                         <CardDescription>
                             Toggle dark mode on or off.
                         </CardDescription>

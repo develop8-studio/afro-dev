@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import { FaRegUser } from "react-icons/fa6";
+import { FcGoogle } from "react-icons/fc";
 
 import { useState } from "react";
 import { useRouter } from "next/router";
@@ -45,6 +46,15 @@ const auth = getAuth(app);
 export default function User() {
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
+    const [user, setUser] = useState<any>(null);
+
+    useEffect(() => {
+        // ユーザーの状態が変更されたときに呼び出されるコールバックを設定
+        const unsubscribe = auth.onAuthStateChanged(user => {
+            setUser(user); // ユーザー情報を更新
+        });
+        return () => unsubscribe(); // クリーンアップ関数
+    }, []);
 
     const handleLogout = async () => {
         try {
@@ -64,19 +74,16 @@ export default function User() {
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
             <Button
-                variant="outline"
-                size="icon"
-                className="overflow-hidden rounded-full"
-            >
-                {/* <Image
-                src="/avatar/02.png"
-                width={36}
-                height={36}
-                alt="Avatar"
-                className="overflow-hidden rounded-full"
-                /> */}
-                <FaRegUser className="w-[15px] h-[15px]" />
-            </Button>
+                        variant="outline"
+                        size="icon"
+                        className="overflow-hidden rounded-full"
+                    >
+                        {user && user.providerData && user.providerData[0]?.providerId === "google.com" ? (
+                            <FcGoogle className="w-[20px] h-[20px]" />
+                        ) : (
+                            <FaRegUser className="w-[15px] h-[15px]" />
+                        )}
+                    </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>

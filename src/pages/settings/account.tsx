@@ -34,31 +34,23 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
+import { FcGoogle } from "react-icons/fc";
+
+import { auth } from "@/firebase/firebaseConfig";
+
 import { FormEvent, useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { getAuth, signOut, updateProfile, updatePassword, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signOut, updateProfile, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 
 import HeaderList from "@/components/header";
 import UserMenu from "@/components/user";
 import SettingsMenu from "@/components/settings";
-
-const firebaseConfig = {
-    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-    appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+import useAuthRedirect from '@/components/auth/useAuthRedirect';
 
 export default function Dashboard() {
+    const auth = getAuth();
     const [username, setUsername] = useState("");
-    const [newPassword, setNewPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
     const router = useRouter();
@@ -69,23 +61,24 @@ export default function Dashboard() {
         }
     }, []);
 
-    useEffect(() => {
-        if (!auth.currentUser) {
-            router.push("/login");
-        }
-    }, []);
+    useAuthRedirect();
 
-    const handleLogout = async () => {
-        try {
-            await signOut(auth);
-            router.push("/login");
-        } catch (err) {
-            if (err instanceof Error) {
-                setError(err.message);
-            } else {
-                setError("An unknown error occurred");
+    const GoogleSignInButton = () => {
+        const auth = getAuth();
+
+        const handleGoogleSignIn = async () => {
+            const provider = new GoogleAuthProvider();
+            try {
+                const result = await signInWithPopup(auth, provider);
+                const user = result.user;
+                console.log('Logged in with Google:', user);
+            } catch (error) {
+                console.error('Google sign in error:', error);
             }
-        }
+        };
+        return (
+            <Button onClick={handleGoogleSignIn} variant="outline"><FcGoogle className="w-[20px] h-[20px] mr-[5px]" />Sign in with Google</Button>
+        );
     };
 
     const handleUsernameChange = async (event: FormEvent) => {
@@ -97,30 +90,6 @@ export default function Dashboard() {
                 });
                 setSuccess(true);
             }
-        } catch (err) {
-            if (err instanceof Error) {
-                setError(err.message);
-            } else {
-                setError("An unknown error occurred");
-            }
-        }
-    };
-
-    const handlePasswordChange = async (event: FormEvent) => {
-        event.preventDefault();
-        try {
-            if (!auth.currentUser) {
-                throw new Error("User not authenticated.");
-            }
-            const userEmail = auth.currentUser?.email || "";;
-            if (!auth.currentUser.providerData.some((provider) => provider.providerId === "password")) {
-                await createUserWithEmailAndPassword(auth, userEmail, newPassword);
-            } else {
-                await updatePassword(auth.currentUser, newPassword);
-            }
-            setNewPassword("");
-            setConfirmPassword("");
-            setSuccess(true);
         } catch (err) {
             if (err instanceof Error) {
                 setError(err.message);
@@ -151,37 +120,37 @@ export default function Dashboard() {
             <SheetContent side="left">
                 <nav className="grid gap-6 text-lg font-medium">
                 <Link
-                    href="#"
+                    href="/"
                     className="flex items-center gap-2 text-lg font-semibold"
                 >
                     <Package2 className="h-6 w-6" />
                     <span className="sr-only">Acme Inc</span>
                 </Link>
                 <Link
-                    href="#"
+                    href="/dashboard"
                     className="text-muted-foreground hover:text-foreground"
                 >
                     Dashboard
                 </Link>
                 <Link
-                    href="#"
+                    href="/orders"
                     className="text-muted-foreground hover:text-foreground"
                 >
                     Orders
                 </Link>
                 <Link
-                    href="#"
+                    href="/products"
                     className="text-muted-foreground hover:text-foreground"
                 >
                     Products
                 </Link>
                 <Link
-                    href="#"
+                    href="/customers"
                     className="text-muted-foreground hover:text-foreground"
                 >
                     Customers
                 </Link>
-                <Link href="#" className="hover:text-foreground">
+                <Link href="/settings" className="hover:text-foreground">
                     Settings
                 </Link>
                 </nav>
@@ -227,6 +196,17 @@ export default function Dashboard() {
                         <Button type="submit">Save</Button>
                     </CardFooter>
                 </form>
+                </Card>
+                <Card x-chunk="dashboard-04-chunk-2">
+                <CardHeader>
+                    <CardTitle>Google Integration</CardTitle>
+                    <CardDescription>
+                        Link your account with Google.
+                    </CardDescription>
+                </CardHeader>
+                    <CardContent>
+                    <GoogleSignInButton />
+                    </CardContent>
                 </Card>
             </div>
             </div>

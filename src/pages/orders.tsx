@@ -72,57 +72,18 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs"
 
-import { FaRegUser } from "react-icons/fa6";
-
-import { FormEvent, useState } from "react";
-import { useRouter } from "next/router";
-import { getAuth, signInWithPopup, signOut } from "firebase/auth";
-import { initializeApp } from "firebase/app";
-
-import { useEffect } from "react";
-
 import Aside from "@/components/aside";
 import UserMenu from "@/components/user";
 
-const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+import useAuthRedirect from '@/components/auth/useAuthRedirect';
 
 export default function Dashboard() {
-  const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!auth.currentUser) {
-        router.push("/login");
-    }
-}, []);
-
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      router.push("/login");
-    } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("An unknown error occurred");
-      }
-    }
-  };
+  useAuthRedirect();
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <Head>
-        <title>Nook.to</title>
+        <title>Orders -Nook.to</title>
       </Head>
       <Aside />
       <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
@@ -185,19 +146,17 @@ export default function Dashboard() {
             <BreadcrumbList>
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
-                  <Link href="#">Dashboard</Link>
+                  <Link href="/dashboard">Dashboard</Link>
                 </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <Link href="#">Orders</Link>
-                </BreadcrumbLink>
+                  <BreadcrumbPage>Orders</BreadcrumbPage>
               </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
+              {/* <BreadcrumbSeparator /> */}
+              {/* <BreadcrumbItem>
                 <BreadcrumbPage>Recent Orders</BreadcrumbPage>
-              </BreadcrumbItem>
+              </BreadcrumbItem> */}
             </BreadcrumbList>
           </Breadcrumb>
           <div className="relative ml-auto flex-1 md:grow-0">
