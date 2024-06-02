@@ -36,7 +36,7 @@ import {
 
 import { FormEvent, useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { getAuth, signOut, updateProfile, updatePassword, createUserWithEmailAndPassword, deleteUser } from "firebase/auth";
+import { getAuth, signOut, updateProfile, updatePassword, createUserWithEmailAndPassword } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
@@ -111,25 +111,6 @@ export default function Dashboard() {
             setNewPassword("");
             setConfirmPassword("");
             setSuccess(true);
-        } catch (err) {
-            if (err instanceof Error) {
-                setError(err.message);
-            } else {
-                setError("An unknown error occurred");
-            }
-        }
-    };
-
-    const handleAccountDeletion = async () => {
-        try {
-            if (!auth.currentUser) {
-                throw new Error("User not authenticated.");
-            }
-
-            await deleteUser(auth.currentUser);
-
-            await signOut(auth);
-            router.push("/signup");
         } catch (err) {
             if (err instanceof Error) {
                 setError(err.message);
@@ -331,17 +312,6 @@ export default function Dashboard() {
             <Button type="submit">Save</Button>
         </CardFooter>
     </form>
-                </Card>
-                <Card x-chunk="dashboard-04-chunk-2">
-                <CardHeader>
-                    <CardTitle>Delete Account</CardTitle>
-                    <CardDescription>
-                        Delete your account.
-                    </CardDescription>
-                </CardHeader>
-        <CardContent>
-            <Button variant="destructive" onClick={handleAccountDeletion}>Delete</Button>
-        </CardContent>
                 </Card>
             </div>
             </div>
