@@ -70,7 +70,11 @@ import {
 import Aside from "@/components/aside";
 import UserMenu from "@/components/user";
 
+import useAuthRedirect from "@/components/useAuthRedirect";
+
 export default function Dashboard() {
+    useAuthRedirect();
+
     return (
         <div className="flex min-h-screen w-full flex-col bg-muted/40">
             <Head>
@@ -163,7 +167,7 @@ export default function Dashboard() {
             <UserMenu />
             </header>
             <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
-            <Tabs defaultValue="all">
+            <Tabs defaultValue="all" className="overflow-x-auto">
                 <div className="flex items-center">
                 <TabsList>
                     <TabsTrigger value="all">All</TabsTrigger>
