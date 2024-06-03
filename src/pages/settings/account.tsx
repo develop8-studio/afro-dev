@@ -165,12 +165,17 @@ export default function Dashboard() {
 
     const fetchUserIcon = async () => {
         if (auth.currentUser) {
-            const userDoc = await getDoc(doc(db, "users", auth.currentUser.uid));
+            const userId = auth.currentUser.uid;
+            const userDocRef = doc(db, "users", userId);
+            const userDoc = await getDoc(userDocRef);
+
             if (userDoc.exists()) {
                 const userData = userDoc.data();
                 if (userData.iconUrl) {
                     setIconUrl(userData.iconUrl);
                 }
+            } else {
+                await setDoc(userDocRef, { iconUrl: null });
             }
         }
     };
