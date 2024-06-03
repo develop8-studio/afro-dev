@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import {
@@ -22,12 +23,13 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import { FaRegUser } from "react-icons/fa6";
-import { FcGoogle } from "react-icons/fc";
 
 import { useState } from "react";
 import { useRouter } from "next/router";
-import { getAuth, signOut } from "firebase/auth";
+import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 import { initializeApp } from "firebase/app";
+import { collection, getFirestore, doc, updateDoc, getDoc, setDoc } from "firebase/firestore";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 import { useEffect } from "react";
 
@@ -44,16 +46,23 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 export default function User() {
+    const auth = getAuth();
+    const db = getFirestore();
+    const storage = getStorage();
+
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
     const [user, setUser] = useState<any>(null);
+    const [iconUrl, setIconUrl] = useState(null);
 
     useEffect(() => {
-        // ユーザーの状態が変更されたときに呼び出されるコールバックを設定
-        const unsubscribe = auth.onAuthStateChanged(user => {
-            setUser(user); // ユーザー情報を更新
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
+            setUser(user);
+            if (user) {
+                fetchUserIcon(user.uid);
+            }
         });
-        return () => unsubscribe(); // クリーンアップ関数
+        return () => unsubscribe();
     }, []);
 
     const handleLogout = async () => {
@@ -69,6 +78,21 @@ export default function User() {
         }
     };
 
+    const fetchUserIcon = async (userId: string) => {
+        try {
+            const userDoc = await getDoc(doc(db, "users", userId));
+            if (userDoc.exists()) {
+                const userData = userDoc.data();
+                if (userData.iconUrl) {
+                    setIconUrl(userData.iconUrl);
+                }
+            }
+        } catch (error) {
+            console.error("Error fetching user icon:", error);
+            setError("Error fetching user icon");
+        }
+    };
+
     return (
         <div>
         <DropdownMenu>
@@ -78,15 +102,21 @@ export default function User() {
                         size="icon"
                         className="overflow-hidden rounded-full"
                     >
-                        {user && user.providerData && user.providerData[0]?.providerId === "google.com" ? (
-                            <FcGoogle className="w-[20px] h-[20px]" />
+                        {iconUrl ? (
+                            <Image
+                                src={iconUrl}
+                                alt="User Icon"
+                                width={100}
+                                height={100}
+                                className="w-full h-full rounded-full"
+                            />
                         ) : (
                             <FaRegUser className="w-[15px] h-[15px]" />
                         )}
                     </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuLabel>{user?.displayName ? `${user.displayName}` : 'My Account'}</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <Link href="/settings/account"><DropdownMenuItem>Settings</DropdownMenuItem></Link>
             <Link href="/settings/support"><DropdownMenuItem>Support</DropdownMenuItem></Link>

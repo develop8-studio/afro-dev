@@ -16,7 +16,6 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 
 import { useTheme } from "next-themes";
 import * as React from "react"
-import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 
 import { zodResolver } from "@hookform/resolvers/zod"

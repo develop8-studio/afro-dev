@@ -1,5 +1,6 @@
 import Head from "next/head";
 import Link from "next/link"
+import Image from "next/image";
 import { CircleUser, Menu, Package2, Search } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -35,25 +36,48 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import { FcGoogle } from "react-icons/fc";
-
-import { auth } from "@/firebase/firebaseConfig";
-
+import { FaGoogle } from "react-icons/fa";
 import { FormEvent, useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { getAuth, signOut, updateProfile, GoogleAuthProvider, signInWithPopup, reauthenticateWithPopup, deleteUser } from "firebase/auth";
-import { initializeApp } from "firebase/app";
+import { getAuth, updateProfile, GoogleAuthProvider, signInWithPopup, reauthenticateWithPopup, deleteUser } from "firebase/auth";
+import { collection, getFirestore, doc, updateDoc, getDoc, setDoc } from "firebase/firestore";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 import HeaderList from "@/components/header";
 import UserMenu from "@/components/user";
 import SettingsMenu from "@/components/settings";
 import useAuthRedirect from '@/components/useAuthRedirect';
+import { initializeApp } from "firebase/app";
+
+const firebaseConfig = {
+    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const storage = getStorage(app);
 
 export default function Dashboard() {
     const auth = getAuth();
+    const db = getFirestore();
+    const storage = getStorage();
+
     const [username, setUsername] = useState("");
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
+    const [changingUsername, setChangingUsername] = useState(false);
     const [deleting, setDeleting] = useState(false);
+    const [googleLinked, setGoogleLinked] = useState(false);
+    const [iconUrl, setIconUrl] = useState<string | null>(null);
+    const [uploadingIcon, setUploadingIcon] = useState(false);
+    const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+
     const router = useRouter();
 
     useAuthRedirect();
@@ -61,7 +85,10 @@ export default function Dashboard() {
     useEffect(() => {
         if (auth.currentUser) {
             setUsername(auth.currentUser.displayName || "");
+            const linked = auth.currentUser.providerData.some(provider => provider.providerId === GoogleAuthProvider.PROVIDER_ID);
+            setGoogleLinked(linked);
         }
+        fetchUserIcon();
     }, []);
 
     const GoogleSignInButton = () => {
@@ -73,17 +100,29 @@ export default function Dashboard() {
                 const result = await signInWithPopup(auth, provider);
                 const user = result.user;
                 console.log('Logged in with Google:', user);
+                setGoogleLinked(true);
             } catch (error) {
                 console.error('Google sign in error:', error);
             }
         };
-        return (
-            <Button onClick={handleGoogleSignIn} variant="outline"><FcGoogle className="w-[20px] h-[20px] mr-[5px]" />Sign in with Google</Button>
+        return googleLinked ? (
+            <Button variant="outline" disabled>
+            <FcGoogle className="w-[20px] h-[20px] mr-[5px] dark:hidden" />
+            <FaGoogle className="w-[17.5px] h-[17.5px] mr-[7.5px] hidden dark:block" />
+            Already linked with Google.
+            </Button>
+        ) : (
+            <Button onClick={handleGoogleSignIn} variant="outline">
+                <FcGoogle className="w-[20px] h-[20px] mr-[5px] dark:hidden" />
+                <FaGoogle className="w-[17.5px] h-[17.5px] mr-[7.5px] hidden dark:block" />
+                Sign in with Google
+            </Button>
         );
     };
 
     const handleUsernameChange = async (event: FormEvent) => {
         event.preventDefault();
+        setChangingUsername(true);
         try {
             if (auth.currentUser) {
                 await updateProfile(auth.currentUser, {
@@ -97,6 +136,8 @@ export default function Dashboard() {
             } else {
                 setError("An unknown error occurred");
             }
+        } finally {
+            setChangingUsername(false);
         }
     };
 
@@ -118,6 +159,55 @@ export default function Dashboard() {
             }
         } finally {
             setDeleting(false);
+        }
+    };
+
+    const fetchUserIcon = async () => {
+        if (auth.currentUser) {
+            const userDoc = await getDoc(doc(db, "users", auth.currentUser.uid));
+            if (userDoc.exists()) {
+                const userData = userDoc.data();
+                if (userData.iconUrl) {
+                    setIconUrl(userData.iconUrl);
+                }
+            }
+        }
+    };
+
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        event.preventDefault();
+        if (event.target.files && event.target.files[0]) {
+            setUploadedFile(event.target.files[0]);
+        }
+    };
+
+    const handleIconUpload = async (event: React.ChangeEvent<HTMLFormElement>) => {
+        event.preventDefault();
+
+        if (uploadedFile) {
+            setUploadingIcon(true);
+
+            try {
+                const storageRef = ref(storage, `icons/${auth.currentUser?.uid}`);
+                await uploadBytes(storageRef, uploadedFile);
+                const downloadURL = await getDownloadURL(storageRef);
+
+                if (auth.currentUser) {
+                    await updateDoc(doc(db, "users", auth.currentUser.uid), {
+                        iconUrl: downloadURL,
+                    });
+                    setIconUrl(downloadURL);
+                    setSuccess(true);
+                }
+            } catch (err) {
+                if (err instanceof Error) {
+                    setError(err.message);
+                } else {
+                    setError("An unknown error occurred");
+                }
+            } finally {
+                setUploadingIcon(false);
+            }
         }
     };
 
@@ -215,11 +305,34 @@ export default function Dashboard() {
                         />
                     </CardContent>
                     <CardFooter className="border-t px-6 py-4">
-                        <Button type="submit">Save</Button>
+                        <Button type="submit" disabled={changingUsername}>
+                            {changingUsername ? "Changing..." : "Change Username"}
+                        </Button>
                     </CardFooter>
                 </form>
                 </Card>
                 <Card x-chunk="dashboard-04-chunk-2">
+                    <CardHeader>
+                        <CardTitle>Profile Icon</CardTitle>
+                        <CardDescription>
+                            Upload a new profile icon.
+                        </CardDescription>
+                    </CardHeader>
+                    <form onSubmit={handleIconUpload}>
+                        <CardContent>
+                            <div className="flex flex-col items-center">
+                                {iconUrl && <Image src={iconUrl} alt="" width={100} height={100} className="w-24 h-24 rounded-full mb-4" />}
+                                <Input type="file" accept="image/*" onChange={handleFileChange} disabled={uploadingIcon} />
+                            </div>
+                        </CardContent>
+                        <CardFooter className="border-t px-6 py-4">
+                            <Button type="submit" disabled={uploadingIcon || !uploadedFile}>
+                                {uploadingIcon ? "Updating..." : "Update Icon"}
+                            </Button>
+                        </CardFooter>
+                    </form>
+                </Card>
+                <Card x-chunk="dashboard-04-chunk-3">
                 <CardHeader>
                     <CardTitle>Google Integration</CardTitle>
                     <CardDescription>
@@ -230,7 +343,7 @@ export default function Dashboard() {
                     <GoogleSignInButton />
                     </CardContent>
                 </Card>
-                <Card x-chunk="dashboard-04-chunk-3">
+                <Card x-chunk="dashboard-04-chunk-4">
                 <CardHeader>
                     <CardTitle>Delete Account</CardTitle>
                     <CardDescription>
