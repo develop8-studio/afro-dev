@@ -85,7 +85,7 @@ export default function Dashboard() {
       <Head>
         <title>Orders -Nook.to</title>
       </Head>
-      <Aside />
+      <Aside current="/orders" />
       <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
         <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
           <Sheet>
@@ -153,10 +153,10 @@ export default function Dashboard() {
               <BreadcrumbItem>
                   <BreadcrumbPage>Orders</BreadcrumbPage>
               </BreadcrumbItem>
-              {/* <BreadcrumbSeparator /> */}
-              {/* <BreadcrumbItem>
+              <BreadcrumbSeparator />
+                <BreadcrumbItem>
                 <BreadcrumbPage>Recent Orders</BreadcrumbPage>
-              </BreadcrumbItem> */}
+              </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
           <div className="relative ml-auto flex-1 md:grow-0">
