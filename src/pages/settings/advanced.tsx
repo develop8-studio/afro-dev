@@ -39,9 +39,10 @@ import { useRouter } from "next/router";
 import { getAuth, signOut, updateProfile, updatePassword, createUserWithEmailAndPassword } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 
-import HeaderList from "@/components/header";
-import UserMenu from "@/components/user";
-import SettingsMenu from "@/components/settings";
+import Header from "@/components/header"
+import UserMenu from "@/components/user"
+import SettingsMenu from "@/components/settings"
+import MobileSheet from "@/components/mobile-sheet"
 
 import { auth } from "@/firebase/firebaseConfig";
 import useAuthRedirect from '@/components/useAuthRedirect';
@@ -117,57 +118,8 @@ export default function Dashboard() {
             <title>Security -Nook.to</title>
         </Head>
         <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
-            <HeaderList />
-            <Sheet>
-            <SheetTrigger asChild>
-                <Button
-                variant="outline"
-                size="icon"
-                className="shrink-0 md:hidden"
-                >
-                <Menu className="h-5 w-5" />
-                <span className="sr-only">Toggle navigation menu</span>
-                </Button>
-            </SheetTrigger>
-            <SheetContent side="left">
-                <nav className="grid gap-6 text-lg font-medium">
-                <Link
-                    href="#"
-                    className="flex items-center gap-2 text-lg font-semibold"
-                >
-                    <Package2 className="h-6 w-6" />
-                    <span className="sr-only">Acme Inc</span>
-                </Link>
-                <Link
-                    href="#"
-                    className="text-muted-foreground hover:text-foreground"
-                >
-                    Dashboard
-                </Link>
-                <Link
-                    href="#"
-                    className="text-muted-foreground hover:text-foreground"
-                >
-                    Orders
-                </Link>
-                <Link
-                    href="#"
-                    className="text-muted-foreground hover:text-foreground"
-                >
-                    Products
-                </Link>
-                <Link
-                    href="#"
-                    className="text-muted-foreground hover:text-foreground"
-                >
-                    Customers
-                </Link>
-                <Link href="#" className="hover:text-foreground">
-                    Settings
-                </Link>
-                </nav>
-            </SheetContent>
-            </Sheet>
+            <Header current="settings" />
+            <MobileSheet current="settings" />
             <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
             <form className="ml-auto flex-1 sm:flex-initial">
                 <div className="relative">
