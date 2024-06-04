@@ -1,7 +1,6 @@
 import Head from "next/head";
 import Link from "next/link"
 import { CircleUser, Menu, Package2, Search } from "lucide-react"
-
 import { Button } from "@/components/ui/button"
 import {
     Card,
@@ -11,264 +10,97 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
-import { Checkbox } from "@/components/ui/checkbox"
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "@/components/ui/accordion"
 
-import { FormEvent, useState, useEffect } from "react";
-import { useRouter } from "next/router";
-import { getAuth, signOut, updateProfile, updatePassword, createUserWithEmailAndPassword } from "firebase/auth";
-import { initializeApp } from "firebase/app";
-
-import HeaderList from "@/components/header";
+import Header from "@/components/header";
 import UserMenu from "@/components/user";
 import SettingsMenu from "@/components/settings";
+import MobileSheet from "@/components/mobile-sheet";
 
-const firebaseConfig = {
-    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-    appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-
-export default function Dashboard() {
-    const [username, setUsername] = useState("");
-    const [newPassword, setNewPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
-    const [error, setError] = useState<string | null>(null);
-    const [success, setSuccess] = useState(false);
-    const router = useRouter();
-
-    useEffect(() => {
-        if (auth.currentUser) {
-            setUsername(auth.currentUser.displayName || "");
-        }
-    }, []);
-
-    useEffect(() => {
-        if (!auth.currentUser) {
-            router.push("/login");
-        }
-    }, []);
-
-    const handleLogout = async () => {
-        try {
-            await signOut(auth);
-            router.push("/login");
-        } catch (err) {
-            if (err instanceof Error) {
-                setError(err.message);
-            } else {
-                setError("An unknown error occurred");
-            }
-        }
-    };
-
-    const handleUsernameChange = async (event: FormEvent) => {
-        event.preventDefault();
-        try {
-            if (auth.currentUser) {
-                await updateProfile(auth.currentUser, {
-                    displayName: username,
-                });
-                setSuccess(true);
-            }
-        } catch (err) {
-            if (err instanceof Error) {
-                setError(err.message);
-            } else {
-                setError("An unknown error occurred");
-            }
-        }
-    };
-
-    const handlePasswordChange = async (event: FormEvent) => {
-        event.preventDefault();
-        try {
-            if (!auth.currentUser) {
-                throw new Error("User not authenticated.");
-            }
-            const userEmail = auth.currentUser?.email || "";;
-            if (!auth.currentUser.providerData.some((provider) => provider.providerId === "password")) {
-                await createUserWithEmailAndPassword(auth, userEmail, newPassword);
-            } else {
-                await updatePassword(auth.currentUser, newPassword);
-            }
-            setNewPassword("");
-            setConfirmPassword("");
-            setSuccess(true);
-        } catch (err) {
-            if (err instanceof Error) {
-                setError(err.message);
-            } else {
-                setError("An unknown error occurred");
-            }
-        }
-    };
-
+export default function SupportPage() {
     return (
         <div className="flex min-h-screen w-full flex-col">
-        <Head>
-            <title>Security -Nook.to</title>
-        </Head>
-        <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
-            <HeaderList />
-            <Sheet>
-            <SheetTrigger asChild>
-                <Button
-                variant="outline"
-                size="icon"
-                className="shrink-0 md:hidden"
-                >
-                <Menu className="h-5 w-5" />
-                <span className="sr-only">Toggle navigation menu</span>
-                </Button>
-            </SheetTrigger>
-            <SheetContent side="left">
-                <nav className="grid gap-6 text-lg font-medium">
-                <Link
-                    href="#"
-                    className="flex items-center gap-2 text-lg font-semibold"
-                >
-                    <Package2 className="h-6 w-6" />
-                    <span className="sr-only">Acme Inc</span>
-                </Link>
-                <Link
-                    href="#"
-                    className="text-muted-foreground hover:text-foreground"
-                >
-                    Dashboard
-                </Link>
-                <Link
-                    href="#"
-                    className="text-muted-foreground hover:text-foreground"
-                >
-                    Orders
-                </Link>
-                <Link
-                    href="#"
-                    className="text-muted-foreground hover:text-foreground"
-                >
-                    Products
-                </Link>
-                <Link
-                    href="#"
-                    className="text-muted-foreground hover:text-foreground"
-                >
-                    Customers
-                </Link>
-                <Link href="#" className="hover:text-foreground">
-                    Settings
-                </Link>
-                </nav>
-            </SheetContent>
-            </Sheet>
-            <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
-            <form className="ml-auto flex-1 sm:flex-initial">
-                <div className="relative">
-                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input
-                    type="search"
-                    placeholder="Search products..."
-                    className="pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]"
-                />
+            <Head>
+                <title>Support -Nook.to</title>
+            </Head>
+            <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
+                <Header current="settings" />
+                <MobileSheet current="settings" />
+                <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
+                    <form className="ml-auto flex-1 sm:flex-initial">
+                        <div className="relative">
+                        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                        <Input
+                            type="search"
+                            placeholder="Search products..."
+                            className="pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]"
+                        />
+                        </div>
+                    </form>
+                    <UserMenu />
                 </div>
-            </form>
-            <UserMenu />
-            </div>
-        </header>
-        <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 bg-muted/40 p-4 md:gap-8 md:p-10">
-            <div className="mx-auto grid w-full max-w-6xl gap-2">
-            <h1 className="text-3xl font-semibold">Settings</h1>
-            </div>
-            <div className="mx-auto grid w-full max-w-6xl items-start gap-6 md:grid-cols-[180px_1fr] lg:grid-cols-[250px_1fr]">
-            <SettingsMenu current="security" />
-            <div className="grid gap-6">
-                {/* <Card x-chunk="dashboard-04-chunk-2">
-                <CardHeader>
-                    <CardTitle>Password</CardTitle>
-                    <CardDescription>
-                        Change your password.
-                    </CardDescription>
-                </CardHeader>
-                <form onSubmit={handlePasswordChange}>
-        <CardContent>
-            <Input
-                type="password"
-                placeholder="New Password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                className="mb-4"
-            />
-            <Input
-                type="password"
-                placeholder="Confirm Password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-            />
-        </CardContent>
-        <CardFooter className="border-t px-6 py-4">
-            <Button type="submit">Save</Button>
-        </CardFooter>
-    </form>
-                </Card> */}
-            </div>
-            </div>
-        </main>
-        {error && (
-            <AlertDialog open>
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>Error</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            {error}
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel onClick={() => setError(null)}>Close</AlertDialogCancel>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
-        )}
-        {success && (
-            <AlertDialog open>
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>Success</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            Username updated successfully!
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel onClick={() => setSuccess(false)}>Close</AlertDialogCancel>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
-        )}
+            </header>
+            <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 bg-muted/40 p-4 md:gap-8 md:p-10">
+                <div className="mx-auto grid w-full max-w-6xl gap-2">
+                    <h1 className="text-3xl font-semibold">Settings</h1>
+                </div>
+                <div className="mx-auto grid w-full max-w-6xl items-start gap-6 md:grid-cols-[180px_1fr] lg:grid-cols-[250px_1fr]">
+                    <SettingsMenu current="support" />
+                    <div className="grid gap-6">
+                        <Card x-chunk="dashboard-04-chunk-1">
+                            <CardHeader>
+                                <CardTitle>Account Creation</CardTitle>
+                                <CardDescription>Creating an account is simple and flexible. You can sign up using your email and a password, or you can link your Google account for a quicker setup.</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <Accordion type="single" collapsible className="mx-5">
+                                <AccordionItem value="item-1">
+                                    <AccordionTrigger>How do I create an account?</AccordionTrigger>
+                                    <AccordionContent>
+                                        You can create an account using your email and password or by linking your Google account. Just follow the prompts on the sign-up page.
+                                    </AccordionContent>
+                                </AccordionItem>
+                                </Accordion>
+                            </CardContent>
+                        </Card>
+                        <Card x-chunk="dashboard-04-chunk-2">
+                            <CardHeader>
+                                <CardTitle>Profile Settings</CardTitle>
+                                <CardDescription>Once your account is created, you can personalize your profile by setting your icon and username through the Settings page.</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <Accordion type="single" collapsible className="mx-5">
+                                <AccordionItem value="item-1">
+                                    <AccordionTrigger>How can I set my icon and username?</AccordionTrigger>
+                                    <AccordionContent>
+                                        Go to the <Link href="/settings/account" className="underline">Settings</Link> page after creating your account. There, you can upload an icon and set your username to personalize your profile.
+                                    </AccordionContent>
+                                </AccordionItem>
+                                <AccordionItem value="item-2">
+                                    <AccordionTrigger>Can I link my Google account after creating my account with email and password?</AccordionTrigger>
+                                    <AccordionContent>
+                                        Yes, you can link your Google account at any time through the <Link href="/settings/integrations" className="underline">Settings</Link> page.
+                                    </AccordionContent>
+                                </AccordionItem>
+                                <AccordionItem value="item-3">
+                                    <AccordionTrigger>How do I switch between Light Mode and Dark Mode?</AccordionTrigger>
+                                    <AccordionContent>
+                                        Navigate to the <Link href="/settings" className="underline">Settings</Link> page where you can select either Light Mode or Dark Mode to suit your preference.
+                                    </AccordionContent>
+                                </AccordionItem>
+                                </Accordion>
+                            </CardContent>
+                        </Card>
+                    </div>
+                </div>
+            </main>
         </div>
     )
 }

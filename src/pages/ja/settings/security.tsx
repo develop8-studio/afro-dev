@@ -38,11 +38,10 @@ import { useRouter } from "next/router";
 import { getAuth, signOut, updateProfile, GoogleAuthProvider, signInWithPopup, reauthenticateWithPopup, deleteUser, EmailAuthProvider, updatePassword } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 
-import Header from "@/components/header";
+import HeaderList from "@/components/header";
 import SearchMenu from "@/components/search";
 import UserMenu from "@/components/user";
-import SettingsMenu from "@/components/settings";
-import MobileSheet from "@/components/mobile-sheet";
+import SettingsMenu from "@/components/ja/settings";
 
 const firebaseConfig = {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -101,11 +100,60 @@ export default function Dashboard() {
     return (
         <div className="flex min-h-screen w-full flex-col">
         <Head>
-            <title>Security -Nook.to</title>
+            <title>セキュリティ | Nook.to</title>
         </Head>
         <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
-            <Header current="settings" />
-            <MobileSheet current="settings" />
+            <HeaderList />
+            <Sheet>
+            <SheetTrigger asChild>
+                <Button
+                variant="outline"
+                size="icon"
+                className="shrink-0 md:hidden"
+                >
+                <Menu className="h-5 w-5" />
+                <span className="sr-only">Toggle navigation menu</span>
+                </Button>
+            </SheetTrigger>
+            <SheetContent side="left">
+                <nav className="grid gap-6 text-lg font-medium">
+                <Link
+                    href="/"
+                    className="flex items-center gap-2 text-lg font-semibold"
+                >
+                    <Package2 className="h-6 w-6" />
+                    <span className="sr-only">Acme Inc</span>
+                </Link>
+                <Link
+                    href="/dashboard"
+                    className="text-muted-foreground hover:text-foreground"
+                >
+                    Dashboard
+                </Link>
+                <Link
+                    href="/orders"
+                    className="text-muted-foreground hover:text-foreground"
+                >
+                    Orders
+                </Link>
+                <Link
+                    href="/products"
+                    className="text-muted-foreground hover:text-foreground"
+                >
+                    Products
+                </Link>
+                <Link
+                    href="/customers"
+                    className="text-muted-foreground hover:text-foreground"
+                >
+                    Customers
+                </Link>
+                <Link href="/ja/settings" className="hover:text-foreground">
+                    Settings
+                </Link>
+                </nav>
+            </SheetContent>
+            </Sheet>
             <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
             <form className="ml-auto flex-1 sm:flex-initial">
                 <SearchMenu />
@@ -115,22 +163,22 @@ export default function Dashboard() {
         </header>
         <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 bg-muted/40 p-4 md:gap-8 md:p-10">
             <div className="mx-auto grid w-full max-w-6xl gap-2">
-            <h1 className="text-3xl font-semibold">Settings</h1>
+            <h1 className="text-3xl font-semibold">設定</h1>
             </div>
             <div className="mx-auto grid w-full max-w-6xl items-start gap-6 md:grid-cols-[180px_1fr] lg:grid-cols-[250px_1fr]">
             <SettingsMenu current="security" />
             <div className="grid gap-6">
             <Card x-chunk="dashboard-04-chunk-1">
                 <CardHeader>
-                    <CardTitle>Change Password</CardTitle>
+                    <CardTitle>パスワードを変更</CardTitle>
                     <CardDescription>
-                        Update your account password.
+                    アカウントのパスワードを変更します。
                     </CardDescription>
                 </CardHeader>
                     <form onSubmit={handlePasswordChange}>
                     <CardContent>
                         <Input
-                            placeholder="Current Password"
+                            placeholder="現在のパスワード"
                             type="password"
                             value={currentPassword}
                             onChange={(e) => setCurrentPassword(e.target.value)}
@@ -138,7 +186,7 @@ export default function Dashboard() {
                             className="mb-3"
                         />
                         <Input
-                            placeholder="New Password"
+                            placeholder="新しいパスワード"
                             type="password"
                             value={newPassword}
                             onChange={(e) => setNewPassword(e.target.value)}
@@ -147,7 +195,7 @@ export default function Dashboard() {
                     </CardContent>
                     <CardFooter className="border-t px-6 py-4">
                         <Button type="submit" disabled={changingPassword || !currentPassword || !newPassword}>
-                            {changingPassword ? "Changing..." : "Change Password"}
+                            {changingPassword ? "更新中..." : "更新する"}
                         </Button>
                     </CardFooter>
                     </form>
@@ -159,13 +207,13 @@ export default function Dashboard() {
             <AlertDialog open>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Error</AlertDialogTitle>
+                        <AlertDialogTitle>エラー</AlertDialogTitle>
                         <AlertDialogDescription>
                             {error}
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel onClick={() => setError(null)}>Close</AlertDialogCancel>
+                        <AlertDialogCancel onClick={() => setError(null)}>閉じる</AlertDialogCancel>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
@@ -174,13 +222,13 @@ export default function Dashboard() {
             <AlertDialog open>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Success</AlertDialogTitle>
+                        <AlertDialogTitle>成功</AlertDialogTitle>
                         <AlertDialogDescription>
-                            Updated successfully!
+                            更新に成功しました！
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel onClick={() => setSuccess(false)}>Close</AlertDialogCancel>
+                        <AlertDialogCancel onClick={() => setSuccess(false)}>閉じる</AlertDialogCancel>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>

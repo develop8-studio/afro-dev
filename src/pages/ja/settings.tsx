@@ -22,11 +22,10 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
-import Header from "@/components/header";
+import HeaderList from "@/components/header";
 import SearchMenu from "@/components/search";
 import UserMenu from "@/components/user";
-import SettingsMenu from "@/components/settings";
-import MobileSheet from "@/components/mobile-sheet";
+import SettingsMenu from "@/components/ja/settings";
 
 const FormSchema = z.object({
     dark_mode: z.boolean(),
@@ -51,11 +50,60 @@ export default function Dashboard() {
     return (
         <div className="flex min-h-screen w-full flex-col">
         <Head>
-            <title>Settings -Nook.to</title>
+            <title>設定 | Nook.to</title>
         </Head>
         <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
-            <Header current="settings" />
-            <MobileSheet current="settings" />
+            <HeaderList />
+            <Sheet>
+            <SheetTrigger asChild>
+                <Button
+                variant="outline"
+                size="icon"
+                className="shrink-0 md:hidden"
+                >
+                <Menu className="h-5 w-5" />
+                <span className="sr-only">Toggle navigation menu</span>
+                </Button>
+            </SheetTrigger>
+            <SheetContent side="left">
+                <nav className="grid gap-6 text-lg font-medium">
+                <Link
+                    href="/"
+                    className="flex items-center gap-2 text-lg font-semibold"
+                >
+                    <Package2 className="h-6 w-6" />
+                    <span className="sr-only">Acme Inc</span>
+                </Link>
+                <Link
+                    href="/dashboard"
+                    className="text-muted-foreground hover:text-foreground"
+                >
+                    Dashboard
+                </Link>
+                <Link
+                    href="/orders"
+                    className="text-muted-foreground hover:text-foreground"
+                >
+                    Orders
+                </Link>
+                <Link
+                    href="/products"
+                    className="text-muted-foreground hover:text-foreground"
+                >
+                    Products
+                </Link>
+                <Link
+                    href="/customers"
+                    className="text-muted-foreground hover:text-foreground"
+                >
+                    Customers
+                </Link>
+                <Link href="/settings" className="hover:text-foreground">
+                    Settings
+                </Link>
+                </nav>
+            </SheetContent>
+            </Sheet>
             <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
             <form className="ml-auto flex-1 sm:flex-initial">
                 <SearchMenu />
@@ -65,23 +113,23 @@ export default function Dashboard() {
         </header>
         <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 bg-muted/40 p-4 md:gap-8 md:p-10">
             <div className="mx-auto grid w-full max-w-6xl gap-2">
-            <h1 className="text-3xl font-semibold">Settings</h1>
+            <h1 className="text-3xl font-semibold">設定</h1>
             </div>
             <div className="mx-auto grid w-full max-w-6xl items-start gap-6 md:grid-cols-[180px_1fr] lg:grid-cols-[250px_1fr]">
             <SettingsMenu current="general" />
             <div className="grid gap-6">
             <Card x-chunk="dashboard-04-chunk-1">
                 <CardHeader>
-                    <CardTitle>Mode</CardTitle>
+                    <CardTitle>モード</CardTitle>
                 </CardHeader>
                     <div className="flex items-center space-x-2">
                     <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
                     <CardContent>
                     <Card className="flex flex-row items-center justify-between p-3">
                         <div className="space-y-0.5">
-                        <CardTitle className="text-md font-medium">Dark Mode</CardTitle>
+                        <CardTitle className="text-md font-medium">ダークモード</CardTitle>
                         <CardDescription>
-                            Toggle dark mode on or off.
+                            ダークモードのオンとオフを切り替えられます。
                         </CardDescription>
                         </div>
                         <Switch
@@ -91,7 +139,7 @@ export default function Dashboard() {
                     </Card>
                     </CardContent>
                     <CardFooter className="border-t px-6 py-4">
-                        <Button type="submit">Save</Button>
+                        <Button type="submit">保存</Button>
                     </CardFooter>
                     </form>
                     </div>
