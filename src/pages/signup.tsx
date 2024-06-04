@@ -73,7 +73,7 @@ export default function SignUp() {
   return (
     <div className="w-full lg:grid lg:grid-cols-2 min-h-screen">
       <Head>
-        <title>Sign Up -Nook.to</title>
+        <title>Sign Up -Afro.dev</title>
       </Head>
       <div className="flex items-center justify-center py-12">
         <div className="mx-auto grid w-[350px] gap-6">

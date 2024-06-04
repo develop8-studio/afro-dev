@@ -81,7 +81,7 @@ export default function Dashboard() {
   return (
     <div className="w-full lg:grid lg:grid-cols-2 min-h-screen">
       <Head>
-        <title>Login -Nook.to</title>
+        <title>Login -Afro.dev</title>
       </Head>
       <div className="flex items-center justify-center py-12">
         <div className="mx-auto grid w-[350px] gap-6">
