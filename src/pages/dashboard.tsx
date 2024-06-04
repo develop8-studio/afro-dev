@@ -50,7 +50,7 @@ export default function DashboardPage() {
   return (
     <div className="flex min-h-screen w-full flex-col">
       <Head>
-        <title>Dashboard -Nook.to</title>
+        <title>Dashboard -Afro.dev</title>
       </Head>
       <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
         <Header current="dashboard" />
