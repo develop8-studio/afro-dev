@@ -18,7 +18,6 @@ import {
     DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuSeparator,
-    DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
@@ -195,7 +194,7 @@ export default function Dashboard() {
                         />
                     </CardContent>
                     <CardFooter className="border-t px-6 py-4">
-                        <Button type="submit" disabled={changingPassword}>
+                        <Button type="submit" disabled={changingPassword || !currentPassword || !newPassword}>
                             {changingPassword ? "Changing..." : "Change Password"}
                         </Button>
                     </CardFooter>
@@ -225,7 +224,7 @@ export default function Dashboard() {
                     <AlertDialogHeader>
                         <AlertDialogTitle>Success</AlertDialogTitle>
                         <AlertDialogDescription>
-                            Username updated successfully!
+                            Updated successfully!
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
