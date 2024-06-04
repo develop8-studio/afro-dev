@@ -409,7 +409,7 @@ export default function Dashboard() {
                         <AlertDialogHeader>
                             <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
                             <AlertDialogDescription>
-                                To confirm account deletion, please type "delete my account" below.
+                                To confirm account deletion, please type &quot;delete my account&quot; below.
                             </AlertDialogDescription>
                         </AlertDialogHeader>
                         <form onSubmit={confirmDeleteAccount}>
