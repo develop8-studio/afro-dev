@@ -12,8 +12,8 @@ export default function App({ Component, pageProps }: AppProps) {
       disableTransitionOnChange
     >
       <Head>
-        <title>Nook.to</title>
-        <link rel="icon" href="/desktop-icon.png" />
+        <title>Afro.dev -Mega-sized Ideas!</title>
+        <link rel="icon" href="/desktop-fav.png" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
       </Head>
     <Component {...pageProps} />
