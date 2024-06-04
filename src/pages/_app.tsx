@@ -13,7 +13,7 @@ export default function App({ Component, pageProps }: AppProps) {
     >
       <Head>
         <title>Nook.to</title>
-        <link rel="icon" href="/desktop-fav.png" />
+        <link rel="icon" href="/desktop-icon.png" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
       </Head>
     <Component {...pageProps} />

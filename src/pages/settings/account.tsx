@@ -202,7 +202,7 @@ export default function AccountSettingsPage() {
     return (
         <div className="flex min-h-screen w-full flex-col">
             <Head>
-                <title>Account -Nook.to</title>
+                <title>Account -Afro.dev</title>
             </Head>
             <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6 z-[50]">
                 <Header current="settings" />

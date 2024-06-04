@@ -27,7 +27,7 @@ export default function Aside({ current }: AsideProps) {
         let defaultClassName = "flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8";
 
         if (current === href) {
-            defaultClassName += " bg-accent text-accent-foreground text-black dark:text-white";
+            defaultClassName += " bg-accent text-accent-foreground text-slate-900 dark:text-white";
         }
 
         return defaultClassName;
