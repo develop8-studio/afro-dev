@@ -14,7 +14,8 @@ export default function App({ Component, pageProps }: AppProps) {
       <Head>
         <title>Afro.dev -Mega-sized Ideas!</title>
         <link rel="icon" href="/favicon-afro.png" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" href="/favicon-afro.png" />
+        {/* <link rel="apple-touch-icon" href="/apple-touch-icon.png" /> */}
       </Head>
     <Component {...pageProps} />
     </ThemeProvider>
