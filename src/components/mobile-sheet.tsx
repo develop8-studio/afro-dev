@@ -1,5 +1,6 @@
 import React from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { Menu, Package2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
@@ -20,8 +21,10 @@ export default function MobileSheet({ current }: MobileSheetProps) {
             <SheetContent side="left">
                 <nav className="grid gap-6 text-lg font-medium">
                     <Link href="/" className="flex items-center gap-2 text-lg font-semibold">
-                        <Package2 className="h-6 w-6" />
-                        <span className="sr-only">Nook.to</span>
+                        {/* <Package2 className="h-6 w-6" />
+                        <span className="sr-only">Nook.to</span> */}
+                        <Image src="/afro.png" alt="afro" width={100} height={100} className="w-20 inline dark:hidden" />
+                        <Image src="/dark-mode-afro.png" alt="afro" width={100} height={100} className="w-20 hidden dark:inline" />
                     </Link>
                     <Link href="/dashboard" className={current === "dashboard" ? "hover:text-foreground" : "text-muted-foreground hover:text-foreground"}>
                         Dashboard
