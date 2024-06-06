@@ -65,7 +65,7 @@ export default function Dashboard() {
         <div className="flex justify-center items-center h-60 md:h-40">
             <div className="text-center">
                 <h1 className="text-5xl font-bold mb-4">Mega-sized Ideas!</h1>
-                <p className="text-lg text-slate-500 dark:text-zinc-100">Discover convenient tools for developers, ideal for team collaboration. And the best part? It's all open source!</p>
+                <p className="text-lg text-slate-500 dark:text-white">Discover convenient tools for developers, ideal for team collaboration. And the best part? It's all open source!</p>
             </div>
         </div>
         <div className="flex justify-center items-center">
