@@ -121,7 +121,7 @@ export default function Dashboard() {
                 <RocketIcon className="h-4 w-4" />
                 <AlertTitle>Sorry about that!</AlertTitle>
                 <AlertDescription>
-                    For now, you'll need to use Google to set or change your password, but we’re on it and will fix it soon!
+                    For now, you'll need to use Google to set or change your password, but we&apos;re on it and will fix it soon!
                 </AlertDescription>
             </Alert>
             <Card x-chunk="dashboard-04-chunk-1">
