@@ -31,7 +31,13 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+} from "@/components/ui/alert-dialog"
+import { RocketIcon } from "@radix-ui/react-icons"
+import {
+    Alert,
+    AlertDescription,
+    AlertTitle,
+} from "@/components/ui/alert"
 
 import { FormEvent, useState, useEffect } from "react";
 import { useRouter } from "next/router";
@@ -111,6 +117,13 @@ export default function Dashboard() {
             <div className="mx-auto grid w-full max-w-6xl items-start gap-6 md:grid-cols-[180px_1fr] lg:grid-cols-[250px_1fr]">
             <SettingsMenu current="security" />
             <div className="grid gap-6">
+            <Alert>
+                <RocketIcon className="h-4 w-4" />
+                <AlertTitle>Sorry about that!</AlertTitle>
+                <AlertDescription>
+                    For now, you'll need to use Google to set or change your password, but we’re on it and will fix it soon!
+                </AlertDescription>
+            </Alert>
             <Card x-chunk="dashboard-04-chunk-1">
                 <CardHeader>
                     <CardTitle>Change Password</CardTitle>

@@ -118,11 +118,8 @@ export default function User() {
             <DropdownMenuContent align="end">
             <DropdownMenuLabel>{user?.displayName ? `${user.displayName}` : 'My Account'}</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuLabel>Settings</DropdownMenuLabel>
-            <DropdownMenuSeparator />
             <Link href="/settings"><DropdownMenuItem>General</DropdownMenuItem></Link>
-            <Link href="/settings/account"><DropdownMenuItem>Accounut</DropdownMenuItem></Link>
-            <Link href="/settings/support"><DropdownMenuItem>Support</DropdownMenuItem></Link>
+            <Link href="/settings/account"><DropdownMenuItem>Account</DropdownMenuItem></Link>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
             </DropdownMenuContent>
