@@ -13,8 +13,8 @@ export default function App({ Component, pageProps }: AppProps) {
     >
       <Head>
         <title>Afro.dev -Mega-sized Ideas!</title>
-        <link rel="icon" href="/afro-fav.png" />
-        <link rel="apple-touch-icon" href="/afro-fav.png" />
+        <link rel="icon" href="/afro-dark-logo.png" />
+        <link rel="apple-touch-icon" href="/afro-mobile-icon.png" />
         {/* <link rel="apple-touch-icon" href="/apple-touch-icon.png" /> */}
       </Head>
     <Component {...pageProps} />

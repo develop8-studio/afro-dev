@@ -22,8 +22,10 @@ export default function MobileSheet({ current }: MobileSheetProps) {
             <SheetContent side="left">
                 <nav className="grid gap-6 text-lg font-medium">
                     <Link href="/" className="flex items-center gap-2 text-lg font-semibold">
-                        <Si9Gag className="h-6 w-6" />
-                        <span className="sr-only">Afro</span>
+                        {/* <Si9Gag className="h-6 w-6" />
+                        <span className="sr-only">Afro</span> */}
+                        <Image src="/afro-dark-logo.png" alt="" width={30} height={30} className="block dark:hidden" />
+                        <Image src="/afro-white-logo.png" alt="" width={30} height={30} className="hidden dark:block" />
                     </Link>
                     <Link href="/dashboard" className={current === "dashboard" ? "hover:text-foreground" : "text-muted-foreground hover:text-foreground"}>
                         Dashboard
