@@ -38,7 +38,7 @@ import {
 import { FormEvent, useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { getAuth, updateProfile, GoogleAuthProvider, signInWithPopup, reauthenticateWithPopup, deleteUser } from "firebase/auth";
-import { collection, getFirestore, doc, updateDoc, getDoc, setDoc } from "firebase/firestore";
+import { collection, getFirestore, doc, updateDoc, getDoc, setDoc, deleteDoc } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 import Header from "@/components/header";
@@ -114,6 +114,27 @@ export default function AccountSettingsPage() {
         }
     };
 
+    // const handleDeleteAccount = async () => {
+    //     setDeleting(true);
+    //     try {
+    //         const user = auth.currentUser;
+    //         if (user) {
+    //             const provider = new GoogleAuthProvider();
+    //             await reauthenticateWithPopup(user, provider);
+    //             await deleteUser(user);
+    //             router.push("/signup");
+    //         }
+    //     } catch (err) {
+    //         if (err instanceof Error) {
+    //             setError(err.message);
+    //         } else {
+    //             setError("An unknown error occurred");
+    //         }
+    //     } finally {
+    //         setDeleting(false);
+    //     }
+    // };
+
     const handleDeleteAccount = async () => {
         setDeleting(true);
         try {
@@ -121,7 +142,12 @@ export default function AccountSettingsPage() {
             if (user) {
                 const provider = new GoogleAuthProvider();
                 await reauthenticateWithPopup(user, provider);
+
+                const userDocRef = doc(db, "users", user.uid);
+                await deleteDoc(userDocRef);
+
                 await deleteUser(user);
+
                 router.push("/signup");
             }
         } catch (err) {
@@ -222,13 +248,13 @@ export default function AccountSettingsPage() {
                             <form onSubmit={handleIconUpload}>
                                 <CardContent>
                                     <div className="flex flex-col items-center">
-                                        {iconUrl && <Image src={iconUrl} alt="" width={100} height={100} className="w-24 h-24 rounded-full mb-4" />}
+                                        {iconUrl && <Image src={iconUrl} alt="" width={100} height={100} className="w-20 h-20 rounded-full mb-4" />}
                                         <Input type="file" accept="image/*" onChange={handleFileChange} disabled={uploadingIcon} />
                                     </div>
                                 </CardContent>
                                 <CardFooter className="border-t px-6 py-4">
-                                    <Button type="submit" disabled={uploadingIcon || !uploadedFile}>
-                                        {uploadingIcon ? "Updating..." : "Update Icon"}
+                                    <Button type="submit" className="h-[20]" disabled={uploadingIcon || !uploadedFile}>
+                                        {uploadingIcon ? "Changing..." : "Save"}
                                     </Button>
                                 </CardFooter>
                             </form>
@@ -247,26 +273,14 @@ export default function AccountSettingsPage() {
                                         value={username}
                                         onChange={(e) => setUsername(e.target.value)}
                                     />
-                                    <CardDescription className="mt-1">Current: {displayName}</CardDescription>
                                 </CardContent>
                                 <CardFooter className="border-t px-6 py-4">
-                                    <Button type="submit" disabled={changingUsername || username === displayName}>
-                                        {changingUsername ? "Changing..." : "Change Username"}
+                                    <Button type="submit" className="h-[20]" disabled={changingUsername || username === displayName}>
+                                        {changingUsername ? "Changing..." : "Save"}
                                     </Button>
                                 </CardFooter>
                             </form>
                         </Card>
-                        {/* <Card x-chunk="dashboard-04-chunk-3">
-                            <CardHeader>
-                                <CardTitle>Google Integration</CardTitle>
-                                <CardDescription>
-                                    Link your account with Google.
-                                </CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                <GoogleSignInButton />
-                            </CardContent>
-                        </Card> */}
                         <Card x-chunk="dashboard-04-chunk-3">
                             <CardHeader>
                                 <CardTitle>Delete Account</CardTitle>
@@ -275,7 +289,7 @@ export default function AccountSettingsPage() {
                                 </CardDescription>
                             </CardHeader>
                             <CardContent>
-                                <Button variant="destructive" onClick={() => setShowDeleteDialog(true)} disabled={deleting}>
+                                <Button variant="destructive" onClick={() => setShowDeleteDialog(true)} disabled={deleting} className="h-[20]">
                                     {deleting ? 'Deleting...' : 'Delete your account'}
                                 </Button>
                             </CardContent>

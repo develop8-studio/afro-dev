@@ -22,11 +22,8 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
-import Header from "@/components/header";
-import SearchMenu from "@/components/search";
-import UserMenu from "@/components/user";
-import SettingsMenu from "@/components/settings";
-import MobileSheet from "@/components/mobile-sheet";
+import Header from "@/components/header"
+import SettingsMenu from "@/components/settings"
 
 const FormSchema = z.object({
     dark_mode: z.boolean(),
@@ -44,8 +41,11 @@ export default function Dashboard() {
         },
     })
 
+    const [isModified, setIsModified] = React.useState(false);
+
     function onSubmit(data: z.infer<typeof FormSchema>) {
         setTheme(data.dark_mode ? 'dark' : 'light')
+        setIsModified(false);
     }
 
     return (
@@ -76,13 +76,16 @@ export default function Dashboard() {
                         </CardDescription>
                         </div>
                         <Switch
-                        checked={form.watch('dark_mode')}
-                        onCheckedChange={(checked) => form.setValue('dark_mode', checked)}
+                            checked={form.watch('dark_mode')}
+                            onCheckedChange={(checked) => {
+                                form.setValue('dark_mode', checked);
+                                setIsModified(true);
+                            }}
                         />
                     </Card>
                     </CardContent>
                     <CardFooter className="border-t px-6 py-4">
-                        <Button type="submit">Save</Button>
+                        <Button type="submit" className="h-[20]" disabled={!isModified}>Save</Button>
                     </CardFooter>
                     </form>
                     </div>

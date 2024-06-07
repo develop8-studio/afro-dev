@@ -49,8 +49,8 @@ export default function Header({ current }: HeaderProps) {
                 <Link href="/" className="flex items-center gap-2 text-lg font-semibold md:text-base">
                     {/* <Si9Gag className="h-6 w-6" />
                     <span className="sr-only">Afro</span> */}
-                    <Image src="/afro-dark-logo.png" alt="" width={30} height={30} className="block dark:hidden transition duration-150 ease-out hover:rotate-45" />
-                    <Image src="/afro-white-logo.png" alt="" width={30} height={30} className="hidden dark:block transition duration-150 ease-out hover:rotate-45" />
+                    <Image src="/afro-dark-logo.png" alt="" width={25} height={25} className="block dark:hidden transition duration-150 ease-out hover:rotate-45" />
+                    <Image src="/afro-white-logo.png" alt="" width={25} height={25} className="hidden dark:block transition duration-150 ease-out hover:rotate-45" />
                 </Link>
                 <Link href="/dashboard" className={`${current === "dashboard" ? 'text-foreground' : 'text-muted-foreground'} transition-colors hover:text-foreground`}>
                     Dashboard

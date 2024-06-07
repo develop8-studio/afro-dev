@@ -84,39 +84,39 @@ export default function Welcome() {
           )}
         </div>
         <div className="contents md:flex justify-center items-center">
-        <Card className="text-center md:w-80 h-60 md:mr-5">
+        <Card className="text-center md:w-80 h-60 md:mr-5 overflow-hidden">
           <CardHeader>
             <CardTitle>Quick Access</CardTitle>
             <CardDescription>Quickly access all pages, enabling seamless support for developers.</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex flex-col justify-center items-center">
-              <Image src="/interface/door.png" alt="" width={100} height={100} className="block dark:hidden w-20" />
-              <Image src="/interface/door-white.png" alt="" width={100} height={100} className="hidden dark:block w-20" />
+              <Image src="/undraw/landscape.svg" alt="" width={100} height={100} className="block dark:hidden w-40" />
+              <Image src="/undraw/landscape-white.svg" alt="" width={100} height={100} className="hidden dark:block w-40" />
             </div>
           </CardContent>
         </Card>
-        <Card className="text-center md:w-80 h-60 md:mr-5">
+        <Card className="text-center md:w-80 h-60 md:mr-5 overflow-hidden">
           <CardHeader>
             <CardTitle>Team Features</CardTitle>
             <CardDescription>Quickly access all pages, enabling seamless support for developers.</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex flex-col justify-center items-center">
-              <Image src="/interface/team.svg" alt="" width={100} height={100} className="block dark:hidden w-20" />
-              <Image src="/interface/team-white.png" alt="" width={100} height={100} className="hidden dark:block w-20" />
+              <Image src="/undraw/walking.svg" alt="" width={100} height={100} className="block dark:hidden w-40" />
+              <Image src="/undraw/walking-white.svg" alt="" width={100} height={100} className="hidden dark:block w-40" />
             </div>
           </CardContent>
         </Card>
-        <Card className="text-center md:w-80 h-60">
+        <Card className="text-center md:w-80 h-60 overflow-hidden">
           <CardHeader>
             <CardTitle>Rich Customization</CardTitle>
             <CardDescription>Customize your screen to meet your preferences.</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex flex-col justify-center items-center">
-              <Image src="/interface/settings.png" alt="" width={100} height={100} className="block dark:hidden w-20" />
-              <Image src="/interface/settings-white.png" alt="" width={100} height={100} className="hidden dark:block w-20" />
+              <Image src="/undraw/grand.svg" alt="" width={100} height={100} className="block dark:hidden w-60" />
+              <Image src="/undraw/grand-white.svg" alt="" width={100} height={100} className="hidden dark:block w-60" />
             </div>
           </CardContent>
         </Card>

@@ -150,8 +150,8 @@ export default function Dashboard() {
                         />
                     </CardContent>
                     <CardFooter className="border-t px-6 py-4">
-                        <Button type="submit" disabled={changingPassword || !currentPassword || !newPassword}>
-                            {changingPassword ? "Changing..." : "Change Password"}
+                        <Button type="submit" className="h-[20]" disabled={changingPassword || !currentPassword || !newPassword}>
+                            {changingPassword ? "Changing..." : "Save"}
                         </Button>
                     </CardFooter>
                     </form>
