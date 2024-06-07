@@ -78,7 +78,6 @@ import UserMenu from "@/components/user";
 import MobileSheet from "@/components/mobile-sheet";
 
 import useAuthRedirect from '@/components/useAuthRedirect';
-
 export default function Dashboard() {
   useAuthRedirect();
 
