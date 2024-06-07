@@ -64,7 +64,7 @@ export default function PrivacyPolicy() {
                   </li>
                   <li>
                       <strong>Use of Content</strong>
-                      <p>Some of the content on this site is provided by Freepik's Flaticon (https://www.flaticon.com/). You must comply with their terms and conditions when using such content. All other content on this site is for your personal and non-commercial use.</p>
+                      <p>Some of the content on this site is provided by Freepik&apos;s Flaticon (https://www.flaticon.com/). You must comply with their terms and conditions when using such content. All other content on this site is for your personal and non-commercial use.</p>
                   </li>
                   <li>
                       <strong>Prohibited Activities</strong>
