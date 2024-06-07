@@ -2,6 +2,8 @@ import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { MdSpaceDashboard } from "react-icons/md"
+import { IoIosHappy } from "react-icons/io"
+import { ScrollArea } from "@/components/ui/scroll-area"
 import Header from "@/components/header"
 
 import { initializeApp } from "firebase/app"
@@ -9,6 +11,15 @@ import { initializeApp } from "firebase/app"
 import { getAuth, updateProfile, GoogleAuthProvider, signInWithPopup, reauthenticateWithPopup, deleteUser, onAuthStateChanged, User } from "firebase/auth"
 
 import { useState, useEffect } from "react"
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -44,7 +55,7 @@ export default function Welcome() {
           <Image src="/afro-dark-logo.png" alt="" width={100} height={100} className="block dark:hidden transition duration-150 ease-out hover:rotate-45 w-20" />
           <Image src="/afro-white-logo.png" alt="" width={100} height={100} className="hidden dark:block transition duration-150 ease-out hover:rotate-45 w-20" />
         </div>
-        <div className="flex justify-center items-center h-auto w-full mb-5">
+        <div className="flex justify-center items-center h-auto w-full">
             <div className="text-center">
                 <h1 className="text-5xl font-bold mb-4">Mega-sized Ideas!</h1>
                 <div className="hidden sm:block">
@@ -56,7 +67,7 @@ export default function Welcome() {
                 </div>
             </div>
         </div>
-        <div className="flex justify-center items-center">
+        <div className="flex justify-center items-center mb-5">
           {user ? (
             <Button className="mr-5" variant="outline" asChild>
               <Link href="/dashboard"><MdSpaceDashboard className="mr-1" size="17.5" />Dashboard</Link>
@@ -71,6 +82,44 @@ export default function Welcome() {
               </Button>
             </>
           )}
+        </div>
+        <div className="contents md:flex justify-center items-center">
+        <Card className="text-center md:w-80 h-60 md:mr-5">
+          <CardHeader>
+            <CardTitle>Quick Access</CardTitle>
+            <CardDescription>Quickly access all pages, enabling seamless support for developers.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-col justify-center items-center">
+              <Image src="/interface/door.png" alt="" width={100} height={100} className="block dark:hidden w-20" />
+              <Image src="/interface/door-white.png" alt="" width={100} height={100} className="hidden dark:block w-20" />
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="text-center md:w-80 h-60 md:mr-5">
+          <CardHeader>
+            <CardTitle>Team Features</CardTitle>
+            <CardDescription>Quickly access all pages, enabling seamless support for developers.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-col justify-center items-center">
+              <Image src="/interface/team.svg" alt="" width={100} height={100} className="block dark:hidden w-20" />
+              <Image src="/interface/team-white.png" alt="" width={100} height={100} className="hidden dark:block w-20" />
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="text-center md:w-80 h-60">
+          <CardHeader>
+            <CardTitle>Rich Customization</CardTitle>
+            <CardDescription>Customize your screen to meet your preferences.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-col justify-center items-center">
+              <Image src="/interface/customize.png" alt="" width={100} height={100} className="block dark:hidden w-20" />
+              <Image src="/interface/customize-white.png" alt="" width={100} height={100} className="hidden dark:block w-20" />
+            </div>
+          </CardContent>
+        </Card>
         </div>
       </main>
     </div>
