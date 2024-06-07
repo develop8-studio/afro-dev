@@ -115,8 +115,8 @@ export default function Welcome() {
           </CardHeader>
           <CardContent>
             <div className="flex flex-col justify-center items-center">
-              <Image src="/interface/customize.png" alt="" width={100} height={100} className="block dark:hidden w-20" />
-              <Image src="/interface/customize-white.png" alt="" width={100} height={100} className="hidden dark:block w-20" />
+              <Image src="/interface/settings.png" alt="" width={100} height={100} className="block dark:hidden w-20" />
+              <Image src="/interface/settings-white.png" alt="" width={100} height={100} className="hidden dark:block w-20" />
             </div>
           </CardContent>
         </Card>
