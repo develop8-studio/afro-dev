@@ -61,6 +61,9 @@ export default function Header({ current }: HeaderProps) {
                 <Link href="/products" className={`${current === "products" ? 'text-foreground' : 'text-muted-foreground'} font-light transition-colors hover:text-foreground`}>
                     Products
                 </Link>
+                <Link href="/tools" className={`${current === "tools" ? 'text-foreground' : 'text-muted-foreground'} font-light transition-colors hover:text-foreground`}>
+                    Tools
+                </Link>
                 <Link href="/chats" className={`${current === "chats" ? 'text-foreground' : 'text-muted-foreground'} font-light transition-colors hover:text-foreground`}>
                     Chats
                 </Link>

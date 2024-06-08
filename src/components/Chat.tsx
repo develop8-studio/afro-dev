@@ -83,7 +83,7 @@ const Chat: React.FC<ChatProps> = ({ currentRoom }) => {
         </div>
         <div className="messages flex-1">
             {messages.map(msg => (
-            <div key={msg.id} className="message mb-3 p-3 bg-slate-50 dark:bg-slate-900 rounded-md">
+            <div key={msg.id} className="message mb-3 p-3 bg-slate-100 dark:bg-muted/60 rounded-md">
                 <div className="message-header flex items-center mb-2">
                 <span className="font-bold">{msg.userName}</span>
                 <span className="ml-2 text-xs text-gray-500 font-light">
