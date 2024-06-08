@@ -87,20 +87,20 @@ const RoomSelector: React.FC<RoomSelectorProps> = ({ currentRoom, setCurrentRoom
         <Card className="room-selector mb-5 p-5">
         <CardTitle className="text-xl">Select Room</CardTitle>
         <div className="create-room flex my-3">
-            <Input value={newRoomName} onChange={(e) => setNewRoomName(e.target.value)} placeholder="New Room Name" />
-            <Button onClick={createRoom} className="ml-3">Create</Button>
+            <Input value={newRoomName} onChange={(e) => setNewRoomName(e.target.value)} placeholder="New Room Name" className="font-light" />
+            <Button onClick={createRoom} className="ml-3 font-normal">Create</Button>
         </div>
         <div className="flex items-center space-x-2 mb-3">
             <Checkbox id="setPassword" checked={isPasswordEnabled} onCheckedChange={(checked: boolean) => setIsPasswordEnabled(checked)} />
-            <Label htmlFor="setPassword">Set Password</Label>
+            <Label htmlFor="setPassword" className="font-normal">Set Password</Label>
         </div>
         {isPasswordEnabled && (
-            <Input type="password" value={password} onChange={(e) => setRoomPassword(e.target.value)} placeholder="Password" className="mb-3" />
+            <Input type="password" value={password} onChange={(e) => setRoomPassword(e.target.value)} placeholder="Password" className="mb-3 font-light" />
         )}
         <Separator className="my-5 block sm:hidden" />
         <ScrollArea className="h-[150px] rounded-md border p-3">
             {rooms.map(room => (
-            <div key={room.id} className={`room-item ${room.id === currentRoom ? 'font-bold cursor-pointer p-1' : 'cursor-pointer p-1'}`} onClick={() => handleRoomSelect(room)}>
+            <div key={room.id} className={`room-item ${room.id === currentRoom ? 'font-semibold cursor-pointer p-1' : 'cursor-pointer p-1'}`} onClick={() => handleRoomSelect(room)}>
                 {room.name}
             </div>
             ))}

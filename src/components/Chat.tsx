@@ -76,8 +76,8 @@ const Chat: React.FC<ChatProps> = ({ currentRoom }) => {
         <div className="chat-container flex flex-col h-full">
         <div className="message-input flex flex-col items-center mb-5">
             <div className="w-full flex">
-            <Input value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Enter your message..." />
-            <Button onClick={sendMessage} className="ml-3">Send</Button>
+            <Input value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Enter your message..." className="font-light" />
+            <Button onClick={sendMessage} className="ml-3 font-normal">Send</Button>
             </div>
             <Input type="file" onChange={(e) => setImage(e.target.files?.[0] || null)} className="mt-3" />
         </div>
@@ -86,7 +86,7 @@ const Chat: React.FC<ChatProps> = ({ currentRoom }) => {
             <div key={msg.id} className="message mb-3 p-3 bg-slate-50 dark:bg-slate-900 rounded-md">
                 <div className="message-header flex items-center mb-2">
                 <span className="font-bold">{msg.userName}</span>
-                <span className="ml-2 text-xs text-gray-500">
+                <span className="ml-2 text-xs text-gray-500 font-light">
                     {msg.timestamp ? new Date(msg.timestamp.toDate()).toLocaleString() : 'No timestamp'}
                 </span>
                 </div>

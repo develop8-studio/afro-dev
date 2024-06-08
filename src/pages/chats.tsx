@@ -1,7 +1,7 @@
 import Head from "next/head"
 import Header from "@/components/header"
 import useAuthRedirect from "@/components/useAuthRedirect"
-import Chat from '@/components/Chat'
+import Chat from "@/components/Chat"
 import RoomSelector from '@/components/RoomSelector'
 import { useState } from 'react'
 
