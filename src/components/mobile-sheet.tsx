@@ -39,11 +39,14 @@ export default function MobileSheet({ current }: MobileSheetProps) {
                     <Link href="/products" className={`${current === "products" ? 'font-normal' : 'font-light'} hover:text-foreground transition duration-150 ease-out hover:translate-x-1`}>
                         Products
                     </Link>
-                    <Link href="/customers" className={`${current === "customers" ? 'font-normal' : 'font-light'} hover:text-foreground transition duration-150 ease-out hover:translate-x-1`}>
+                    {/* <Link href="/customers" className={`${current === "customers" ? 'font-normal' : 'font-light'} hover:text-foreground transition duration-150 ease-out hover:translate-x-1`}>
                         Customers
                     </Link>
                     <Link href="/analytics" className={`${current === "analytics" ? 'font-normal' : 'font-light'} hover:text-foreground transition duration-150 ease-out hover:translate-x-1`}>
                         Analytics
+                    </Link> */}
+                    <Link href="/chats" className={`${current === "chats" ? 'font-normal' : 'font-light'} hover:text-foreground transition duration-150 ease-out hover:translate-x-1`}>
+                        Chats
                     </Link>
                     <Link href="/settings" className={`${current === "settings" ? 'font-normal' : 'font-light'} hover:text-foreground transition duration-150 ease-out hover:translate-x-1`}>
                         Settings

@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react';
-import { collection, addDoc, onSnapshot } from 'firebase/firestore';
-import { db } from '@/firebase/firebaseConfig';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Card, CardTitle } from '@/components/ui/card';
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Checkbox } from '@/components/ui/checkbox';
-import { Label } from '@/components/ui/label';
+import { useState, useEffect } from 'react'
+import { collection, addDoc, onSnapshot } from 'firebase/firestore'
+import { db } from '@/firebase/firebaseConfig'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Card, CardTitle } from '@/components/ui/card'
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Checkbox } from '@/components/ui/checkbox'
+import { Label } from '@/components/ui/label'
 import {
     AlertDialog,
     AlertDialogAction,
@@ -17,7 +17,8 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
+} from '@/components/ui/alert-dialog'
+import { Separator } from "@/components/ui/separator"
 
 interface Room {
     id: string;
@@ -93,6 +94,7 @@ const RoomSelector: React.FC<RoomSelectorProps> = ({ currentRoom, setCurrentRoom
             <Checkbox id="setPassword" checked={isPasswordEnabled} onCheckedChange={(checked: boolean) => setIsPasswordEnabled(checked)} />
             <Label htmlFor="setPassword">Set Password</Label>
         </div>
+        <Separator className="my-5 block sm:hidden" />
         {isPasswordEnabled && (
             <Input type="password" value={password} onChange={(e) => setRoomPassword(e.target.value)} placeholder="Password" className="mb-3" />
         )}
