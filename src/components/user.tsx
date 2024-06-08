@@ -94,7 +94,7 @@ export default function User() {
     };
 
     return (
-        <div>
+        <div className="pt-1">
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
             <Button
