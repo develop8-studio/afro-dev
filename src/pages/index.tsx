@@ -90,8 +90,8 @@ export default function Welcome() {
         <div className="contents md:flex justify-center items-center">
         <Card className="text-center md:w-80 h-60 md:mr-5">
           <CardHeader className="h-20">
-            <CardTitle>Quick Access</CardTitle>
-            <CardDescription className="font-light">Quickly access all pages, enabling seamless support for developers.</CardDescription>
+            <CardTitle className="font-medium">Quick Access</CardTitle>
+            <CardDescription className="font-thin">Quickly access all pages, enabling seamless support for developers.</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="h-40 flex flex-col justify-center items-center">
@@ -103,8 +103,8 @@ export default function Welcome() {
         </Card>
         <Card className="text-center md:w-80 h-60 md:mr-5">
           <CardHeader className="h-20">
-            <CardTitle>Team Features</CardTitle>
-            <CardDescription className="font-light">Quickly access all pages, enabling seamless support for developers.</CardDescription>
+            <CardTitle className="font-medium">Team Features</CardTitle>
+            <CardDescription className="font-thin">Quickly access all pages, enabling seamless support for developers.</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="h-40 flex flex-col justify-center items-center">
@@ -116,8 +116,8 @@ export default function Welcome() {
         </Card>
         <Card className="text-center md:w-80 h-60">
           <CardHeader className="h-20">
-            <CardTitle>Rich Customization</CardTitle>
-            <CardDescription className="font-light">Customize your screen to meet your preferences.</CardDescription>
+            <CardTitle className="font-medium">Rich Customization</CardTitle>
+            <CardDescription className="font-thin">Customize your screen to meet your preferences.</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="h-40 flex flex-col  justify-center items-center">

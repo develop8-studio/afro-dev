@@ -53,7 +53,7 @@ const RoomSelector: React.FC<RoomSelectorProps> = ({ currentRoom, setCurrentRoom
     const createRoom = async () => {
         if (newRoomName.trim() === '') return;
 
-        const roomData: Omit<Room, 'id'> = { name: newRoomName }; // Omit<Room, 'id'>を使用してidを除外
+        const roomData: Omit<Room, 'id'> = { name: newRoomName };
         if (isPasswordEnabled && password.trim() !== '') {
             roomData.password = password;
         }
@@ -94,10 +94,10 @@ const RoomSelector: React.FC<RoomSelectorProps> = ({ currentRoom, setCurrentRoom
             <Checkbox id="setPassword" checked={isPasswordEnabled} onCheckedChange={(checked: boolean) => setIsPasswordEnabled(checked)} />
             <Label htmlFor="setPassword">Set Password</Label>
         </div>
-        <Separator className="my-5 block sm:hidden" />
         {isPasswordEnabled && (
             <Input type="password" value={password} onChange={(e) => setRoomPassword(e.target.value)} placeholder="Password" className="mb-3" />
         )}
+        <Separator className="my-5 block sm:hidden" />
         <ScrollArea className="h-[150px] rounded-md border p-3">
             {rooms.map(room => (
             <div key={room.id} className={`room-item ${room.id === currentRoom ? 'font-bold cursor-pointer p-1' : 'cursor-pointer p-1'}`} onClick={() => handleRoomSelect(room)}>
