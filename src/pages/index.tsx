@@ -8,6 +8,7 @@ import Header from "@/components/header"
 import { Badge } from "@/components/ui/badge"
 import { FaArrowRightLong } from "react-icons/fa6"
 import { GoArrowRight } from "react-icons/go"
+import { ThumbsUp, PartyPopper, Smile } from "lucide-react"
 
 import { initializeApp } from "firebase/app"
 
@@ -88,38 +89,41 @@ export default function Welcome() {
         </div>
         <div className="contents md:flex justify-center items-center">
         <Card className="text-center md:w-80 h-60 md:mr-5">
-          <CardHeader className="h-28">
+          <CardHeader className="h-20">
             <CardTitle>Quick Access</CardTitle>
             <CardDescription className="font-light">Quickly access all pages, enabling seamless support for developers.</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="h-24 flex flex-col justify-center items-center">
-              <Image src="/undraw/rocket.svg" alt="" width={100} height={100} className="block dark:hidden w-20" />
-              <Image src="/undraw/rocket-white.svg" alt="" width={100} height={100} className="hidden dark:block w-20" />
+            <div className="h-40 flex flex-col justify-center items-center">
+              <ThumbsUp size="60" absoluteStrokeWidth={true} />
+              {/* <Image src="/undraw/rocket.svg" alt="" width={100} height={100} className="block dark:hidden w-20" />
+              <Image src="/undraw/rocket-white.svg" alt="" width={100} height={100} className="hidden dark:block w-20" /> */}
             </div>
           </CardContent>
         </Card>
         <Card className="text-center md:w-80 h-60 md:mr-5">
-          <CardHeader className="h-28">
+          <CardHeader className="h-20">
             <CardTitle>Team Features</CardTitle>
             <CardDescription className="font-light">Quickly access all pages, enabling seamless support for developers.</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="h-24 flex flex-col justify-center items-center">
-              <Image src="/undraw/smiley.svg" alt="" width={100} height={100} className="block dark:hidden w-20" />
-              <Image src="/undraw/smiley-white.svg" alt="" width={100} height={100} className="hidden dark:block w-20" />
+            <div className="h-40 flex flex-col justify-center items-center">
+              <Smile size="60" absoluteStrokeWidth={true} />
+              {/* <Image src="/undraw/smiley.svg" alt="" width={100} height={100} className="block dark:hidden w-20" />
+              <Image src="/undraw/smiley-white.svg" alt="" width={100} height={100} className="hidden dark:block w-20" /> */}
             </div>
           </CardContent>
         </Card>
         <Card className="text-center md:w-80 h-60">
-          <CardHeader className="h-28">
+          <CardHeader className="h-20">
             <CardTitle>Rich Customization</CardTitle>
             <CardDescription className="font-light">Customize your screen to meet your preferences.</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="h-24 flex flex-col  justify-center items-center">
-              <Image src="/undraw/flower.svg" alt="" width={100} height={100} className="block dark:hidden w-20" />
-              <Image src="/undraw/flower-white.svg" alt="" width={100} height={100} className="hidden dark:block w-20" />
+            <div className="h-40 flex flex-col  justify-center items-center">
+              <PartyPopper size="60" absoluteStrokeWidth={true} />
+              {/* <Image src="/undraw/flower.svg" alt="" width={100} height={100} className="block dark:hidden w-20" />
+              <Image src="/undraw/flower-white.svg" alt="" width={100} height={100} className="hidden dark:block w-20" /> */}
             </div>
           </CardContent>
         </Card>

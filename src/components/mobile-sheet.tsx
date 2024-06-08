@@ -30,22 +30,22 @@ export default function MobileSheet({ current }: MobileSheetProps) {
                         <Image src="/afro-dark-logo.png" alt="" width={30} height={30} className="block dark:hidden" />
                         <Image src="/afro-white-logo.png" alt="" width={30} height={30} className="hidden dark:block" />
                     </Link>
-                    <Link href="/dashboard" className={current === "dashboard" ? "hover:text-foreground" : "text-muted-foreground hover:text-foreground"}>
+                    <Link href="/dashboard" className={`${current === "dashboard" ? 'font-normal' : 'font-light'} hover:text-foreground transition duration-150 ease-out hover:translate-x-1`}>
                         Dashboard
                     </Link>
-                    <Link href="/orders" className={current === "orders" ? "hover:text-foreground" : "text-muted-foreground hover:text-foreground"}>
+                    <Link href="/orders" className={`${current === "orders" ? 'font-normal' : 'font-light'} hover:text-foreground transition duration-150 ease-out hover:translate-x-1`}>
                         Orders
                     </Link>
-                    <Link href="/products" className={current === "products" ? "hover:text-foreground" : "text-muted-foreground hover:text-foreground"}>
+                    <Link href="/products" className={`${current === "products" ? 'font-normal' : 'font-light'} hover:text-foreground transition duration-150 ease-out hover:translate-x-1`}>
                         Products
                     </Link>
-                    <Link href="/customers" className={current === "customers" ? "hover:text-foreground" : "text-muted-foreground hover:text-foreground"}>
+                    <Link href="/customers" className={`${current === "customers" ? 'font-normal' : 'font-light'} hover:text-foreground transition duration-150 ease-out hover:translate-x-1`}>
                         Customers
                     </Link>
-                    <Link href="/analytics" className={current === "analytics" ? "hover:text-foreground" : "text-muted-foreground hover:text-foreground"}>
+                    <Link href="/analytics" className={`${current === "analytics" ? 'font-normal' : 'font-light'} hover:text-foreground transition duration-150 ease-out hover:translate-x-1`}>
                         Analytics
                     </Link>
-                    <Link href="/settings" className={current === "settings" ? "hover:text-foreground" : "text-muted-foreground hover:text-foreground"}>
+                    <Link href="/settings" className={`${current === "settings" ? 'font-normal' : 'font-light'} hover:text-foreground transition duration-150 ease-out hover:translate-x-1`}>
                         Settings
                     </Link>
                 </nav>
