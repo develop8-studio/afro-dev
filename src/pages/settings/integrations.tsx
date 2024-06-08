@@ -117,7 +117,7 @@ export default function Dashboard() {
                 <Card x-chunk="dashboard-04-chunk-1">
                     <CardHeader>
                         <CardTitle>Integration</CardTitle>
-                        <CardDescription>Link your account with Google.</CardDescription>
+                        <CardDescription className="font-light">Link your account with Google.</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <GoogleSignInButton />

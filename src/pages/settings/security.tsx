@@ -120,14 +120,14 @@ export default function Dashboard() {
             <Alert>
                 <RocketIcon className="h-4 w-4" />
                 <AlertTitle>Sorry about that!</AlertTitle>
-                <AlertDescription>
+                <AlertDescription className="font-light">
                     For now, you&apos;ll need to use Google to set or change your password, but we&apos;re on it and will fix it soon!
                 </AlertDescription>
             </Alert>
             <Card x-chunk="dashboard-04-chunk-1">
                 <CardHeader>
                     <CardTitle>Change Password</CardTitle>
-                    <CardDescription>
+                    <CardDescription className="font-light">
                         Update your account password.
                     </CardDescription>
                 </CardHeader>

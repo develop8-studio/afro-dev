@@ -71,7 +71,7 @@ export default function Dashboard() {
                     <Card className="flex flex-row items-center justify-between p-3">
                         <div className="space-y-0.5">
                         <CardTitle className="text-md font-medium">Dark Mode</CardTitle>
-                        <CardDescription>
+                        <CardDescription className="font-light">
                             Toggle dark mode on or off.
                         </CardDescription>
                         </div>

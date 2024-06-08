@@ -241,7 +241,7 @@ export default function AccountSettingsPage() {
                         <Card x-chunk="dashboard-04-chunk-1">
                             <CardHeader>
                                 <CardTitle>Profile Icon</CardTitle>
-                                <CardDescription>
+                                <CardDescription className="font-light">
                                     Upload a new profile icon.
                                 </CardDescription>
                             </CardHeader>
@@ -262,7 +262,7 @@ export default function AccountSettingsPage() {
                         <Card x-chunk="dashboard-04-chunk-2">
                             <CardHeader>
                                 <CardTitle>Username</CardTitle>
-                                <CardDescription>
+                                <CardDescription className="font-light">
                                     Update your display name.
                                 </CardDescription>
                             </CardHeader>
@@ -284,7 +284,7 @@ export default function AccountSettingsPage() {
                         <Card x-chunk="dashboard-04-chunk-3">
                             <CardHeader>
                                 <CardTitle>Delete Account</CardTitle>
-                                <CardDescription>
+                                <CardDescription className="font-light">
                                     Delete your account permanently.
                                 </CardDescription>
                             </CardHeader>

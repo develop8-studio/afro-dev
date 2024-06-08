@@ -13,11 +13,14 @@ type MobileSheetProps = {
 export default function MobileSheet({ current }: MobileSheetProps) {
     return (
         <Sheet>
-            <SheetTrigger asChild>
-                <Button variant="outline" size="icon" className="shrink-0 md:hidden">
+            {/* <SheetTrigger asChild>
+                <Button variant="outline" size="icon" className="shrink-0 md:hidden h-[35px] w-[35px]">
                     <Menu className="h-5 w-5" />
                     <span className="sr-only">Toggle navigation menu</span>
                 </Button>
+            </SheetTrigger> */}
+            <SheetTrigger asChild>
+                <Menu className="cursor-pointer md:hidden" />
             </SheetTrigger>
             <SheetContent side="left">
                 <nav className="grid gap-6 text-lg font-medium">
