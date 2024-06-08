@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { collection, addDoc, onSnapshot } from 'firebase/firestore';
 import { db } from '@/firebase/firebaseConfig';
 import { Input } from '@/components/ui/input';
@@ -32,18 +32,18 @@ interface RoomSelectorProps {
 
 const RoomSelector: React.FC<RoomSelectorProps> = ({ currentRoom, setCurrentRoom }) => {
     const [rooms, setRooms] = useState<Room[]>([]);
-    const [newRoomName, setNewRoomName] = useState<string>('');
-    const [password, setRoomPassword] = useState<string>('');
-    const [isPasswordEnabled, setIsPasswordEnabled] = useState<boolean>(false);
-    const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
-    const [roomPassword, setRoomPasswordInput] = useState<string>('');
+    const [newRoomName, setNewRoomName] = useState('');
+    const [password, setRoomPassword] = useState('');
+    const [isPasswordEnabled, setIsPasswordEnabled] = useState(false);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [roomPassword, setRoomPasswordInput] = useState('');
     const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const unsubscribe = onSnapshot(collection(db, 'rooms'), (snapshot) => {
-            const roomsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Room));
-            setRooms(roomsData);
+        const roomsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Room));
+        setRooms(roomsData);
         });
 
         return () => unsubscribe();
@@ -52,7 +52,7 @@ const RoomSelector: React.FC<RoomSelectorProps> = ({ currentRoom, setCurrentRoom
     const createRoom = async () => {
         if (newRoomName.trim() === '') return;
 
-        const roomData: Room = { id: '', name: newRoomName };
+        const roomData: Omit<Room, 'id'> = { name: newRoomName }; // Omit<Room, 'id'>を使用してidを除外
         if (isPasswordEnabled && password.trim() !== '') {
             roomData.password = password;
         }
@@ -65,10 +65,10 @@ const RoomSelector: React.FC<RoomSelectorProps> = ({ currentRoom, setCurrentRoom
 
     const handleRoomSelect = (room: Room) => {
         if (room.password) {
-            setSelectedRoom(room);
-            setIsDialogOpen(true);
+        setSelectedRoom(room);
+        setIsDialogOpen(true);
         } else {
-            setCurrentRoom(room.id);
+        setCurrentRoom(room.id);
         }
     };
 
@@ -84,56 +84,56 @@ const RoomSelector: React.FC<RoomSelectorProps> = ({ currentRoom, setCurrentRoom
 
     return (
         <Card className="room-selector mb-5 p-5">
-            <CardTitle className="text-xl">Select Room</CardTitle>
-            <div className="create-room flex my-3">
-                <Input value={newRoomName} onChange={(e) => setNewRoomName(e.target.value)} placeholder="New Room Name" />
-                <Button onClick={createRoom} className="ml-3">Create</Button>
+        <CardTitle className="text-xl">Select Room</CardTitle>
+        <div className="create-room flex my-3">
+            <Input value={newRoomName} onChange={(e) => setNewRoomName(e.target.value)} placeholder="New Room Name" />
+            <Button onClick={createRoom} className="ml-3">Create</Button>
+        </div>
+        <div className="flex items-center space-x-2 mb-3">
+            <Checkbox id="setPassword" checked={isPasswordEnabled} onCheckedChange={(checked: boolean) => setIsPasswordEnabled(checked)} />
+            <Label htmlFor="setPassword">Set Password</Label>
+        </div>
+        {isPasswordEnabled && (
+            <Input type="password" value={password} onChange={(e) => setRoomPassword(e.target.value)} placeholder="Password" className="mb-3" />
+        )}
+        <ScrollArea className="h-[150px] rounded-md border p-3">
+            {rooms.map(room => (
+            <div key={room.id} className={`room-item ${room.id === currentRoom ? 'font-bold cursor-pointer p-1' : 'cursor-pointer p-1'}`} onClick={() => handleRoomSelect(room)}>
+                {room.name}
             </div>
-            <div className="flex items-center space-x-2 mb-3">
-                <Checkbox id="setPassword" checked={isPasswordEnabled} onCheckedChange={(checked: boolean) => setIsPasswordEnabled(checked)} />
-                <Label htmlFor="setPassword">Set Password</Label>
-            </div>
-            {isPasswordEnabled && (
-                <Input type="password" value={password} onChange={(e) => setRoomPassword(e.target.value)} placeholder="Password" className="mb-3" />
-            )}
-            <ScrollArea className="h-[150px] rounded-md border p-3">
-                {rooms.map(room => (
-                    <div key={room.id} className={`room-item ${room.id === currentRoom ? 'font-bold cursor-pointer p-1' : 'cursor-pointer p-1'}`} onClick={() => handleRoomSelect(room)}>
-                        {room.name}
-                    </div>
-                ))}
-            </ScrollArea>
+            ))}
+        </ScrollArea>
 
-            <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>Enter Room Password</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            Please enter the password to join this room.
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <Input type="password" value={roomPassword} onChange={(e) => setRoomPasswordInput(e.target.value)} placeholder="Password" className="my-2" />
-                    <AlertDialogFooter>
-                        <AlertDialogCancel onClick={() => setIsDialogOpen(false)}>Cancel</AlertDialogCancel>
-                        <AlertDialogAction onClick={handlePasswordConfirm}>Confirm</AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
+        <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <AlertDialogContent>
+            <AlertDialogHeader>
+                <AlertDialogTitle>Enter Room Password</AlertDialogTitle>
+                <AlertDialogDescription>
+                Please enter the password to join this room.
+                </AlertDialogDescription>
+            </AlertDialogHeader>
+            <Input type="password" value={roomPassword} onChange={(e) => setRoomPasswordInput(e.target.value)} placeholder="Password" className="my-2" />
+            <AlertDialogFooter>
+                <AlertDialogCancel onClick={() => setIsDialogOpen(false)}>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={handlePasswordConfirm}>Confirm</AlertDialogAction>
+            </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
+        {error && (
+            <AlertDialog open>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                <AlertDialogTitle>Error</AlertDialogTitle>
+                <AlertDialogDescription>
+                    {error}
+                </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                <AlertDialogCancel onClick={() => setError(null)}>Close</AlertDialogCancel>
+                </AlertDialogFooter>
+            </AlertDialogContent>
             </AlertDialog>
-            {error && (
-                <AlertDialog open>
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                    <AlertDialogTitle>Error</AlertDialogTitle>
-                    <AlertDialogDescription>
-                        {error}
-                    </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                    <AlertDialogCancel onClick={() => setError(null)}>Close</AlertDialogCancel>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-                </AlertDialog>
-            )}
+        )}
         </Card>
     );
 };
