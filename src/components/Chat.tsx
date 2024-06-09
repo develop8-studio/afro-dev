@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
-import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, Timestamp } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { db, storage, auth } from '@/firebase/firebaseConfig';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { onAuthStateChanged, User } from 'firebase/auth';
+import { useEffect, useState } from 'react'
+import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, Timestamp } from 'firebase/firestore'
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
+import { db, storage, auth } from '@/firebase/firebaseConfig'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { onAuthStateChanged, User } from 'firebase/auth'
+import Image from "next/image"
 
 interface Message {
     id: string;
@@ -91,7 +92,7 @@ const Chat: React.FC<ChatProps> = ({ currentRoom }) => {
                 </span>
                 </div>
                 {msg.text && <div className="message-text">{msg.text}</div>}
-                {msg.imageUrl && <img src={msg.imageUrl} alt="image" className="mt-2 max-w-xs" />}
+                {msg.imageUrl && <img src={msg.imageUrl} alt="image" className="mt-2 w-full sm:w-60 lg:w-80" />}
             </div>
             ))}
         </div>
