@@ -87,16 +87,16 @@ export default function Dashboard() {
             }
         };
         return googleLinked ? (
-            <Button variant="outline" disabled>
+            <Button variant="outline" className="rounded-full" disabled>
                 <FcGoogle className="w-[20px] h-[20px] mr-[5px] dark:hidden" />
                 <FaGoogle className="w-[17.5px] h-[17.5px] mr-[7.5px] hidden dark:block" />
                 Already linked with Google.
             </Button>
         ) : (
-            <Button onClick={handleGoogleSignIn} variant="outline">
+            <Button onClick={handleGoogleSignIn} className="rounded-full" variant="outline">
                 <FcGoogle className="w-[20px] h-[20px] mr-[5px] dark:hidden" />
                 <FaGoogle className="w-[17.5px] h-[17.5px] mr-[7.5px] hidden dark:block" />
-                Sign in with Google
+                    Sign in with Google
             </Button>
         );
     };
@@ -136,7 +136,7 @@ export default function Dashboard() {
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel onClick={() => setError(null)}>Close</AlertDialogCancel>
+                        <AlertDialogCancel onClick={() => setError(null)} className="rounded-full">Close</AlertDialogCancel>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
@@ -151,7 +151,7 @@ export default function Dashboard() {
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel onClick={() => setSuccess(false)}>Close</AlertDialogCancel>
+                        <AlertDialogCancel onClick={() => setSuccess(false)} className="rounded-full">Close</AlertDialogCancel>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>

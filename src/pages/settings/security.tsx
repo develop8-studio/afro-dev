@@ -150,7 +150,7 @@ export default function Dashboard() {
                         />
                     </CardContent>
                     <CardFooter className="border-t px-6 py-4">
-                        <Button type="submit" className="h-[20]" disabled={changingPassword || !currentPassword || !newPassword}>
+                        <Button type="submit" className="h-[20] rounded-full" disabled={changingPassword || !currentPassword || !newPassword}>
                             {changingPassword ? "Changing..." : "Save"}
                         </Button>
                     </CardFooter>
@@ -169,7 +169,7 @@ export default function Dashboard() {
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel onClick={() => setError(null)}>Close</AlertDialogCancel>
+                        <AlertDialogCancel onClick={() => setError(null)} className="rounded-full">Close</AlertDialogCancel>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
@@ -184,7 +184,7 @@ export default function Dashboard() {
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel onClick={() => setSuccess(false)}>Close</AlertDialogCancel>
+                        <AlertDialogCancel onClick={() => setSuccess(false)} className="rounded-full">Close</AlertDialogCancel>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>

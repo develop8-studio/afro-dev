@@ -101,10 +101,10 @@ export default function SignUp() {
               </div>
               <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
             </div>
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full rounded-full">
               Sign Up
             </Button>
-            <Button variant="outline" className="w-full" onClick={handleGoogleSignUp}>
+            <Button variant="outline" className="w-full rounded-full" onClick={handleGoogleSignUp}>
               <FaGoogle className="w-5 h-5 mr-[10px]" />Sign Up with Google
             </Button>
           </form>
@@ -135,7 +135,7 @@ export default function SignUp() {
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel onClick={() => setError(null)}>Close</AlertDialogCancel>
+              <AlertDialogCancel onClick={() => setError(null)} className="rounded-full">Close</AlertDialogCancel>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>

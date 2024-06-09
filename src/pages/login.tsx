@@ -107,10 +107,10 @@ export default function Dashboard() {
                 <Label htmlFor="password">Password</Label>
               <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
             </div>
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full rounded-full">
               Login
             </Button>
-            <Button variant="outline" className="w-full" onClick={handleGoogleLogin}>
+            <Button variant="outline" className="w-full rounded-full" onClick={handleGoogleLogin}>
               <FaGoogle className="w-5 h-5 mr-[10px]" />Login with Google
             </Button>
           </form>
@@ -141,7 +141,7 @@ export default function Dashboard() {
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel onClick={() => setError(null)}>Close</AlertDialogCancel>
+              <AlertDialogCancel onClick={() => setError(null)} className="rounded-full">Close</AlertDialogCancel>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>

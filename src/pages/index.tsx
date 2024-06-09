@@ -73,15 +73,15 @@ export default function Welcome() {
         </div>
         <div className="flex justify-center items-center mb-10">
           {user ? (
-            <Button className="mr-5" variant="outline" asChild>
+            <Button className="mr-5 rounded-full" variant="outline" asChild>
               <Link href="/dashboard">Dashboard<GoArrowRight className="ml-1 transition duration-150 ease-out hover:translate-x-1" size="17.5" /></Link>
             </Button>
           ) : (
             <>
-              <Button className="mr-5 font-normal" asChild>
+              <Button className="mr-5 font-normal rounded-full" asChild>
                 <Link href="/signup">Sign Up</Link>
               </Button>
-              <Button variant="secondary" className="font-normal" asChild>
+              <Button variant="secondary" className="font-normal rounded-full" asChild>
                 <Link href="/login">Login</Link>
               </Button>
             </>

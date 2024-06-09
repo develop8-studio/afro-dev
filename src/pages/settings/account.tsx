@@ -114,27 +114,6 @@ export default function AccountSettingsPage() {
         }
     };
 
-    // const handleDeleteAccount = async () => {
-    //     setDeleting(true);
-    //     try {
-    //         const user = auth.currentUser;
-    //         if (user) {
-    //             const provider = new GoogleAuthProvider();
-    //             await reauthenticateWithPopup(user, provider);
-    //             await deleteUser(user);
-    //             router.push("/signup");
-    //         }
-    //     } catch (err) {
-    //         if (err instanceof Error) {
-    //             setError(err.message);
-    //         } else {
-    //             setError("An unknown error occurred");
-    //         }
-    //     } finally {
-    //         setDeleting(false);
-    //     }
-    // };
-
     const handleDeleteAccount = async () => {
         setDeleting(true);
         try {
@@ -253,7 +232,7 @@ export default function AccountSettingsPage() {
                                     </div>
                                 </CardContent>
                                 <CardFooter className="border-t px-6 py-4">
-                                    <Button type="submit" className="h-[20]" disabled={uploadingIcon || !uploadedFile}>
+                                    <Button type="submit" className="h-[20] rounded-full" disabled={uploadingIcon || !uploadedFile}>
                                         {uploadingIcon ? "Changing..." : "Save"}
                                     </Button>
                                 </CardFooter>
@@ -275,7 +254,7 @@ export default function AccountSettingsPage() {
                                     />
                                 </CardContent>
                                 <CardFooter className="border-t px-6 py-4">
-                                    <Button type="submit" className="h-[20]" disabled={changingUsername || username === displayName}>
+                                    <Button type="submit" className="h-[20] rounded-full" disabled={changingUsername || username === displayName}>
                                         {changingUsername ? "Changing..." : "Save"}
                                     </Button>
                                 </CardFooter>
@@ -289,7 +268,7 @@ export default function AccountSettingsPage() {
                                 </CardDescription>
                             </CardHeader>
                             <CardContent>
-                                <Button variant="destructive" onClick={() => setShowDeleteDialog(true)} disabled={deleting} className="h-[20]">
+                                <Button variant="destructive" onClick={() => setShowDeleteDialog(true)} disabled={deleting} className="h-[20] rounded-full">
                                     {deleting ? 'Deleting...' : 'Delete your account'}
                                 </Button>
                             </CardContent>
@@ -307,7 +286,7 @@ export default function AccountSettingsPage() {
                             </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
-                            <AlertDialogCancel onClick={() => setError(null)}>Close</AlertDialogCancel>
+                            <AlertDialogCancel onClick={() => setError(null)} className="rounded-full">Close</AlertDialogCancel>
                         </AlertDialogFooter>
                     </AlertDialogContent>
                 </AlertDialog>
@@ -322,7 +301,7 @@ export default function AccountSettingsPage() {
                             </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
-                            <AlertDialogCancel onClick={() => setSuccess(false)}>Close</AlertDialogCancel>
+                            <AlertDialogCancel onClick={() => setSuccess(false)} className="rounded-full">Close</AlertDialogCancel>
                         </AlertDialogFooter>
                     </AlertDialogContent>
                 </AlertDialog>
@@ -344,8 +323,8 @@ export default function AccountSettingsPage() {
                                     className="mb-5"
                                 />
                             <AlertDialogFooter>
-                                <AlertDialogCancel onClick={() => setShowDeleteDialog(false)}>Cancel</AlertDialogCancel>
-                                <AlertDialogAction type="submit" disabled={deleting}>
+                                <AlertDialogCancel onClick={() => setShowDeleteDialog(false)} className="rounded-full">Cancel</AlertDialogCancel>
+                                <AlertDialogAction type="submit" disabled={deleting} className="rounded-full">
                                     {deleting ? 'Deleting...' : 'Delete Account'}
                                 </AlertDialogAction>
                             </AlertDialogFooter>

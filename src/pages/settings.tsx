@@ -85,7 +85,7 @@ export default function Dashboard() {
                     </Card>
                     </CardContent>
                     <CardFooter className="border-t px-6 py-4">
-                        <Button type="submit" className="h-[20]" disabled={!isModified}>Save</Button>
+                        <Button type="submit" className="h-[20] rounded-full" disabled={!isModified}>Save</Button>
                     </CardFooter>
                     </form>
                     </div>

@@ -82,7 +82,7 @@ export default function Header({ current }: HeaderProps) {
             {user ? (
                 <UserMenu />
             ) : (
-                <Button className="h-[35px] font-normal" asChild>
+                <Button className="h-[35px] font-normal rounded-full" asChild>
                     <Link href="/login">Login</Link>
                 </Button>
             )}
