@@ -85,7 +85,7 @@ const Chat: React.FC<ChatProps> = ({ currentRoom }) => {
                 <Input type="file" onChange={(e) => setImage(e.target.files?.[0] || null)} className="mt-3" />
                 <div className="messages flex-1 w-full mt-2">
                     {messages.map(msg => (
-                        <div key={msg.id} className="message mt-3 px-3 md:px-4 py-3 bg-slate-100 dark:bg-muted/40 rounded-md dark:border">
+                        <div key={msg.id} className="message mt-3 px-3 md:px-4 py-3 dark:bg-muted/40 rounded-md dark:border">
                             <div className="message-header flex items-center mb-2">
                                 <span className="font-bold">{msg.userName}</span>
                                 <span className="ml-2 text-xs text-gray-500 font-light">
