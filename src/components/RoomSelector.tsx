@@ -132,7 +132,7 @@ const RoomSelector: React.FC<RoomSelectorProps> = ({ currentRoom, setCurrentRoom
                         <Input value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="Search Room" className="mb-3 md:mb-5 font-light" />
                         <AlertDialog>
                             <AlertDialogTrigger asChild>
-                                <Button variant="secondary" className="font-normal w-full sm:w-auto sm:ml-3 mb-5">Create Room</Button>
+                                <Button className="w-full sm:w-auto sm:ml-3 mb-5 rounded-full">Create Room</Button>
                             </AlertDialogTrigger>
                             <AlertDialogContent>
                                 <AlertDialogHeader>
@@ -150,15 +150,15 @@ const RoomSelector: React.FC<RoomSelectorProps> = ({ currentRoom, setCurrentRoom
                                     )}
                                 </div>
                                 <AlertDialogFooter>
-                                    <AlertDialogCancel className="font-normal">Cancel</AlertDialogCancel>
-                                    <Button onClick={createRoom} className="font-normal">Create</Button>
+                                    <AlertDialogCancel className="font-normal rounded-full">Cancel</AlertDialogCancel>
+                                    <Button onClick={createRoom} className="font-normal rounded-full">Create</Button>
                                 </AlertDialogFooter>
                             </AlertDialogContent>
                         </AlertDialog>
                     </div>
                     <ScrollArea className="h-[150px] rounded-md border px-4 py-2">
                         {filteredRooms.map(room => (
-                            <div key={room.id} className={`room-item ${room.id === currentRoom ? 'border cursor-pointer p-2 my-2 bg-slate-100 dark:bg-muted/60 rounded-lg' : 'cursor-pointer p-2 my-2 dark:bg-transparent rounded-lg'}`} onClick={() => handleRoomSelect(room)}>
+                            <div key={room.id} className={`room-item ${room.id === currentRoom ? 'border cursor-pointer px-3 md:px-4 py-2 my-2 bg-slate-100 dark:bg-muted/60 rounded-full' : 'cursor-pointer px-3 md:px-4 p-2 my-2'}`} onClick={() => handleRoomSelect(room)}>
                                 {room.name}
                             </div>
                         ))}
@@ -175,8 +175,8 @@ const RoomSelector: React.FC<RoomSelectorProps> = ({ currentRoom, setCurrentRoom
                         </AlertDialogHeader>
                         <Input type="password" value={roomPassword} onChange={(e) => setRoomPasswordInput(e.target.value)} placeholder="Password" className="my-2" />
                         <AlertDialogFooter>
-                            <AlertDialogCancel onClick={() => setIsDialogOpen(false)}>Cancel</AlertDialogCancel>
-                            <AlertDialogAction onClick={handlePasswordConfirm}>Confirm</AlertDialogAction>
+                            <AlertDialogCancel onClick={() => setIsDialogOpen(false)} className="rounded-full">Cancel</AlertDialogCancel>
+                            <AlertDialogAction onClick={handlePasswordConfirm} className="rounded-full">Confirm</AlertDialogAction>
                         </AlertDialogFooter>
                     </AlertDialogContent>
                 </AlertDialog>
@@ -190,7 +190,7 @@ const RoomSelector: React.FC<RoomSelectorProps> = ({ currentRoom, setCurrentRoom
                                 </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
-                                <AlertDialogCancel onClick={() => setError(null)}>Close</AlertDialogCancel>
+                                <AlertDialogCancel onClick={() => setError(null)} className="rounded-full">Close</AlertDialogCancel>
                             </AlertDialogFooter>
                         </AlertDialogContent>
                     </AlertDialog>

@@ -119,9 +119,9 @@ export default function ProductsEditPage() {
                     <RocketIcon className="mr-2 h-4 w-4" />
                     <span>Tools</span>
                     </CommandItem></Link>
-                    <Link href="/chats"><CommandItem>
+                    <Link href="/threads"><CommandItem>
                     <FaceIcon className="mr-2 h-4 w-4" />
-                    <span>Realtime Chat</span>
+                    <span>Threads</span>
                     </CommandItem></Link>
                 </CommandGroup>
                 <CommandSeparator />
