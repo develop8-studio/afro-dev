@@ -49,14 +49,14 @@ export default function ProductsEditPage() {
         <div className="relative ml-auto flex-1 md:grow-0">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground hidden md:block" />
             <Card className="w-full rounded-lg bg-background pl-4 md:pl-8 md:w-[200px] lg:w-[350px] shadow-none" onClick={toggleDialog}>
-                <CardDescription className="text-sm py-[7.5px] hidden lg:block font-light">
+                <CardDescription className="text-sm py-[7.5px] hidden lg:block">
                     Ready to search? Hit the {" "}
                     <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
                         <span className="text-xs">⌘</span>J
                     </kbd>
                     {" "} key!
                 </CardDescription>
-                <CardDescription className="text-sm py-[7.5px] hidden md:block lg:hidden font-light">
+                <CardDescription className="text-sm py-[7.5px] hidden md:block lg:hidden">
                     Hit the {" "}
                     <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
                         <span className="text-xs">⌘</span>J

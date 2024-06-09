@@ -78,7 +78,7 @@ const Chat: React.FC<ChatProps> = ({ currentRoom, topic }) => {
         <Card className="flex flex-col h-full pt-5">
             <CardContent className="message-input flex flex-col items-center">
                 <div className="w-full flex">
-                    <Input value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Enter your message..." className="font-light" />
+                    <Input value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Enter your message..." />
                     <Button onClick={sendMessage} className="w-auto ml-3 rounded-full">Send</Button>
                 </div>
                 <Input type="file" onChange={(e) => setImage(e.target.files?.[0] || null)} className="mt-3" />

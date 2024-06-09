@@ -63,11 +63,11 @@ export default function Welcome() {
             <div className="text-center">
                 <h1 className="text-5xl font-bold mb-4">Mega-sized Ideas!</h1>
                 <div className="hidden sm:block">
-                  <p className="text-lg font-thin dark:text-slate-200">Discover convenient tools for developers, ideal for team collaboration.</p>
-                  <p className="text-lg font-thin dark:text-slate-200">And the best part? It&apos;s all open source!</p>
+                  <p className="text-20 font-thin dark:text-slate-200">Discover convenient tools for developers, ideal for team collaboration.</p>
+                  <p className="text-20 font-thin dark:text-slate-200">And the best part? It&apos;s all open source!</p>
                 </div>
                 <div className="block sm:hidden">
-                  <p className="text-lg font-extralight dark:text-white">Discover convenient tools for developers, ideal for team collaboration. And the best part? It&apos;s all open source!</p>
+                  <p className="text-lg font-thin dark:text-white">Discover convenient tools for developers, ideal for team collaboration. And the best part? It&apos;s all open source!</p>
                 </div>
             </div>
         </div>
