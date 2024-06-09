@@ -76,7 +76,6 @@ const RoomSelector: React.FC<RoomSelectorProps> = ({ currentRoom, setCurrentRoom
         setNewRoomName('');
         setIsPasswordEnabled(false);
         setRoomPassword('');
-        setIsDialogOpen(false); // Close the dialog
     };
 
     const handleRoomSelect = (room: Room) => {
@@ -127,11 +126,11 @@ const RoomSelector: React.FC<RoomSelectorProps> = ({ currentRoom, setCurrentRoom
                     </AlertDialogContent>
                 </AlertDialog>
             </div>
-            <Card className="room-selector p-5">
+            <Card className="p-5">
                 <Input value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="Search Room" className="mb-3 font-light" />
                 <ScrollArea className="h-[150px] rounded-md border p-3">
                     {filteredRooms.map(room => (
-                        <div key={room.id} className={`room-item ${room.id === currentRoom ? 'font-semibold cursor-pointer p-1' : 'cursor-pointer p-1'}`} onClick={() => handleRoomSelect(room)}>
+                        <div key={room.id} className={`room-item ${room.id === currentRoom ? 'cursor-pointer p-2 mb-2 bg-slate-200 dark:bg-muted/60 rounded-lg' : 'cursor-pointer p-2 mb-2 bg-slate-50 dark:bg-muted/20 rounded-lg'}`} onClick={() => handleRoomSelect(room)}>
                             {room.name}
                         </div>
                     ))}
