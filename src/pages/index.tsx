@@ -67,7 +67,7 @@ export default function Welcome() {
                   <p className="text-lg font-thin dark:text-slate-200">And the best part? It&apos;s all open source!</p>
                 </div>
                 <div className="block sm:hidden">
-                  <p className="text-lg font-thin dark:text-white">Discover convenient tools for developers, ideal for team collaboration. And the best part? It&apos;s all open source!</p>
+                  <p className="text-lg font-extralight dark:text-white">Discover convenient tools for developers, ideal for team collaboration. And the best part? It&apos;s all open source!</p>
                 </div>
             </div>
         </div>
@@ -78,10 +78,10 @@ export default function Welcome() {
             </Button>
           ) : (
             <>
-              <Button className="mr-5 font-normal rounded-full" asChild>
+              <Button className="mr-5 rounded-full" asChild>
                 <Link href="/signup">Sign Up</Link>
               </Button>
-              <Button variant="secondary" className="font-normal rounded-full" asChild>
+              <Button variant="secondary" className="rounded-full" asChild>
                 <Link href="/login">Login</Link>
               </Button>
             </>
@@ -91,7 +91,7 @@ export default function Welcome() {
         <Card className="text-center md:w-80 h-60 md:mr-5">
           <CardHeader className="h-20">
             <CardTitle className="font-medium">Quick Access</CardTitle>
-            <CardDescription className="font-thin">Quickly access all pages, enabling seamless support for developers.</CardDescription>
+            <CardDescription>Quickly access all pages, enabling seamless support for developers.</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="h-40 flex flex-col justify-center items-center">
@@ -104,7 +104,7 @@ export default function Welcome() {
         <Card className="text-center md:w-80 h-60 md:mr-5">
           <CardHeader className="h-20">
             <CardTitle className="font-medium">Team Features</CardTitle>
-            <CardDescription className="font-thin">Quickly access all pages, enabling seamless support for developers.</CardDescription>
+            <CardDescription>Quickly access all pages, enabling seamless support for developers.</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="h-40 flex flex-col justify-center items-center">
@@ -117,7 +117,7 @@ export default function Welcome() {
         <Card className="text-center md:w-80 h-60">
           <CardHeader className="h-20">
             <CardTitle className="font-medium">Rich Customization</CardTitle>
-            <CardDescription className="font-thin">Customize your screen to meet your preferences.</CardDescription>
+            <CardDescription>Customize your screen to meet your preferences.</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="h-40 flex flex-col  justify-center items-center">
