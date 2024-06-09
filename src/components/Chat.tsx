@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { onAuthStateChanged, User } from 'firebase/auth'
 import Image from "next/image"
 import { Card, CardContent } from '@/components/ui/card'
+import { FaceIcon, ImageIcon, SunIcon } from '@radix-ui/react-icons'
 
 interface Message {
     id: string;
@@ -75,28 +76,28 @@ const Chat: React.FC<ChatProps> = ({ currentRoom }) => {
     }
 
     return (
-        <Card className="flex flex-col h-full">
-        <CardContent className="message-input flex flex-col items-center mt-5">
-            <div className="w-full contents sm:flex">
-                <Input value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Enter your message..." className="font-light" />
-                <Button onClick={sendMessage} className="w-full sm:w-auto sm:mt-0 mt-3 sm:ml-3 font-normal">Send</Button>
-            </div>
-            <Input type="file" onChange={(e) => setImage(e.target.files?.[0] || null)} className="mt-3" />
-        </CardContent>
-        <CardContent className="messages flex-1">
-            {messages.map(msg => (
-                <div key={msg.id} className="message mb-3 p-3 bg-slate-100 dark:bg-muted/40 rounded-md">
-                    <div className="message-header flex items-center mb-2">
-                    <span className="font-bold">{msg.userName}</span>
-                    <span className="ml-2 text-xs text-gray-500 font-light">
-                        {msg.timestamp ? new Date(msg.timestamp.toDate()).toLocaleString() : 'No timestamp'}
-                    </span>
-                    </div>
-                    {msg.text && <div className="message-text">{msg.text}</div>}
-                    {msg.imageUrl && <img src={msg.imageUrl} alt="image" className="mt-2 w-full sm:w-60 lg:w-80" />}
+        <Card className="flex flex-col h-full pt-5">
+            <CardContent className="message-input flex flex-col items-center">
+                <div className="w-full contents sm:flex">
+                    <Input value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Enter your message..." className="font-light" />
+                    <Button onClick={sendMessage} className="w-full sm:w-auto sm:mt-0 mt-3 sm:ml-3 font-normal">Send</Button>
                 </div>
-            ))}
-        </CardContent>
+                <Input type="file" onChange={(e) => setImage(e.target.files?.[0] || null)} className="mt-3" />
+                <div className="messages flex-1 w-full mt-2">
+                    {messages.map(msg => (
+                        <div key={msg.id} className="message mt-3 p-3 md:p-4 bg-slate-100 dark:bg-muted/40 rounded-md dark:border">
+                            <div className="message-header flex items-center mb-2">
+                            <span className="font-bold">{msg.userName}</span>
+                            <span className="ml-2 text-xs text-gray-500 font-light">
+                                {msg.timestamp ? new Date(msg.timestamp.toDate()).toLocaleString() : 'No timestamp'}
+                            </span>
+                            </div>
+                            {msg.text && <div className="message-text">{msg.text}</div>}
+                            {msg.imageUrl && <img src={msg.imageUrl} alt="image" className="mt-2 w-full sm:w-60 lg:w-80 rounded-sm" />}
+                        </div>
+                    ))}
+                </div>
+            </CardContent>
         </Card>
     );
 }
