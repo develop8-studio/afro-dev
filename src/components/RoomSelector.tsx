@@ -128,11 +128,11 @@ const RoomSelector: React.FC<RoomSelectorProps> = ({ currentRoom, setCurrentRoom
             </div> */}
             <Card className="pt-5">
                 <CardContent>
-                    <div className="contents sm:flex justify-end">
-                        <Input value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="Search Room" className="mb-3 md:mb-5 font-light" />
+                    <div className="flex justify-end">
+                        <Input value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="Search Room" className="mb-5 font-light" />
                         <AlertDialog>
                             <AlertDialogTrigger asChild>
-                                <Button className="w-full sm:w-auto sm:ml-3 mb-5 rounded-full">Create Room</Button>
+                                <Button className="w-auto ml-3 mb-5 rounded-full">Create</Button>
                             </AlertDialogTrigger>
                             <AlertDialogContent>
                                 <AlertDialogHeader>
@@ -140,18 +140,18 @@ const RoomSelector: React.FC<RoomSelectorProps> = ({ currentRoom, setCurrentRoom
                                     <AlertDialogDescription>You can create a room by deciding on a name. You can also set a password.</AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <div className="flex flex-col gap-3">
-                                    <Input value={newRoomName} onChange={(e) => setNewRoomName(e.target.value)} placeholder="New Room Name" className="font-light" />
+                                    <Input value={newRoomName} onChange={(e) => setNewRoomName(e.target.value)} placeholder="New Room Name" />
                                     <div className="flex items-center space-x-2">
                                         <Checkbox id="setPassword" checked={isPasswordEnabled} onCheckedChange={(checked: boolean) => setIsPasswordEnabled(checked)} />
                                         <Label htmlFor="setPassword" className="font-normal">Set Password</Label>
                                     </div>
                                     {isPasswordEnabled && (
-                                        <Input type="password" value={password} onChange={(e) => setRoomPassword(e.target.value)} placeholder="Password" className="font-light" />
+                                        <Input type="password" value={password} onChange={(e) => setRoomPassword(e.target.value)} placeholder="Password" />
                                     )}
                                 </div>
                                 <AlertDialogFooter>
-                                    <AlertDialogCancel className="font-normal rounded-full">Cancel</AlertDialogCancel>
-                                    <Button onClick={createRoom} className="font-normal rounded-full">Create</Button>
+                                    <AlertDialogCancel className="rounded-full">Cancel</AlertDialogCancel>
+                                    <Button onClick={createRoom} className="rounded-full">Create</Button>
                                 </AlertDialogFooter>
                             </AlertDialogContent>
                         </AlertDialog>
