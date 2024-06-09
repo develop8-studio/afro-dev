@@ -84,16 +84,16 @@ const Chat: React.FC<ChatProps> = ({ currentRoom }) => {
         </div>
         <div className="messages flex-1">
             {messages.map(msg => (
-            <div key={msg.id} className="message mb-3 p-3 bg-slate-100 dark:bg-muted/60 rounded-md">
-                <div className="message-header flex items-center mb-2">
-                <span className="font-bold">{msg.userName}</span>
-                <span className="ml-2 text-xs text-gray-500 font-light">
-                    {msg.timestamp ? new Date(msg.timestamp.toDate()).toLocaleString() : 'No timestamp'}
-                </span>
+                <div key={msg.id} className="message mb-3 p-3 bg-slate-100 dark:bg-muted/40 rounded-md">
+                    <div className="message-header flex items-center mb-2">
+                    <span className="font-bold">{msg.userName}</span>
+                    <span className="ml-2 text-xs text-gray-500 font-light">
+                        {msg.timestamp ? new Date(msg.timestamp.toDate()).toLocaleString() : 'No timestamp'}
+                    </span>
+                    </div>
+                    {msg.text && <div className="message-text">{msg.text}</div>}
+                    {msg.imageUrl && <img src={msg.imageUrl} alt="image" className="mt-2 w-full sm:w-60 lg:w-80" />}
                 </div>
-                {msg.text && <div className="message-text">{msg.text}</div>}
-                {msg.imageUrl && <img src={msg.imageUrl} alt="image" className="mt-2 w-full sm:w-60 lg:w-80" />}
-            </div>
             ))}
         </div>
         </div>

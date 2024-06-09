@@ -115,24 +115,24 @@ export default function ProductsEditPage() {
                 <CommandList>
                 <CommandEmpty>No results found.</CommandEmpty>
                 <CommandGroup heading="Suggestions">
-                    <CommandItem>
-                    <FaceIcon className="mr-2 h-4 w-4" />
-                    <span>Search Emoji</span>
-                    </CommandItem>
-                    <CommandItem>
+                    <Link href="/tools"><CommandItem>
                     <RocketIcon className="mr-2 h-4 w-4" />
-                    <span>Create New Order</span>
-                    </CommandItem>
+                    <span>Tools</span>
+                    </CommandItem></Link>
+                    <Link href="/chats"><CommandItem>
+                    <FaceIcon className="mr-2 h-4 w-4" />
+                    <span>Realtime Chat</span>
+                    </CommandItem></Link>
                 </CommandGroup>
                 <CommandSeparator />
                 <CommandGroup heading="Settings">
-                    <Link href="/settings/account"><CommandItem>
-                    <PersonIcon className="mr-2 h-4 w-4" />
-                    <span>Account</span>
-                    </CommandItem></Link>
                     <Link href="/settings"><CommandItem>
-                    <GearIcon className="mr-2 h-4 w-4" />
-                    <span>Settings</span>
+                        <GearIcon className="mr-2 h-4 w-4" />
+                        <span>General</span>
+                    </CommandItem></Link>
+                    <Link href="/settings/account"><CommandItem>
+                        <PersonIcon className="mr-2 h-4 w-4" />
+                        <span>Account</span>
                     </CommandItem></Link>
                 </CommandGroup>
                 </CommandList>
