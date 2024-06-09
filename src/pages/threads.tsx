@@ -14,7 +14,7 @@ export default function DashboardPage() {
       <Head>
         <title>Threads -Afro.dev</title>
       </Head>
-      <Header current="chats" />
+      <Header current="threads" />
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 bg-slate-50 dark:bg-muted/40">
         <RoomSelector currentRoom={currentRoom} setCurrentRoom={setCurrentRoom} />
         {currentRoom && <Chat currentRoom={currentRoom} />}
