@@ -99,7 +99,7 @@ const RoomSelector: React.FC<RoomSelectorProps> = ({ currentRoom, setCurrentRoom
 
     return (
         <div>
-            <div className="flex justify-end mb-3">
+            {/* <div className="flex justify-end mb-3">
                 <AlertDialog>
                     <AlertDialogTrigger asChild>
                         <Button variant="outline" className="font-normal">Create Room</Button>
@@ -125,9 +125,36 @@ const RoomSelector: React.FC<RoomSelectorProps> = ({ currentRoom, setCurrentRoom
                         </AlertDialogFooter>
                     </AlertDialogContent>
                 </AlertDialog>
-            </div>
+            </div> */}
             <Card className="p-5">
-                <Input value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="Search Room" className="mb-3 font-light" />
+                <div className="contents sm:flex justify-end mb-3">
+                    <Input value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="Search Room" className="mb-3 font-light" />
+                    <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                            <Button variant="secondary" className="font-normal w-full mb-3 sm:w-auto sm:ml-3 sm:mb-0">Create Room</Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>Create a Room</AlertDialogTitle>
+                                <AlertDialogDescription>You can create a room by deciding on a name. You can also set a password.</AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <div className="flex flex-col gap-3">
+                                <Input value={newRoomName} onChange={(e) => setNewRoomName(e.target.value)} placeholder="New Room Name" className="font-light" />
+                                <div className="flex items-center space-x-2">
+                                    <Checkbox id="setPassword" checked={isPasswordEnabled} onCheckedChange={(checked: boolean) => setIsPasswordEnabled(checked)} />
+                                    <Label htmlFor="setPassword" className="font-normal">Set Password</Label>
+                                </div>
+                                {isPasswordEnabled && (
+                                    <Input type="password" value={password} onChange={(e) => setRoomPassword(e.target.value)} placeholder="Password" className="font-light" />
+                                )}
+                            </div>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel className="font-normal">Cancel</AlertDialogCancel>
+                                <Button onClick={createRoom} className="font-normal">Create</Button>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
+                </div>
                 <ScrollArea className="h-[150px] rounded-md border p-3">
                     {filteredRooms.map(room => (
                         <div key={room.id} className={`room-item ${room.id === currentRoom ? 'cursor-pointer p-2 mb-2 bg-slate-200 dark:bg-muted/60 rounded-lg' : 'cursor-pointer p-2 mb-2 bg-slate-50 dark:bg-muted/20 rounded-lg'}`} onClick={() => handleRoomSelect(room)}>

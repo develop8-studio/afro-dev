@@ -6,8 +6,6 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
 export default function DashboardPage() {
-    useAuthRedirect();
-
     return (
         <div className="flex min-h-screen w-full flex-col">
         <Head>
