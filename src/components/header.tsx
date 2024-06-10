@@ -1,7 +1,6 @@
 import React from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { Si9Gag } from "react-icons/si"
 
 import SearchMenu from "@/components/search"
 import UserMenu from "@/components/user"
@@ -44,11 +43,9 @@ export default function Header({ current }: HeaderProps) {
     }, []);
 
     return (
-        <header className="sticky top-0 flex h-16 items-center gap-5 bg-background px-5 md:px-5 border-b z-10">
+        <header className="sticky top-0 flex h-16 items-center gap-5 bg-background px-5 border-b z-10">
             <nav className="hidden flex-col gap-6 text-lg font-normal md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
                 <Link href="/" className="flex items-center gap-2 text-lg font-semibold md:text-base">
-                    {/* <Si9Gag className="h-6 w-6" />
-                    <span className="sr-only">Afro</span> */}
                     <Image src="/afro-dark-logo.png" alt="" width={25} height={25} className="block dark:hidden transition duration-150 ease-out hover:rotate-45" />
                     <Image src="/afro-white-logo.png" alt="" width={25} height={25} className="hidden dark:block transition duration-150 ease-out hover:rotate-45" />
                 </Link>
@@ -67,22 +64,18 @@ export default function Header({ current }: HeaderProps) {
                 <Link href="/threads" className={`${current === "threads" ? 'text-foreground' : 'text-muted-foreground'} transition-colors hover:text-foreground`}>
                     Threads
                 </Link>
-                {/* <Link href="/customers" className={`${current === "customers" ? 'text-foreground' : 'text-muted-foreground'} font-light transition-colors hover:text-foreground`}>
-                    Customers
-                </Link>
-                <Link href="/analytics" className={`${current === "analytics" ? 'text-foreground' : 'text-muted-foreground'} font-light transition-colors hover:text-foreground`}>
-                    Analytics
-                </Link> */}
                 <Link href="/settings" className={`${current === "settings" ? 'text-foreground' : 'text-muted-foreground'} transition-colors hover:text-foreground`}>
                     Settings
                 </Link>
             </nav>
-            <MobileSheet current={current} />
+            <div className="w-full">
+                <MobileSheet current={current} />
+            </div>
             <SearchMenu />
             {user ? (
                 <UserMenu />
             ) : (
-                <Button className="h-[35px] font-normal rounded-full" asChild>
+                <Button className="h-[35px]" asChild>
                     <Link href="/login">Login</Link>
                 </Button>
             )}
