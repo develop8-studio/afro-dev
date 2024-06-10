@@ -87,13 +87,13 @@ export default function Dashboard() {
             }
         };
         return googleLinked ? (
-            <Button variant="outline" className="rounded-full" disabled>
+            <Button variant="outline" disabled>
                 <FcGoogle className="w-[20px] h-[20px] mr-[5px] dark:hidden" />
                 <FaGoogle className="w-[17.5px] h-[17.5px] mr-[7.5px] hidden dark:block" />
                 Already linked with Google.
             </Button>
         ) : (
-            <Button onClick={handleGoogleSignIn} className="rounded-full" variant="outline">
+            <Button onClick={handleGoogleSignIn} variant="outline">
                 <FcGoogle className="w-[20px] h-[20px] mr-[5px] dark:hidden" />
                 <FaGoogle className="w-[17.5px] h-[17.5px] mr-[7.5px] hidden dark:block" />
                     Sign in with Google
@@ -117,7 +117,7 @@ export default function Dashboard() {
                 <Card x-chunk="dashboard-04-chunk-1">
                     <CardHeader>
                         <CardTitle>Integration</CardTitle>
-                        <CardDescription className="font-light">Link your account with Google.</CardDescription>
+                        <CardDescription>Link your account with Google.</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <GoogleSignInButton />
@@ -136,7 +136,7 @@ export default function Dashboard() {
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel onClick={() => setError(null)} className="rounded-full">Close</AlertDialogCancel>
+                        <AlertDialogCancel onClick={() => setError(null)}>Close</AlertDialogCancel>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
@@ -151,7 +151,7 @@ export default function Dashboard() {
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel onClick={() => setSuccess(false)} className="rounded-full">Close</AlertDialogCancel>
+                        <AlertDialogCancel onClick={() => setSuccess(false)}>Close</AlertDialogCancel>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>

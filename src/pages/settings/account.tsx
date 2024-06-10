@@ -22,7 +22,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import {
     AlertDialog,
     AlertDialogAction,
@@ -33,39 +33,26 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+} from "@/components/ui/alert-dialog"
 
-import { FormEvent, useState, useEffect } from "react";
+import { FormEvent, useState, useEffect } from "react"
 import { useRouter } from "next/router";
-import { getAuth, updateProfile, GoogleAuthProvider, signInWithPopup, reauthenticateWithPopup, deleteUser } from "firebase/auth";
-import { collection, getFirestore, doc, updateDoc, getDoc, setDoc, deleteDoc } from "firebase/firestore";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getAuth, updateProfile, GoogleAuthProvider, signInWithPopup, reauthenticateWithPopup, deleteUser } from "firebase/auth"
+import { collection, getFirestore, doc, updateDoc, getDoc, setDoc, deleteDoc } from "firebase/firestore"
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage"
 
-import Header from "@/components/header";
-import SearchMenu from "@/components/search";
-import UserMenu from "@/components/user";
-import SettingsMenu from "@/components/settings";
-import MobileSheet from "@/components/mobile-sheet";
+import Header from "@/components/header"
+import SearchMenu from "@/components/search"
+import UserMenu from "@/components/user"
+import SettingsMenu from "@/components/settings"
+import MobileSheet from "@/components/mobile-sheet"
 
-import useAuthRedirect from '@/components/useAuthRedirect';
-import { initializeApp } from "firebase/app";
+import useAuthRedirect from '@/components/useAuthRedirect'
+import { initializeApp } from "firebase/app"
 
-const firebaseConfig = {
-    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-    appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-};
-
-const app = initializeApp(firebaseConfig);
+import { db, storage, auth } from '@/firebase/firebaseConfig'
 
 export default function AccountSettingsPage() {
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    const storage = getStorage(app);
-
     const [username, setUsername] = useState("");
     const [displayName, setDisplayName] = useState("");
     const [error, setError] = useState<string | null>(null);
@@ -220,7 +207,7 @@ export default function AccountSettingsPage() {
                         <Card x-chunk="dashboard-04-chunk-1">
                             <CardHeader>
                                 <CardTitle>Profile Icon</CardTitle>
-                                <CardDescription className="font-light">
+                                <CardDescription>
                                     Upload a new profile icon.
                                 </CardDescription>
                             </CardHeader>
@@ -232,7 +219,7 @@ export default function AccountSettingsPage() {
                                     </div>
                                 </CardContent>
                                 <CardFooter className="border-t px-6 py-4">
-                                    <Button type="submit" className="h-[20] rounded-full" disabled={uploadingIcon || !uploadedFile}>
+                                    <Button type="submit" className="h-[20]" disabled={uploadingIcon || !uploadedFile}>
                                         {uploadingIcon ? "Changing..." : "Save"}
                                     </Button>
                                 </CardFooter>
@@ -241,7 +228,7 @@ export default function AccountSettingsPage() {
                         <Card x-chunk="dashboard-04-chunk-2">
                             <CardHeader>
                                 <CardTitle>Username</CardTitle>
-                                <CardDescription className="font-light">
+                                <CardDescription>
                                     Update your display name.
                                 </CardDescription>
                             </CardHeader>
@@ -254,7 +241,7 @@ export default function AccountSettingsPage() {
                                     />
                                 </CardContent>
                                 <CardFooter className="border-t px-6 py-4">
-                                    <Button type="submit" className="h-[20] rounded-full" disabled={changingUsername || username === displayName}>
+                                    <Button type="submit" className="h-[20]" disabled={changingUsername || username === displayName}>
                                         {changingUsername ? "Changing..." : "Save"}
                                     </Button>
                                 </CardFooter>
@@ -263,12 +250,12 @@ export default function AccountSettingsPage() {
                         <Card x-chunk="dashboard-04-chunk-3">
                             <CardHeader>
                                 <CardTitle>Delete Account</CardTitle>
-                                <CardDescription className="font-light">
+                                <CardDescription>
                                     Delete your account permanently.
                                 </CardDescription>
                             </CardHeader>
                             <CardContent>
-                                <Button variant="destructive" onClick={() => setShowDeleteDialog(true)} disabled={deleting} className="h-[20] rounded-full">
+                                <Button variant="destructive" onClick={() => setShowDeleteDialog(true)} disabled={deleting} className="h-[20]">
                                     {deleting ? 'Deleting...' : 'Delete your account'}
                                 </Button>
                             </CardContent>
@@ -286,7 +273,7 @@ export default function AccountSettingsPage() {
                             </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
-                            <AlertDialogCancel onClick={() => setError(null)} className="rounded-full">Close</AlertDialogCancel>
+                            <AlertDialogCancel onClick={() => setError(null)}>Close</AlertDialogCancel>
                         </AlertDialogFooter>
                     </AlertDialogContent>
                 </AlertDialog>
@@ -301,7 +288,7 @@ export default function AccountSettingsPage() {
                             </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
-                            <AlertDialogCancel onClick={() => setSuccess(false)} className="rounded-full">Close</AlertDialogCancel>
+                            <AlertDialogCancel onClick={() => setSuccess(false)}>Close</AlertDialogCancel>
                         </AlertDialogFooter>
                     </AlertDialogContent>
                 </AlertDialog>
@@ -323,8 +310,8 @@ export default function AccountSettingsPage() {
                                     className="mb-5"
                                 />
                             <AlertDialogFooter>
-                                <AlertDialogCancel onClick={() => setShowDeleteDialog(false)} className="rounded-full">Cancel</AlertDialogCancel>
-                                <AlertDialogAction type="submit" disabled={deleting} className="rounded-full">
+                                <AlertDialogCancel onClick={() => setShowDeleteDialog(false)}>Cancel</AlertDialogCancel>
+                                <AlertDialogAction type="submit" disabled={deleting}>
                                     {deleting ? 'Deleting...' : 'Delete Account'}
                                 </AlertDialogAction>
                             </AlertDialogFooter>

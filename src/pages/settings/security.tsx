@@ -44,24 +44,13 @@ import { useRouter } from "next/router";
 import { getAuth, signOut, updateProfile, GoogleAuthProvider, signInWithPopup, reauthenticateWithPopup, deleteUser, EmailAuthProvider, updatePassword } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 
-import Header from "@/components/header";
-import SearchMenu from "@/components/search";
-import UserMenu from "@/components/user";
-import SettingsMenu from "@/components/settings";
-import MobileSheet from "@/components/mobile-sheet";
+import Header from "@/components/header"
+import SearchMenu from "@/components/search"
+import UserMenu from "@/components/user"
+import SettingsMenu from "@/components/settings"
+import MobileSheet from "@/components/mobile-sheet"
 
-const firebaseConfig = {
-    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-    appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-
+import { db, storage, auth } from '@/firebase/firebaseConfig'
 export default function Dashboard() {
     const auth = getAuth();
     const [username, setUsername] = useState("");
@@ -127,7 +116,7 @@ export default function Dashboard() {
             <Card x-chunk="dashboard-04-chunk-1">
                 <CardHeader>
                     <CardTitle>Change Password</CardTitle>
-                    <CardDescription className="font-light">
+                    <CardDescription>
                         Update your account password.
                     </CardDescription>
                 </CardHeader>
@@ -150,7 +139,7 @@ export default function Dashboard() {
                         />
                     </CardContent>
                     <CardFooter className="border-t px-6 py-4">
-                        <Button type="submit" className="h-[20] rounded-full" disabled={changingPassword || !currentPassword || !newPassword}>
+                        <Button type="submit" className="h-[20]" disabled={changingPassword || !currentPassword || !newPassword}>
                             {changingPassword ? "Changing..." : "Save"}
                         </Button>
                     </CardFooter>

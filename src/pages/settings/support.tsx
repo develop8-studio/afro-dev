@@ -41,7 +41,7 @@ export default function SupportPage() {
                         <Card x-chunk="dashboard-04-chunk-1">
                             <CardHeader>
                                 <CardTitle>Account Creation</CardTitle>
-                                <CardDescription className="font-light">Creating an account is simple and flexible. You can sign up using your email and a password, or you can link your Google account for a quicker setup.</CardDescription>
+                                <CardDescription>Creating an account is simple and flexible. You can sign up using your email and a password, or you can link your Google account for a quicker setup.</CardDescription>
                             </CardHeader>
                             <CardContent>
                                 <Accordion type="single" collapsible className="mx-5">
@@ -57,7 +57,7 @@ export default function SupportPage() {
                         <Card x-chunk="dashboard-04-chunk-2">
                             <CardHeader>
                                 <CardTitle>Profile Settings</CardTitle>
-                                <CardDescription className="font-light">Once your account is created, you can personalize your profile by setting your icon and username through the Settings page.</CardDescription>
+                                <CardDescription>Once your account is created, you can personalize your profile by setting your icon and username through the Settings page.</CardDescription>
                             </CardHeader>
                             <CardContent>
                                 <Accordion type="single" collapsible className="mx-5">

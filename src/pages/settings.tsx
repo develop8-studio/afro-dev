@@ -71,7 +71,7 @@ export default function Dashboard() {
                     <Card className="flex flex-row items-center justify-between p-3">
                         <div className="space-y-0.5">
                         <CardTitle className="text-md font-medium">Dark Mode</CardTitle>
-                        <CardDescription className="font-light">
+                        <CardDescription>
                             Toggle dark mode on or off.
                         </CardDescription>
                         </div>
@@ -85,7 +85,7 @@ export default function Dashboard() {
                     </Card>
                     </CardContent>
                     <CardFooter className="border-t px-6 py-4">
-                        <Button type="submit" className="h-[20] rounded-full" disabled={!isModified}>Save</Button>
+                        <Button type="submit" className="h-[20]" disabled={!isModified}>Save</Button>
                     </CardFooter>
                     </form>
                     </div>

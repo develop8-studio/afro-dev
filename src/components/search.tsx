@@ -71,7 +71,7 @@ export default function ProductsEditPage() {
                 <FaRegBell />
             </Card> */}
             <div className="flex mb-1">
-                <IoSearch onClick={toggleDialog} size="22.5" className="text-slate-500 cursor-pointer mr-2.5" />
+                <IoSearch onClick={toggleDialog} size="22.5" className="text-slate-500 cursor-pointer mr-3" />
                 <FaRegBell size="22.5" className="text-slate-500 cursor-pointer " />
             </div>
             {/* <Input
