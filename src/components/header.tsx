@@ -45,9 +45,9 @@ export default function Header({ current }: HeaderProps) {
     return (
         <header className="sticky top-0 flex h-16 items-center gap-5 bg-background px-5 border-b z-10">
             <nav className="hidden flex-col gap-6 text-lg font-normal md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
-                <Link href="/" className="flex items-center gap-2 text-lg font-semibold md:text-base">
-                    <Image src="/afro-dark-logo.png" alt="" width={25} height={25} className="block dark:hidden transition duration-150 ease-out hover:rotate-45" />
-                    <Image src="/afro-white-logo.png" alt="" width={25} height={25} className="hidden dark:block transition duration-150 ease-out hover:rotate-45" />
+                <Link href="/" className="hidden md:flex items-center gap-2 text-lg font-semibold md:text-base">
+                    <Image src="/afro-dark-logo.png" alt="" width={100} height={100} className="w-auto h-auto max-w-[27.5px] lg:max-w-[27.5px] block dark:hidden transition duration-150 ease-out hover:rotate-45" />
+                    <Image src="/afro-white-logo.png" alt="" width={100} height={100} className="hidden dark:block w-auto h-auto max-w-[27.5px] lg:max-w-[27.5px] transition duration-150 ease-out hover:rotate-45" />
                 </Link>
                 <Link href="/dashboard" className={`${current === "dashboard" ? 'text-foreground' : 'text-muted-foreground'} transition-colors hover:text-foreground`}>
                     Dashboard

@@ -70,9 +70,9 @@ export default function ProductsEditPage() {
                 </CardDescription>
                 <FaRegBell />
             </Card> */}
-            <div className="flex">
+            <div className="flex mb-1">
                 <IoSearch onClick={toggleDialog} size="22.5" className="text-slate-500 cursor-pointer mr-2.5" />
-                <FaRegBell size="22.5" className="text-slate-500 cursor-pointer mr-1" />
+                <FaRegBell size="22.5" className="text-slate-500 cursor-pointer " />
             </div>
             {/* <Input
                 type="search"
