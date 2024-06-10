@@ -42,6 +42,7 @@ const RoomSelector: React.FC<RoomSelectorProps> = ({ currentRoom, setCurrentRoom
     const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState('');
+    const [isHidden, setIsHidden] = useState(false); // 表示・非表示の状態を管理
 
     useEffect(() => {
         const unsubscribe = onSnapshot(collection(db, 'rooms', topic, 'rooms'), (snapshot) => {
@@ -97,47 +98,57 @@ const RoomSelector: React.FC<RoomSelectorProps> = ({ currentRoom, setCurrentRoom
         }
     };
 
+    const toggleVisibility = () => {
+        setIsHidden(!isHidden);
+    };
+
     return (
         <div>
             <Card className="pt-5">
                 <CardContent>
-                    <div className="flex justify-end">
-                        <Input value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="Search Threads" className="mb-5" />
-                        <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                                <Button className="w-auto ml-3 mb-5 rounded-full">Create</Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                                <AlertDialogHeader>
-                                    <AlertDialogTitle>Create a Thread</AlertDialogTitle>
-                                    <AlertDialogDescription>You can create a thread by deciding on a name. You can also set a password.</AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <div className="flex flex-col gap-3">
-                                    <Input value={newRoomName} onChange={(e) => setNewRoomName(e.target.value)} placeholder="New Thread Name" />
-                                    <div className="flex items-center space-x-2">
-                                        <Checkbox id="setPassword" checked={isPasswordEnabled} onCheckedChange={(checked: boolean) => setIsPasswordEnabled(checked)} />
-                                        <Label htmlFor="setPassword" className="font-normal">Set Password</Label>
+                    <div className="contents sm:flex justify-between items-center">
+                        <Input value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="Search Threads" className="w-full" />
+                        <div className="flex">
+                            <Button className="w-full sm:w-auto sm:ml-3 mt-3 sm:mt-0" onClick={toggleVisibility}>
+                                {isHidden ? 'Show' : 'Hide'} Threads
+                            </Button>
+                            <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                    <Button className="w-full sm:w-auto ml-3 mt-3 sm:mt-0">Create</Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                        <AlertDialogTitle>Create a Thread</AlertDialogTitle>
+                                        <AlertDialogDescription>You can create a thread by deciding on a name. You can also set a password.</AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <div className="flex flex-col gap-3">
+                                        <Input value={newRoomName} onChange={(e) => setNewRoomName(e.target.value)} placeholder="New Thread Name" />
+                                        <div className="flex items-center space-x-2">
+                                            <Checkbox id="setPassword" checked={isPasswordEnabled} onCheckedChange={(checked: boolean) => setIsPasswordEnabled(checked)} />
+                                            <Label htmlFor="setPassword" className="font-normal">Set Password</Label>
+                                        </div>
+                                        {isPasswordEnabled && (
+                                            <Input type="password" value={password} onChange={(e) => setRoomPassword(e.target.value)} placeholder="Password" />
+                                        )}
                                     </div>
-                                    {isPasswordEnabled && (
-                                        <Input type="password" value={password} onChange={(e) => setRoomPassword(e.target.value)} placeholder="Password" />
-                                    )}
-                                </div>
-                                <AlertDialogFooter>
-                                    <AlertDialogCancel className="rounded-full">Cancel</AlertDialogCancel>
-                                    <Button onClick={createRoom} className="rounded-full">Create</Button>
-                                </AlertDialogFooter>
-                            </AlertDialogContent>
-                        </AlertDialog>
+                                    <AlertDialogFooter>
+                                        <AlertDialogCancel className="rounded-full">Cancel</AlertDialogCancel>
+                                        <Button onClick={createRoom} className="rounded-full">Create</Button>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
+                        </div>
                     </div>
-                    <ScrollArea className="h-[150px] rounded-md border px-4 py-2">
-                        {filteredRooms.map(room => (
-                            <div key={room.id} className={`room-item ${room.id === currentRoom ? 'border cursor-pointer px-4 py-2 my-2 bg-slate-100 dark:bg-muted/60 rounded-full' : 'cursor-pointer px-4 p-2 my-2'}`} onClick={() => handleRoomSelect(room)}>
-                                {room.name}
-                            </div>
-                        ))}
-                    </ScrollArea>
+                    {!isHidden && (
+                        <ScrollArea className="h-[150px] rounded-md border px-4 py-2.5 mt-5">
+                            {filteredRooms.map(room => (
+                                <div key={room.id} className={`room-item ${room.id === currentRoom ? 'border cursor-pointer px-4 py-2 my-2 bg-slate-100 dark:bg-muted/60 rounded-full' : 'cursor-pointer px-4 p-2 my-2'}`} onClick={() => handleRoomSelect(room)}>
+                                    {room.name}
+                                </div>
+                            ))}
+                        </ScrollArea>
+                    )}
                 </CardContent>
-
                 <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                     <AlertDialogContent>
                         <AlertDialogHeader>
@@ -148,8 +159,8 @@ const RoomSelector: React.FC<RoomSelectorProps> = ({ currentRoom, setCurrentRoom
                         </AlertDialogHeader>
                         <Input type="password" value={roomPassword} onChange={(e) => setRoomPasswordInput(e.target.value)} placeholder="Password" className="my-2" />
                         <AlertDialogFooter>
-                            <AlertDialogCancel onClick={() => setIsDialogOpen(false)} className="rounded-full">Cancel</AlertDialogCancel>
-                            <AlertDialogAction onClick={handlePasswordConfirm} className="rounded-full">Confirm</AlertDialogAction>
+                            <AlertDialogCancel onClick={() => setIsDialogOpen(false)}>Cancel</AlertDialogCancel>
+                            <AlertDialogAction onClick={handlePasswordConfirm}>Confirm</AlertDialogAction>
                         </AlertDialogFooter>
                     </AlertDialogContent>
                 </AlertDialog>
@@ -163,7 +174,7 @@ const RoomSelector: React.FC<RoomSelectorProps> = ({ currentRoom, setCurrentRoom
                                 </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
-                                <AlertDialogCancel onClick={() => setError(null)} className="rounded-full">Close</AlertDialogCancel>
+                                <AlertDialogCancel onClick={() => setError(null)}>Close</AlertDialogCancel>
                             </AlertDialogFooter>
                         </AlertDialogContent>
                     </AlertDialog>
