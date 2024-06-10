@@ -13,14 +13,22 @@ import { Button } from "@/components/ui/button"
 interface Room {
   id: number;
   name: string;
-  imageUrl: string;
   link: string;
   description: string;
 }
 
 const roomsData: Room[] = [
-  { id: 1, name: "Next.js", imageUrl: '/threads/nextjs.png', link: '/threads/nextjs', description: "Next.js simplifies building React applications with features like server-side rendering and automatic code splitting." },
-  { id: 2, name: 'TypeScript', imageUrl: '/threads/typescript.png', link: '/threads/typescript', description: "TypeScript enhances JavaScript with static typing, helping catch errors early and improving code maintainability." },
+  { id: 1, name: "React", link: '/threads/react', description: "A JavaScript library for building user interfaces, maintained by Facebook. Emphasizes reusable components and efficient rendering." },
+  { id: 2, name: "Vue.js", link: '/threads/vuejs', description: "A progressive framework for building user interfaces and single-page applications. Known for its simplicity and flexibility." },
+  { id: 3, name: "Angular", link: '/threads/angular', description: "A JavaScript library for building user interfaces, maintained by Facebook. Emphasizes reusable components and efficient rendering." },
+  { id: 4, name: "Svelte", link: '/threads/svelte', description: "Compiles code to highly efficient JavaScript at build time, resulting in faster applications with smaller bundles." },
+  { id: 5, name: "Next.js", link: '/threads/nextjs', description: "A React-based framework for server-rendered or statically-exported React applications, known for its performance and developer experience." },
+
+  { id: 6, name: "Python", link: '/threads/python', description: "An interpreted, high-level language known for its readability and wide usage in web development, data science, and more." },
+  { id: 7, name: "JavaScript", link: '/threads/javascript', description: "A core technology of the web, enabling interactive web pages. Essential for front-end development alongside HTML and CSS." },
+  { id: 8, name: "Java", link: '/threads/java', description: "A class-based, object-oriented language that follows the write-once, run-anywhere principle. Popular in enterprise environments." },
+  { id: 9, name: "TypeScript", link: '/threads/typescript', description: "A superset of JavaScript that adds static typing, designed for large-scale applications. Developed by Microsoft." },
+  { id: 10, name: "C#", link: '/threads/csharp', description: "A modern, object-oriented language developed by Microsoft, used in a wide range of applications including web, desktop, and games." },
 ];
 
 roomsData.sort((a, b) => a.name.localeCompare(b.name));
@@ -29,7 +37,6 @@ export default function DashboardPage() {
   useAuthRedirect();
 
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
 
   const filteredRooms = roomsData.filter(room =>
     room.name.toLowerCase().includes(searchQuery.toLowerCase())
