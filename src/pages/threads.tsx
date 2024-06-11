@@ -57,10 +57,10 @@ const DescriptionWithReadMore = ({ description }: { description: string }) => {
 
   return (
     <div>
-      <CardDescription className="text-slate-400">
+      <CardDescription className="text-slate-400 mb-2.5">
         {isExpanded ? description : `${description.slice(0, 175)}...`}
       </CardDescription>
-      <Button variant="link" onClick={toggleExpand} className="p-0">
+      <Button variant="link" onClick={toggleExpand} className="p-0 h-0">
         {isExpanded ? 'Read less' : 'Read more'}
       </Button>
     </div>
