@@ -27,6 +27,7 @@ import { Input } from "@/components/ui/input"
 import { Card, CardDescription } from "@/components/ui/card"
 import { FaRegBell } from "react-icons/fa6"
 import { IoSearch } from "react-icons/io5"
+import { FiBell, FiSearch } from "react-icons/fi"
 
 export default function ProductsEditPage() {
     const [open, setOpen] = React.useState(false)
@@ -70,9 +71,9 @@ export default function ProductsEditPage() {
                 </CardDescription>
                 <FaRegBell />
             </Card> */}
-            <div className="flex mb-1">
-                <IoSearch onClick={toggleDialog} size="22.5" className="text-slate-500 cursor-pointer mr-3" />
-                <FaRegBell size="22.5" className="text-slate-500 cursor-pointer " />
+            <div className="flex">
+                <FiSearch onClick={toggleDialog} size="22.5" className="text-slate-500 cursor-pointer mr-3" />
+                <FiBell size="22.5" className="text-slate-500 cursor-pointer " />
             </div>
             {/* <Input
                 type="search"

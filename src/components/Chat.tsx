@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { onAuthStateChanged, User } from 'firebase/auth'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { FaHeart } from "react-icons/fa"
 
 interface Message {
     id: string;
@@ -28,6 +29,7 @@ const Chat: React.FC<ChatProps> = ({ currentRoom, topic }) => {
     const [image, setImage] = useState<File | null>(null);
     const [roomName, setRoomName] = useState<string>('');
     const [userIcons, setUserIcons] = useState<{ [userId: string]: string }>({}); // ユーザーのアイコンURLを保持するstate
+    const [uploadButtonVariant, setUploadButtonVariant] = useState<'outline' | 'secondary'>('outline');
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     // 一文字目を大文字に変える関数
@@ -85,6 +87,12 @@ const Chat: React.FC<ChatProps> = ({ currentRoom, topic }) => {
         }
     };
 
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0] || null;
+        setImage(file);
+        setUploadButtonVariant(file ? 'secondary' : 'outline');
+    };
+
     const sendMessage = async () => {
         if (!message.trim() && !image) return;
 
@@ -106,6 +114,7 @@ const Chat: React.FC<ChatProps> = ({ currentRoom, topic }) => {
 
             setMessage('');
             setImage(null);
+            setUploadButtonVariant('outline');
             if (fileInputRef.current) {
                 fileInputRef.current.value = '';
             }
@@ -124,9 +133,18 @@ const Chat: React.FC<ChatProps> = ({ currentRoom, topic }) => {
             <CardContent className="flex flex-col items-center w-full">
                 <div className="w-full flex items-center mb-3">
                     <Input value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Enter your message..." />
+                    <Button onClick={() => fileInputRef.current?.click()} className="ml-3 hidden sm:block" variant={uploadButtonVariant}>
+                        Upload
+                        <input
+                            ref={fileInputRef}
+                            type="file"
+                            onChange={handleImageChange}
+                            style={{ display: 'none' }}
+                        />
+                    </Button>
                     <Button onClick={sendMessage} className="ml-3">Send</Button>
                 </div>
-                <Input ref={fileInputRef} type="file" onChange={(e) => setImage(e.target.files?.[0] || null)} className="mb-3" />
+                <Input ref={fileInputRef} type="file" onChange={handleImageChange} className="mb-3 block sm:hidden" />
                 <div className="mt-3 flex-1 w-full space-y-3">
                     {messages.map(msg => (
                         <div key={msg.id} className="p-3 dark:bg-muted/40 rounded-md dark:border">

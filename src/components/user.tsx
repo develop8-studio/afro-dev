@@ -9,7 +9,6 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-
 import {
     AlertDialog,
     AlertDialogAction,
@@ -20,36 +19,33 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+} from "@/components/ui/alert-dialog"
+import {
+    Cloud,
+    CreditCard,
+    Keyboard,
+    LifeBuoy,
+    LogOut,
+    Mail,
+    MessageSquare,
+    Plus,
+    PlusCircle,
+    Settings,
+    UserPlus,
+    Users,
+    User
+} from "lucide-react"
+import { FaRegUser } from "react-icons/fa6"
 
-import { FaRegUser } from "react-icons/fa6";
+import { useState } from "react"
+import { useRouter } from "next/router"
+import { getAuth, signOut, onAuthStateChanged } from "firebase/auth"
+import { collection, getFirestore, doc, updateDoc, getDoc, setDoc } from "firebase/firestore"
 
-import { useState } from "react";
-import { useRouter } from "next/router";
-import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
-import { initializeApp } from "firebase/app";
-import { collection, getFirestore, doc, updateDoc, getDoc, setDoc } from "firebase/firestore";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { useEffect } from "react"
+import { auth, db } from "@/firebase/firebaseConfig"
 
-import { useEffect } from "react";
-
-const firebaseConfig = {
-    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-    appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-
-export default function User() {
-    const auth = getAuth();
-    const db = getFirestore();
-    const storage = getStorage();
-
+export default function UserMenu() {
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
     const [user, setUser] = useState<any>(null);
@@ -118,10 +114,10 @@ export default function User() {
             <DropdownMenuContent align="end">
             <DropdownMenuLabel>{user?.displayName ? `${user.displayName}` : 'My Account'}</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <Link href="/settings"><DropdownMenuItem>General</DropdownMenuItem></Link>
-            <Link href="/settings/account"><DropdownMenuItem>Account</DropdownMenuItem></Link>
+            <Link href="/settings"><DropdownMenuItem><Settings className="mr-2 h-4 w-4 text-slate-500" />General</DropdownMenuItem></Link>
+            <Link href="/settings/account"><DropdownMenuItem><User className="mr-2 h-4 w-4 text-slate-500" />Account</DropdownMenuItem></Link>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout}><LogOut className="mr-2 h-4 w-4 text-slate-500" />Logout</DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
         {error && (

@@ -140,7 +140,7 @@ const RoomSelector: React.FC<RoomSelectorProps> = ({ currentRoom, setCurrentRoom
                         </div>
                     </div>
                     {!isHidden && (
-                        <ScrollArea className="h-[150px] rounded-md border px-4 py-2.5 mt-5">
+                        <ScrollArea className="h-[150px] rounded-md border px-[10px] py-2.5 mt-5">
                             {filteredRooms.map(room => (
                                 <div key={room.id} className={`room-item ${room.id === currentRoom ? 'border cursor-pointer px-4 py-2 my-2 bg-slate-100 dark:bg-muted/60 rounded-full' : 'cursor-pointer px-4 p-2 my-2'}`} onClick={() => handleRoomSelect(room)}>
                                     {room.name}
