@@ -147,7 +147,7 @@ const Chat: React.FC<ChatProps> = ({ currentRoom, topic }) => {
                 <Input ref={fileInputRef} type="file" onChange={handleImageChange} className="mb-3 block sm:hidden" />
                 <div className="mt-3 flex-1 w-full space-y-3">
                     {messages.map(msg => (
-                        <div key={msg.id} className="p-3 dark:bg-muted/40 rounded-md dark:border">
+                        <div key={msg.id} className="p-3">
                             <div className="flex items-center mb-2.5">
                                 {/* ユーザーのアイコンを表示 */}
                                 {userIcons[msg.userId] && (

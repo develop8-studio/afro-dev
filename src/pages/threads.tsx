@@ -54,7 +54,7 @@ export default function DashboardPage() {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search for a room..."
-          className="w-full"
+          className="w-full rounded-full"
         />
         <div className="flex flex-col">
           {filteredRooms.map(room => (

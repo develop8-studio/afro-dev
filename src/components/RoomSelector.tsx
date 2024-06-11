@@ -127,7 +127,7 @@ const RoomSelector: React.FC<RoomSelectorProps> = ({ currentRoom, setCurrentRoom
                                         <Input value={newRoomName} onChange={(e) => setNewRoomName(e.target.value)} placeholder="New Thread Name" />
                                         <div className="flex items-center space-x-2">
                                             <Checkbox id="setPassword" checked={isPasswordEnabled} onCheckedChange={(checked: boolean) => setIsPasswordEnabled(checked)} />
-                                            <Label htmlFor="setPassword" className="font-normal">Set Password</Label>
+                                            <Label htmlFor="setPassword">Set Password</Label>
                                         </div>
                                         {isPasswordEnabled && (
                                             <Input type="password" value={password} onChange={(e) => setRoomPassword(e.target.value)} placeholder="Password" />
@@ -144,7 +144,7 @@ const RoomSelector: React.FC<RoomSelectorProps> = ({ currentRoom, setCurrentRoom
                     {!isHidden && (
                         <ScrollArea className="h-[150px] rounded-md border px-[10px] py-2.5 mt-5">
                             {filteredRooms.map(room => (
-                                <div key={room.id} className={`room-item ${room.id === currentRoom ? 'border cursor-pointer px-4 py-2 my-2 bg-slate-100 dark:bg-muted/60 rounded-full' : 'cursor-pointer px-4 p-2 my-2'}`} onClick={() => handleRoomSelect(room)}>
+                                <div key={room.id} className={`room-item ${room.id === currentRoom ? 'border dark:border-none cursor-pointer px-4 py-2 my-2 bg-slate-100 dark:bg-muted/60 rounded-full' : 'cursor-pointer px-4 p-2 my-2'}`} onClick={() => handleRoomSelect(room)}>
                                     {room.name}
                                 </div>
                             ))}
