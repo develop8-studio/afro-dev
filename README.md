@@ -1,40 +1,22 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Afro.dev -Mega-sized Ideas!
+Afro.dev is a casual platform for developers to chat.
+It also offers AI-assisted support and allows users to create threads on any topic.
 
-## Getting Started
+## [Usage](https://afro.dev/settings/support)
+The settings page allows you to switch between light and dark modes, and choose between English and Japanese language, so you can enjoy Afro.dev more comfortably.
 
-First, run the development server:
+## [Threads](https://afro.dev/threads)
+Errors and questions about each topic (programming language or framework) can be shared as threads. Any logged-in user can create a thread.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+In a thread, you can send text, images, and stamps.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## [Tools](https://afro.dev/tools)
+We provide various tools to help developers.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+- AI error handling and image generation
+- Comparison of syntax highlighting packages
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## Contact
+If you have any inquiries about this service, please contact us at the account below.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+[@develop8-studio](https://x.com/develop8-studio)
