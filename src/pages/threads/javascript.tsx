@@ -4,6 +4,7 @@ import useAuthRedirect from "@/components/useAuthRedirect"
 import Chat from "@/components/Chat"
 import RoomSelector from '@/components/RoomSelector'
 import { useState } from 'react'
+import Layout from "@/components/Layout"
 
 export default function DashboardPage() {
     useAuthRedirect();

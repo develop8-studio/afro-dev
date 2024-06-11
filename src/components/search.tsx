@@ -28,6 +28,15 @@ import { Card, CardDescription } from "@/components/ui/card"
 import { FaRegBell } from "react-icons/fa6"
 import { IoSearch } from "react-icons/io5"
 import { FiBell, FiSearch } from "react-icons/fi"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export default function ProductsEditPage() {
     const [open, setOpen] = React.useState(false)
@@ -71,8 +80,8 @@ export default function ProductsEditPage() {
                 </CardDescription>
                 <FaRegBell />
             </Card> */}
-            <div className="flex">
-                <FiSearch onClick={toggleDialog} size="22.5" className="text-slate-500 dark:text-slate-300 cursor-pointer mr-3" />
+            <div className="flex mb-px">
+                <FiSearch onClick={toggleDialog} size="22.5" className="text-slate-500 dark:text-slate-300 cursor-pointer mr-[15px]" />
                 <FiBell size="22.5" className="text-slate-500 dark:text-slate-300 cursor-pointer" />
             </div>
             {/* <Input

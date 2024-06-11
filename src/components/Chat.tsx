@@ -128,7 +128,7 @@ const Chat: React.FC<ChatProps> = ({ currentRoom, topic }) => {
     return (
         <Card className="flex flex-col h-full pt-5">
             <div className="flex flex-col items-center">
-                <h1 className="font-semibold text-lg md:text-xl mb-5 px-5 sm:px-0">{capitalizeFirstLetter(roomName)}</h1>
+                <h1 className="font-semibold text-lg md:text-xl mb-5 px-5">{capitalizeFirstLetter(roomName)}</h1>
             </div>
             <CardContent className="flex flex-col items-center w-full">
                 <div className="w-full flex items-center mb-3">
@@ -151,7 +151,7 @@ const Chat: React.FC<ChatProps> = ({ currentRoom, topic }) => {
                             <div className="flex items-center mb-2.5">
                                 {/* ユーザーのアイコンを表示 */}
                                 {userIcons[msg.userId] && (
-                                    <img src={userIcons[msg.userId]} alt="User Icon" className="w-10 h-10 rounded-full mr-2.5" />
+                                    <img src={userIcons[msg.userId]} alt="User Icon" className="w-10 h-10 rounded-full mr-2.5 border" />
                                 )}
                                 <span className="font-bold">{msg.userName}</span>
                                 <span className="ml-2.5 text-xs text-gray-500 font-light">

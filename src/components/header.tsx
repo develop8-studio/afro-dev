@@ -16,19 +16,9 @@ import { getAuth, updateProfile, GoogleAuthProvider, signInWithPopup, reauthenti
 import { useState, useEffect } from "react"
 import { initializeApp } from "firebase/app"
 
-const firebaseConfig = {
-    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-    appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-};
-
-const app = initializeApp(firebaseConfig);
+import { auth, db, storage } from "@/firebase/firebaseConfig"
 
 export default function Header({ current }: HeaderProps) {
-    const auth = getAuth(app);
     const [user, setUser] = useState<User | null>(null);
 
     useEffect(() => {
@@ -51,13 +41,13 @@ export default function Header({ current }: HeaderProps) {
                 </Link>
             </nav>
             <nav className="hidden flex-col gap-5 md:flex md:flex-row md:items-center md:text-sm">
-                <Link href="/tools" className={`${current === "tools" ? 'text-foreground bg-emerald-100' : 'text-muted-foreground'} p-2.5 rounded-xl transition-colors hover:text-foreground`}>
+                <Link href="/tools" className={`${current === "tools" ? 'text-foreground bg-emerald-100' : 'text-muted-foreground'} p-2.5 rounded-md transition-colors hover:text-foreground`}>
                     Tools
                 </Link>
-                <Link href="/threads" className={`${current === "threads" ? 'text-foreground bg-emerald-100' : 'text-muted-foreground'} p-2.5 rounded-xl transition-colors hover:text-foreground`}>
+                <Link href="/threads" className={`${current === "threads" ? 'text-foreground bg-emerald-100' : 'text-muted-foreground'} p-2.5 rounded-md transition-colors hover:text-foreground`}>
                     Threads
                 </Link>
-                <Link href="/settings" className={`${current === "settings" ? 'text-foreground bg-emerald-100' : 'text-muted-foreground'} p-2.5 rounded-xl transition-colors hover:text-foreground`}>
+                <Link href="/settings" className={`${current === "settings" ? 'text-foreground bg-emerald-100' : 'text-muted-foreground'} p-2.5 rounded-md transition-colors hover:text-foreground`}>
                     Settings
                 </Link>
             </nav>

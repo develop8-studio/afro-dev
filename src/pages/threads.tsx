@@ -9,6 +9,8 @@ import Image from "next/image"
 import { Card, CardContent, CardDescription, CardFooter } from "@/components/ui/card"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import Layout from "@/components/Layout"
+import { FiSearch } from "react-icons/fi"
 
 interface Room {
   id: number;
@@ -48,7 +50,7 @@ export default function DashboardPage() {
         <title>Threads -Afro.dev</title>
       </Head>
       <Header current="threads" />
-      <main className="flex flex-1 flex-col p-5 gap-5 md:p-8 bg-slate-50 dark:bg-muted/40">
+      <Layout>
         <Input
           type="text"
           value={searchQuery}
@@ -69,7 +71,7 @@ export default function DashboardPage() {
             </Card>
           ))}
         </div>
-      </main>
+      </Layout>
     </div>
   )
 }

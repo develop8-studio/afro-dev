@@ -4,6 +4,7 @@ import useAuthRedirect from "@/components/useAuthRedirect"
 import Chat from "@/components/Chat"
 import RoomSelector from '@/components/RoomSelector'
 import { useState } from 'react'
+import Layout from "@/components/Layout"
 
 export default function DashboardPage() {
     useAuthRedirect();
@@ -15,10 +16,10 @@ export default function DashboardPage() {
             <title>Thread about Svelte -Afro.dev</title>
         </Head>
         <Header current="threads" />
-        <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 bg-slate-50 dark:bg-muted/40">
+        <Layout>
             <RoomSelector currentRoom={currentRoom} setCurrentRoom={setCurrentRoom} topic="svelte" />
             {currentRoom && <Chat currentRoom={currentRoom} topic="svelte" />}
-        </main>
+        </Layout>
         </div>
     )
 }
