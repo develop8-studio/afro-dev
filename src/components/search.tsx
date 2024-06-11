@@ -80,7 +80,7 @@ export default function ProductsEditPage() {
                 </CardDescription>
                 <FaRegBell />
             </Card> */}
-            <div className="flex mb-px">
+            <div className="flex mb-1">
                 <FiSearch onClick={toggleDialog} size="22.5" className="text-slate-500 dark:text-slate-300 cursor-pointer mr-[15px]" />
                 <FiBell size="22.5" className="text-slate-500 dark:text-slate-300 cursor-pointer" />
             </div>

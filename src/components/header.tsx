@@ -41,13 +41,13 @@ export default function Header({ current }: HeaderProps) {
                 </Link>
             </nav>
             <nav className="hidden flex-col gap-5 md:flex md:flex-row md:items-center md:text-sm">
-                <Link href="/tools" className={`${current === "tools" ? 'text-foreground bg-emerald-100' : 'text-muted-foreground'} p-2.5 rounded-md transition-colors hover:text-foreground`}>
+                <Link href="/tools" className={`${current === "tools" ? 'text-foreground dark:text-black bg-emerald-100 dark:bg-slate-200' : 'text-muted-foreground'} p-2.5 rounded-md transition-colors hover:text-foreground`}>
                     Tools
                 </Link>
-                <Link href="/threads" className={`${current === "threads" ? 'text-foreground bg-emerald-100' : 'text-muted-foreground'} p-2.5 rounded-md transition-colors hover:text-foreground`}>
+                <Link href="/threads" className={`${current === "threads" ? 'text-foreground dark:text-black bg-emerald-100 dark:bg-slate-200' : 'text-muted-foreground'} p-2.5 rounded-md transition-colors hover:text-foreground`}>
                     Threads
                 </Link>
-                <Link href="/settings" className={`${current === "settings" ? 'text-foreground bg-emerald-100' : 'text-muted-foreground'} p-2.5 rounded-md transition-colors hover:text-foreground`}>
+                <Link href="/settings" className={`${current === "settings" ? 'text-foreground dark:text-black bg-emerald-100 dark:bg-slate-200' : 'text-muted-foreground'} p-2.5 rounded-md transition-colors hover:text-foreground`}>
                     Settings
                 </Link>
             </nav>
@@ -62,6 +62,9 @@ export default function Header({ current }: HeaderProps) {
                     <Link href="/login">Login</Link>
                 </Button>
             )}
+            <Button className="hidden md:flex bg-blue-500 hover:bg-blue-600 dark:text-white" asChild>
+                <Link href="/threads">Threads</Link>
+            </Button>
         </header>
     )
 }
