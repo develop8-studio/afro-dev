@@ -55,7 +55,7 @@ export default function DashboardPage() {
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search for a room..."
+          placeholder="Search for topics..."
           className="w-full rounded-full"
         />
         <div className="flex flex-col">

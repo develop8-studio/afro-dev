@@ -22,8 +22,7 @@ import SearchMenu from "@/components/search"
 import UserMenu from "@/components/user"
 import MobileSheet from "@/components/mobile-sheet"
 import Header from "@/components/header"
-
-import useAuthRedirect from '@/components/useAuthRedirect'
+import Layout from "@/components/Layout"
 
 export default function PrivacyPolicy() {
     return (
@@ -32,9 +31,8 @@ export default function PrivacyPolicy() {
             <title>Terms of Service and Privacy Policy -Afro.dev</title>
         </Head>
         <Header current="none" />
-        <main className="flex flex-col gap-4 p-4 md:gap-8 md:p-8 bg-slate-50 dark:bg-transparent">
-        <div className="container mx-auto p-6">
-            <Card className="p-10 mb-10 dark:bg-muted/40">
+        <Layout>
+            <Card className="p-10 mb-5 dark:bg-muted/40">
                 <CardTitle>Terms of Service</CardTitle>
                 <h3 className="text-xl font-semibold mt-6 mb-2">English</h3>
                 <p className="mb-4"><strong>Welcome to our Afro.dev. By using our site, you agree to comply with and be bound by the following terms and conditions of use. Please review these terms carefully.</strong></p>
@@ -161,8 +159,7 @@ export default function PrivacyPolicy() {
                     </li>
                 </ol>
             </Card>
-        </div>
-        </main>
+        </Layout>
         </div>
     )
 }
