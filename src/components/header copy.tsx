@@ -43,19 +43,13 @@ export default function Header({ current }: HeaderProps) {
     }, []);
 
     return (
-        <header className="sticky top-0 flex h-16 items-center gap-5 bg-background px-5  z-10">
+        <header className="sticky top-0 flex h-16 items-center gap-5 bg-background px-5 border-b z-10">
             <nav className="hidden flex-col gap-6 text-lg font-normal md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
                 <Link href="/" className="hidden md:flex items-center gap-2 text-lg font-semibold md:text-base">
-                    <Image src="/afro-dark-logo.png" alt="" width={100} height={100} className="w-auto h-auto max-w-[22.5px] lg:max-w-[22.5px] block dark:hidden transition duration-150 ease-out hover:rotate-45" />
+                    <Image src="/afro-dark-logo.png" alt="" width={100} height={100} className="w-auto h-auto max-w-[27.5px] lg:max-w-[27.5px] block dark:hidden transition duration-150 ease-out hover:rotate-45" />
                     <Image src="/afro-white-logo.png" alt="" width={100} height={100} className="hidden dark:block w-auto h-auto max-w-[27.5px] lg:max-w-[27.5px] transition duration-150 ease-out hover:rotate-45" />
-                    <div className="flex text-xl">
-                        <h1 className="font-serif">A</h1>
-                        <h1 className="font-mono">f</h1>
-                        <h1 className="font-serif">r</h1>
-                        <h1 className="font-sans">o</h1>
-                    </div>
                 </Link>
-                {/* <Link href="/dashboard" className={`${current === "dashboard" ? 'text-foreground' : 'text-muted-foreground'} transition-colors hover:text-foreground`}>
+                <Link href="/dashboard" className={`${current === "dashboard" ? 'text-foreground' : 'text-muted-foreground'} transition-colors hover:text-foreground`}>
                     Dashboard
                 </Link>
                 <Link href="/orders" className={`${current === "orders" ? 'text-foreground' : 'text-muted-foreground'} transition-colors hover:text-foreground`}>
@@ -63,16 +57,16 @@ export default function Header({ current }: HeaderProps) {
                 </Link>
                 <Link href="/products" className={`${current === "products" ? 'text-foreground' : 'text-muted-foreground'} transition-colors hover:text-foreground`}>
                     Products
-                </Link> */}
-                {/* <Link href="/tools" className={`${current === "tools" ? 'text-foreground' : 'text-muted-foreground'} transition-colors hover:text-foreground`}>
+                </Link>
+                <Link href="/tools" className={`${current === "tools" ? 'text-foreground' : 'text-muted-foreground'} transition-colors hover:text-foreground`}>
                     Tools
-                </Link> */}
-                {/* <Link href="/threads" className={`${current === "threads" ? 'text-foreground' : 'text-muted-foreground'} transition-colors hover:text-foreground`}>
+                </Link>
+                <Link href="/threads" className={`${current === "threads" ? 'text-foreground' : 'text-muted-foreground'} transition-colors hover:text-foreground`}>
                     Threads
-                </Link> */}
-                {/* <Link href="/settings" className={`${current === "settings" ? 'text-foreground' : 'text-muted-foreground'} transition-colors hover:text-foreground`}>
+                </Link>
+                <Link href="/settings" className={`${current === "settings" ? 'text-foreground' : 'text-muted-foreground'} transition-colors hover:text-foreground`}>
                     Settings
-                </Link> */}
+                </Link>
             </nav>
             <div className="w-full">
                 <MobileSheet current={current} />

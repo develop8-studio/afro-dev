@@ -23,7 +23,12 @@ export default function MobileSheet({ current }: MobileSheetProps) {
                         <span className="sr-only">Afro</span> */}
                         <Image src="/afro-dark-logo.png" alt="" width={20} height={20} className="block dark:hidden" />
                         <Image src="/afro-white-logo.png" alt="" width={20} height={20} className="hidden dark:block" />
-                        <h1>Afro.dev</h1>
+                        <div className="flex text-xl">
+                            <h1 className="font-serif">A</h1>
+                            <h1 className="font-mono">f</h1>
+                            <h1 className="font-serif">r</h1>
+                            <h1 className="font-sans">o</h1>
+                        </div>
                     </Link>
                     <Link href="/dashboard">
                         Dashboard

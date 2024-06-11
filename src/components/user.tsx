@@ -93,29 +93,29 @@ export default function UserMenu() {
         <div className="pt-1">
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-            <Button
-                        variant="outline"
-                        size="icon"
-                        className="overflow-hidden rounded-full"
-                    >
-                        {iconUrl ? (
-                            <Image
-                                src={iconUrl}
-                                alt="User Icon"
-                                width={100}
-                                height={100}
-                                className="w-full h-full rounded-full"
-                            />
-                        ) : (
-                            <FaRegUser className="w-[15px] h-[15px]" />
-                        )}
-                    </Button>
+                <Button
+                    variant="outline"
+                    size="icon"
+                    className="overflow-hidden rounded-full"
+                >
+                    {iconUrl ? (
+                        <Image
+                            src={iconUrl}
+                            alt="User Icon"
+                            width={100}
+                            height={100}
+                            className="w-full h-full rounded-full"
+                        />
+                    ) : (
+                        <FaRegUser className="w-[15px] h-[15px]" />
+                    )}
+                </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
             <DropdownMenuLabel>{user?.displayName ? `${user.displayName}` : 'My Account'}</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <Link href="/settings"><DropdownMenuItem><Settings className="mr-2 h-4 w-4 text-slate-500" />General</DropdownMenuItem></Link>
-            <Link href="/settings/account"><DropdownMenuItem><User className="mr-2 h-4 w-4 text-slate-500" />Account</DropdownMenuItem></Link>
+            <Link href="/settings"><DropdownMenuItem><Settings className="mr-2 h-4 w-4 text-slate-500 dark:text-slate-300" />General</DropdownMenuItem></Link>
+            <Link href="/settings/account"><DropdownMenuItem><User className="mr-2 h-4 w-4 text-slate-500 dark:text-slate-300" />Account</DropdownMenuItem></Link>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleLogout}><LogOut className="mr-2 h-4 w-4 text-slate-500" />Logout</DropdownMenuItem>
             </DropdownMenuContent>

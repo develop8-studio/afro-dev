@@ -6,11 +6,11 @@ const useAuthRedirect = () => {
     const router = useRouter();
 
     useEffect(() => {
-        console.log("Rendered");
+        // console.log("Rendered");
         const unsubscribe = auth.onAuthStateChanged(user => {
-            console.log("User:", user);
+            // console.log("User:", user);
             if (!user && router.pathname !== '/login') {
-                console.log("Redirecting...");
+                // console.log("Redirecting...");
                 router.push("/login");
             }
         });

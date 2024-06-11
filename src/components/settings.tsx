@@ -14,7 +14,7 @@ export default function SettingsList({ current }: { current: string }) {
                 <Link href="/settings/security" className={current === "security" ? "font-semibold text-primary" : ""}>Security</Link>
                 <Link href="/settings/integrations" className={current === "integrations" ? "font-semibold text-primary" : ""}>Integrations</Link>
                 <Link href="/support" className={current === "support" ? "font-semibold text-primary" : ""}>Support</Link>
-                <Link href="/settings/organizations" className={current === "organizations" ? "font-semibold text-primary" : ""}>Organizations</Link>
+                {/* <Link href="/settings/organizations" className={current === "organizations" ? "font-semibold text-primary" : ""}>Organizations</Link> */}
             </nav>
     )
 }

@@ -43,6 +43,7 @@ const RoomSelector: React.FC<RoomSelectorProps> = ({ currentRoom, setCurrentRoom
     const [error, setError] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [isHidden, setIsHidden] = useState(false); // 表示・非表示の状態を管理
+    const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false); // New state for create dialog open state
 
     useEffect(() => {
         const unsubscribe = onSnapshot(collection(db, 'rooms', topic, 'rooms'), (snapshot) => {
@@ -77,6 +78,7 @@ const RoomSelector: React.FC<RoomSelectorProps> = ({ currentRoom, setCurrentRoom
         setNewRoomName('');
         setIsPasswordEnabled(false);
         setRoomPassword('');
+        setIsCreateDialogOpen(false); // Close the create dialog
     };
 
     const handleRoomSelect = (room: Room) => {
@@ -112,7 +114,7 @@ const RoomSelector: React.FC<RoomSelectorProps> = ({ currentRoom, setCurrentRoom
                             <Button className="w-full sm:w-auto sm:ml-3 mt-3 sm:mt-0" onClick={toggleVisibility}>
                                 {isHidden ? 'Show' : 'Hide'} Threads
                             </Button>
-                            <AlertDialog>
+                            <AlertDialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
                                 <AlertDialogTrigger asChild>
                                     <Button className="w-full sm:w-auto ml-3 mt-3 sm:mt-0">Create</Button>
                                 </AlertDialogTrigger>
@@ -132,7 +134,7 @@ const RoomSelector: React.FC<RoomSelectorProps> = ({ currentRoom, setCurrentRoom
                                         )}
                                     </div>
                                     <AlertDialogFooter>
-                                        <AlertDialogCancel className="rounded-full">Cancel</AlertDialogCancel>
+                                        <AlertDialogCancel className="rounded-full" onClick={() => setIsCreateDialogOpen(false)}>Cancel</AlertDialogCancel>
                                         <Button onClick={createRoom} className="rounded-full">Create</Button>
                                     </AlertDialogFooter>
                                 </AlertDialogContent>

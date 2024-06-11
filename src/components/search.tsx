@@ -72,8 +72,8 @@ export default function ProductsEditPage() {
                 <FaRegBell />
             </Card> */}
             <div className="flex">
-                <FiSearch onClick={toggleDialog} size="22.5" className="text-slate-500 cursor-pointer mr-3" />
-                <FiBell size="22.5" className="text-slate-500 cursor-pointer " />
+                <FiSearch onClick={toggleDialog} size="22.5" className="text-slate-500 dark:text-slate-300 cursor-pointer mr-3" />
+                <FiBell size="22.5" className="text-slate-500 dark:text-slate-300 cursor-pointer" />
             </div>
             {/* <Input
                 type="search"
