@@ -47,26 +47,6 @@ const roomsData: Room[] = [
 
 roomsData.sort((a, b) => a.name.localeCompare(b.name));
 
-const DescriptionWithReadMore = ({ description }: { description: string }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const toggleExpand = () => setIsExpanded(!isExpanded);
-
-  if (description.length <= 175) {
-    return <CardDescription className="text-slate-400">{description}</CardDescription>;
-  }
-
-  return (
-    <div>
-      <CardDescription className="text-slate-400">
-        {isExpanded ? description : `${description.slice(0, 175)}...`}
-      </CardDescription>
-      <Button variant="link" onClick={toggleExpand} className="p-0">
-        {isExpanded ? 'Read less' : 'Read more'}
-      </Button>
-    </div>
-  );
-};
-
 export default function DashboardPage() {
   useAuthRedirect();
 
@@ -95,7 +75,7 @@ export default function DashboardPage() {
             <Card key={room.id} className="flex justify-center items-center overflow-hidden mb-3 p-4">
               <div className="flex-grow mr-3">
                 <h3 className="text-lg font-semibold mb-1">{room.name}</h3>
-                <DescriptionWithReadMore description={room.description} />
+                <CardDescription className="text-slate-400">{room.description}</CardDescription>
               </div>
               <Button className="rounded-full" asChild>
                 <Link href={room.link}>View</Link>
