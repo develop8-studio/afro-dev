@@ -16,7 +16,7 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ language, children }) => {
     }, []);
 
     return (
-        <pre>
+        <pre className="text-sm">
             <code ref={ref} className={language}>
                 {children}
             </code>

@@ -1,17 +1,23 @@
-import { useEffect, useState, useRef } from 'react'
-import { collection, doc, addDoc, updateDoc, query, orderBy, onSnapshot, serverTimestamp, getDoc, where, setDoc } from 'firebase/firestore'
-import { db, auth } from '@/firebase/firebaseConfig'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { onAuthStateChanged, User } from 'firebase/auth'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { FaHeart } from "react-icons/fa"
-import Layout from "@/components/Layout"
-import { Textarea } from "@/components/ui/textarea"
-import { IoIosSend } from "react-icons/io"
-import 'highlight.js/styles/default.css'
-import React from 'react';
+import { useEffect, useState } from 'react';
+import { collection, doc, addDoc, updateDoc, query, orderBy, onSnapshot, serverTimestamp, getDoc, setDoc } from 'firebase/firestore';
+import { db, auth } from '@/firebase/firebaseConfig';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { onAuthStateChanged, User } from 'firebase/auth';
+import { Card } from '@/components/ui/card';
+import { FaHeart } from "react-icons/fa";
+import Layout from "@/components/Layout";
+import { Textarea } from "@/components/ui/textarea";
+import { IoIosSend } from "react-icons/io";
+import 'highlight.js/styles/default.css';
 import CodeBlock from '@/components/CodeBlock';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
 
 interface CodeSnippet {
     id: string;
@@ -30,6 +36,10 @@ const highlightLanguages = [
         label: "HTML",
     },
     {
+        value: "css",
+        label: "CSS",
+    },
+    {
         value: "javascript",
         label: "JavaScript",
     },
@@ -46,7 +56,7 @@ const CodeShare: React.FC = () => {
     const [codeSnippets, setCodeSnippets] = useState<CodeSnippet[]>([]);
     const [userIcons, setUserIcons] = useState<{ [userId: string]: string }>({});
     const [userLikes, setUserLikes] = useState<{ [snippetId: string]: number }>({});
-    const [language, setLanguage] = useState('');
+    const [language, setLanguage] = useState<string>('');
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -158,24 +168,26 @@ const CodeShare: React.FC = () => {
 
     return (
         <Layout>
-        <div className="flex flex-col h-full">
             <div className="flex flex-col items-center">
-                <Input value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Enter description..." className="mb-3"/>
-                <Textarea value={code} onChange={(e) => setCode(e.target.value)} placeholder="Enter your code..." className="mb-3"/>
-                <div className="flex items-center mb-3">
-                    <select
+                <div className="contents sm:flex w-full">
+                    <Select
                         value={language}
-                        onChange={(e) => setLanguage(e.target.value)}
-                        className="w-[200px] px-3 py-2 border rounded-md mr-2.5"
+                        onValueChange={(value) => setLanguage(value)}
                     >
-                        <option value="">Select language...</option>
-                        {highlightLanguages.map((highlightLanguage) => (
-                            <option key={highlightLanguage.value} value={highlightLanguage.value}>
-                                {highlightLanguage.label}
-                            </option>
-                        ))}
-                    </select>
+                        <SelectTrigger className="w-full sm:w-[150px] mb-3 sm:mb-0 sm:mr-3">
+                            <SelectValue placeholder="Language" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {highlightLanguages.map((highlightLanguage) => (
+                                <SelectItem key={highlightLanguage.value} value={highlightLanguage.value}>
+                                    {highlightLanguage.label}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                    <Input value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Enter description..." className="mb-3"/>
                 </div>
+                <Textarea value={code} onChange={(e) => setCode(e.target.value)} placeholder="Enter your code..." className="mb-3"/>
                 <Button onClick={shareCode}>Share<IoIosSend className="ml-[5px] text-lg" /></Button>
                 <div className="mt-10 flex-1 space-y-[15px] w-full">
                     {codeSnippets.map(snippet => (
@@ -197,7 +209,7 @@ const CodeShare: React.FC = () => {
                                 </CodeBlock>
                             )}
                             {!snippet.language && (
-                                <pre className="bg-slate-100 dark:bg-slate-900 p-2.5 rounded-md text-sm whitespace-pre-wrap">{snippet.code}</pre>
+                                <pre className="bg-[#F3F3F3] dark:bg-slate-900 p-2.5 text-sm whitespace-pre-wrap">{snippet.code}</pre>
                             )}
                             <div className="flex items-center mt-2.5 pt-2.5 pb-[7.5px]">
                                 <Button onClick={() => likeSnippet(snippet.id)} className="bg-transparent hover:bg-transparent h-0 p-0">
@@ -209,7 +221,6 @@ const CodeShare: React.FC = () => {
                     ))}
                 </div>
             </div>
-        </div>
         </Layout>
     );
 }
