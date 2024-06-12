@@ -132,9 +132,9 @@ export default function ProductsEditPage() {
                 <CommandList>
                 <CommandEmpty>No results found.</CommandEmpty>
                 <CommandGroup heading="Suggestions">
-                    <Link href="/tools"><CommandItem>
+                    <Link href="/codes"><CommandItem>
                     <RocketIcon className="mr-2 h-4 w-4" />
-                    <span>Tools</span>
+                    <span>Codes</span>
                     </CommandItem></Link>
                     <Link href="/threads"><CommandItem>
                     <FaceIcon className="mr-2 h-4 w-4" />

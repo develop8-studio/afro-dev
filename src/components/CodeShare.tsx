@@ -9,17 +9,9 @@ import { FaHeart } from "react-icons/fa"
 import Layout from "@/components/Layout"
 import { Textarea } from "@/components/ui/textarea"
 import { IoIosSend } from "react-icons/io"
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+import 'highlight.js/styles/default.css'
+import React from 'react';
+import CodeBlock from '@/components/CodeBlock';
 
 interface CodeSnippet {
     id: string;
@@ -29,7 +21,23 @@ interface CodeSnippet {
     userName: string;
     timestamp: any;
     likes: number;
+    language: string;
 }
+
+const highlightLanguages = [
+    {
+        value: "html",
+        label: "HTML",
+    },
+    {
+        value: "javascript",
+        label: "JavaScript",
+    },
+    {
+        value: "typescript",
+        label: "TypeScript",
+    },
+]
 
 const CodeShare: React.FC = () => {
     const [user, setUser] = useState<User | null>(null);
@@ -38,7 +46,7 @@ const CodeShare: React.FC = () => {
     const [codeSnippets, setCodeSnippets] = useState<CodeSnippet[]>([]);
     const [userIcons, setUserIcons] = useState<{ [userId: string]: string }>({});
     const [userLikes, setUserLikes] = useState<{ [snippetId: string]: number }>({});
-    const [error, setError] = useState<string | null>(null);
+    const [language, setLanguage] = useState('');
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -97,11 +105,13 @@ const CodeShare: React.FC = () => {
                 userId: user.uid,
                 userName: user.displayName,
                 timestamp: serverTimestamp(),
-                likes: 0
+                likes: 0,
+                language
             });
 
             setCode('');
             setDescription('');
+            setLanguage('');
         }
     };
 
@@ -152,6 +162,20 @@ const CodeShare: React.FC = () => {
             <div className="flex flex-col items-center">
                 <Input value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Enter description..." className="mb-3"/>
                 <Textarea value={code} onChange={(e) => setCode(e.target.value)} placeholder="Enter your code..." className="mb-3"/>
+                <div className="flex items-center mb-3">
+                    <select
+                        value={language}
+                        onChange={(e) => setLanguage(e.target.value)}
+                        className="w-[200px] px-3 py-2 border rounded-md mr-2.5"
+                    >
+                        <option value="">Select language...</option>
+                        {highlightLanguages.map((highlightLanguage) => (
+                            <option key={highlightLanguage.value} value={highlightLanguage.value}>
+                                {highlightLanguage.label}
+                            </option>
+                        ))}
+                    </select>
+                </div>
                 <Button onClick={shareCode}>Share<IoIosSend className="ml-[5px] text-lg" /></Button>
                 <div className="mt-10 flex-1 space-y-[15px] w-full">
                     {codeSnippets.map(snippet => (
@@ -166,7 +190,15 @@ const CodeShare: React.FC = () => {
                                 </span>
                             </div>
                             <div className="mb-2.5 text-sm">{snippet.description}</div>
-                            <pre className="bg-slate-100 dark:bg-slate-900 p-2.5 rounded-md text-sm">{snippet.code}</pre>
+                            {/* <CodeBlock language='javascript'><pre className="bg-slate-100 dark:bg-slate-900 p-2.5 rounded-md text-sm whitespace-pre-wrap">{snippet.code}</pre></CodeBlock> */}
+                            {snippet.language && (
+                                <CodeBlock language={snippet.language}>
+                                    <pre className="bg-slate-100 dark:bg-slate-900 p-2.5 rounded-md text-sm whitespace-pre-wrap">{snippet.code}</pre>
+                                </CodeBlock>
+                            )}
+                            {!snippet.language && (
+                                <pre className="bg-slate-100 dark:bg-slate-900 p-2.5 rounded-md text-sm whitespace-pre-wrap">{snippet.code}</pre>
+                            )}
                             <div className="flex items-center mt-2.5 pt-2.5 pb-[7.5px]">
                                 <Button onClick={() => likeSnippet(snippet.id)} className="bg-transparent hover:bg-transparent h-0 p-0">
                                     <FaHeart className={`text-lg mr-[10px] transition-all ${userLikes[snippet.id] ? 'text-red-500' : 'text-slate-300'} hover:text-red-500`} />
@@ -178,21 +210,6 @@ const CodeShare: React.FC = () => {
                 </div>
             </div>
         </div>
-        {error && (
-            <AlertDialog open>
-            <AlertDialogContent>
-                <AlertDialogHeader>
-                <AlertDialogTitle>Error</AlertDialogTitle>
-                <AlertDialogDescription>
-                    {error}
-                </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                <AlertDialogCancel onClick={() => setError(null)} className="rounded-full">Close</AlertDialogCancel>
-                </AlertDialogFooter>
-            </AlertDialogContent>
-            </AlertDialog>
-        )}
         </Layout>
     );
 }

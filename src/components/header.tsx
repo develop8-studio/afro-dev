@@ -72,7 +72,7 @@ export default function Header({ current }: HeaderProps) {
                     </Button>
                 </>
             ) : (
-                <Button className="h-[35px]" asChild>
+                <Button className="h-[35px] bg-blue-500 hover:bg-blue-600 dark:text-white" asChild>
                     <Link href="/login">Login</Link>
                 </Button>
             )}

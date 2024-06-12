@@ -13,7 +13,7 @@ import { ThumbsUp, PartyPopper, Smile } from "lucide-react"
 import { initializeApp } from "firebase/app"
 
 import { getAuth, updateProfile, GoogleAuthProvider, signInWithPopup, reauthenticateWithPopup, deleteUser, onAuthStateChanged, User } from "firebase/auth"
-
+import 'highlight.js/styles/default.css'
 import { useState, useEffect } from "react"
 
 import {
