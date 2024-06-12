@@ -18,7 +18,7 @@ export default function MobileSheet({ current }: MobileSheetProps) {
             </SheetTrigger>
             <SheetContent side="left">
                 <nav className="grid gap-5 text-base">
-                    <Link href="/" className="flex items-center gap-2 text-lg font-semibold">
+                    <Link href="/" className="flex items-center gap-2 text-lg font-semibold mb-2.5">
                         {/* <Si9Gag className="h-6 w-6" />
                         <span className="sr-only">Afro</span> */}
                         {/* <Image src="/afro-dark-logo.png" alt="" width={20} height={20} className="block dark:hidden" />
