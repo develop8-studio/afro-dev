@@ -26,7 +26,7 @@ export default function Header({ current }: HeaderProps) {
 
     return (
         <header className="sticky top-0 flex h-16 items-center gap-5 bg-background px-5 z-10">
-            <nav className="hidden flex-col gap-5 md:flex md:flex-row md:items-center mr-1">
+            <nav className="hidden flex-col gap-5 md:flex md:flex-row md:items-center mr-[5px] lg:mr-[10px]">
                 <Link href="/" className="">
                     <div className="relative w-[60px] h-[60px]">
                         <Image
@@ -47,9 +47,9 @@ export default function Header({ current }: HeaderProps) {
                 </Link>
             </nav>
             <nav className="hidden flex-col gap-5 md:flex md:flex-row md:items-center md:text-sm">
-                <Link href="/tools" className={`${current === "tools" ? 'text-foreground bg-slate-100 dark:bg-slate-800' : 'text-muted-foreground'} p-2.5 rounded-md transition-colors hover:text-foreground`}>
+                {/* <Link href="/tools" className={`${current === "tools" ? 'text-foreground bg-slate-100 dark:bg-slate-800' : 'text-muted-foreground'} p-2.5 rounded-md transition-colors hover:text-foreground`}>
                     Tools
-                </Link>
+                </Link> */}
                 <Link href="/codes" className={`${current === "codes" ? 'text-foreground bg-slate-100 dark:bg-slate-800' : 'text-muted-foreground'} p-2.5 rounded-md transition-colors hover:text-foreground`}>
                     Codes
                 </Link>
