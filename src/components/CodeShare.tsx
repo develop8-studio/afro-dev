@@ -7,6 +7,8 @@ import { onAuthStateChanged, User } from 'firebase/auth'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { FaHeart } from "react-icons/fa"
 import Layout from "@/components/Layout"
+import { Textarea } from "@/components/ui/textarea"
+import { IoIosSend } from "react-icons/io"
 
 interface CodeSnippet {
     id: string;
@@ -135,41 +137,36 @@ const CodeShare: React.FC = () => {
 
     return (
         <Layout>
-        <Card className="flex flex-col h-full pt-5">
-            <CardHeader className="flex flex-col items-center">
-                <CardTitle className="font-semibold text-lg md:text-xl mb-5">Share Your Code</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col items-center w-full">
-                <div className="w-full flex flex-col items-center mb-3">
-                    <Input value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Enter description..." className="mb-2"/>
-                    <Input value={code} onChange={(e) => setCode(e.target.value)} placeholder="Enter your code..." className="mb-2"/>
-                    <Button onClick={shareCode}>Share</Button>
-                </div>
-                <div className="mt-3 flex-1 w-full space-y-3">
+        <div className="flex flex-col h-full">
+            <div className="flex flex-col items-center">
+                <Input value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Enter description..." className="mb-3"/>
+                <Textarea value={code} onChange={(e) => setCode(e.target.value)} placeholder="Enter your code..." className="mb-3"/>
+                <Button onClick={shareCode}>Share<IoIosSend className="ml-[5px] text-lg" /></Button>
+                <div className="mt-10 flex-1 space-y-[15px] w-full">
                     {codeSnippets.map(snippet => (
-                        <div key={snippet.id} className="p-3 border-b">
+                        <Card key={snippet.id} className="px-5 py-[17.5px] shadow-none">
                             <div className="flex items-center mb-2.5">
                                 {userIcons[snippet.userId] && (
                                     <img src={userIcons[snippet.userId]} alt="User Icon" className="w-10 h-10 rounded-full mr-2.5 border" />
                                 )}
                                 <span className="font-bold">{snippet.userName}</span>
-                                <span className="ml-2.5 text-xs text-gray-500 font-light">
+                                <span className="ml-2.5 text-xs text-slate-500 font-light">
                                     {snippet.timestamp ? new Date(snippet.timestamp.toDate()).toLocaleString() : 'No timestamp'}
                                 </span>
                             </div>
-                            <div className="mb-2">{snippet.description}</div>
-                            <pre className="bg-gray-100 p-2 rounded">{snippet.code}</pre>
-                            <div className="flex items-center mt-2">
-                                <Button onClick={() => likeSnippet(snippet.id)} className="mr-2" variant="ghost">
-                                    <FaHeart className="mr-1" /> Like
+                            <div className="mb-2.5 text-sm">{snippet.description}</div>
+                            <pre className="bg-slate-100 dark:bg-slate-900 p-2.5 rounded-md text-sm">{snippet.code}</pre>
+                            <div className="flex items-center mt-2.5 pt-2.5 pb-[7.5px]">
+                                <Button onClick={() => likeSnippet(snippet.id)} className="bg-transparent hover:bg-transparent h-0 p-0">
+                                    <FaHeart className="text-lg mr-[10px] transition-all text-slate-300 hover:text-red-500" />
                                 </Button>
-                                <span>{snippet.likes} likes</span>
+                                <span className="text-sm text-slate-500">{snippet.likes}</span>
                             </div>
-                        </div>
+                        </Card>
                     ))}
                 </div>
-            </CardContent>
-        </Card>
+            </div>
+        </div>
         </Layout>
     );
 }

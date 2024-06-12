@@ -154,7 +154,7 @@ const Chat: React.FC<ChatProps> = ({ currentRoom, topic }) => {
                                     <img src={userIcons[msg.userId]} alt="User Icon" className="w-10 h-10 rounded-full mr-2.5 border" />
                                 )}
                                 <span className="font-bold">{msg.userName}</span>
-                                <span className="ml-2.5 text-xs text-gray-500 font-light">
+                                <span className="ml-2.5 text-xs text-slate-500 font-light">
                                     {msg.timestamp ? new Date(msg.timestamp.toDate()).toLocaleString() : 'No timestamp'}
                                 </span>
                             </div>
