@@ -12,7 +12,9 @@ export default function CodesPage() {
         <title>Codes - Afro.dev</title>
       </Head>
       <Header current="codes" />
-      <CodeShare />
+      <Layout>
+        <CodeShare />
+      </Layout>
     </div>
   )
 }

@@ -167,7 +167,6 @@ const CodeShare: React.FC = () => {
     }
 
     return (
-        <Layout>
             <div className="flex flex-col items-center">
                 <div className="contents sm:flex w-full">
                     <Select
@@ -204,9 +203,12 @@ const CodeShare: React.FC = () => {
                             <div className="mb-2.5 text-sm">{snippet.description}</div>
                             {/* <CodeBlock language='javascript'><pre className="bg-slate-100 dark:bg-slate-900 p-2.5 rounded-md text-sm whitespace-pre-wrap">{snippet.code}</pre></CodeBlock> */}
                             {snippet.language && (
-                                <CodeBlock language={snippet.language}>
-                                    <pre className="bg-slate-100 dark:bg-slate-900 p-2.5 rounded-md text-sm whitespace-pre-wrap">{snippet.code}</pre>
-                                </CodeBlock>
+                                <>
+                                    <CodeBlock language={snippet.language}>
+                                        <pre className="bg-slate-100 dark:bg-slate-900 p-2.5 rounded-md text-sm whitespace-pre-wrap">{snippet.code}</pre>
+                                    </CodeBlock>
+                                    <pre className="hidden dark:block bg-slate-100 dark:bg-slate-900 p-2.5 text-sm whitespace-pre-wrap">{snippet.code}</pre>
+                                </>
                             )}
                             {!snippet.language && (
                                 <pre className="bg-[#F3F3F3] dark:bg-slate-900 p-2.5 text-sm whitespace-pre-wrap">{snippet.code}</pre>
@@ -221,7 +223,6 @@ const CodeShare: React.FC = () => {
                     ))}
                 </div>
             </div>
-        </Layout>
     );
 }
 
