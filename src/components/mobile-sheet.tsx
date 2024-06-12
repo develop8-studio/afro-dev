@@ -32,17 +32,20 @@ export default function MobileSheet({ current }: MobileSheetProps) {
                         <Image src="/afro-black-text.png" alt="" width={100} height={100} className="w-[60px] block dark:hidden" />
                         <Image src="/afro-white-text.png" alt="" width={100} height={100} className="w-[60px] hidden dark:block" />
                     </Link>
-                    <Link href="/dashboard">
+                    {/* <Link href="/dashboard">
                         Dashboard
-                    </Link>
-                    <Link href="/orders">
+                    </Link> */}
+                    {/* <Link href="/orders">
                         Orders
                     </Link>
                     <Link href="/products">
                         Products
-                    </Link>
+                    </Link> */}
                     <Link href="/tools">
                         Tools
+                    </Link>
+                    <Link href="/codes">
+                        Codes
                     </Link>
                     <Link href="/threads">
                         Threads

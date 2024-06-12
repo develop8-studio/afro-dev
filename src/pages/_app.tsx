@@ -12,12 +12,14 @@ export default function App({ Component, pageProps }: AppProps) {
       disableTransitionOnChange
     >
       <Head>
-        <title>Afro.dev -Mega-sized Ideas!</title>
+        <title>Afro.dev</title>
         <link rel="icon" href="/afro-dark-logo.png" />
         <link rel="apple-touch-icon" href="/afro-mobile-icon.png" />
         {/* <link rel="apple-touch-icon" href="/apple-touch-icon.png" /> */}
       </Head>
-    <Component {...pageProps} />
+      <div className="m-0 p-0 font-sans">
+        <Component {...pageProps} />
+      </div>
     </ThemeProvider>
   )
 }
