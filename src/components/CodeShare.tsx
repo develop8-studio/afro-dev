@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { collection, doc, addDoc, updateDoc, query, orderBy, onSnapshot, serverTimestamp, getDoc, setDoc, deleteDoc } from 'firebase/firestore';
+import { collection, doc, addDoc, updateDoc, query, orderBy, onSnapshot, serverTimestamp, getDoc, setDoc, deleteDoc, getDocs } from 'firebase/firestore';
 import { db, auth } from '@/firebase/firebaseConfig';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { Card } from '@/components/ui/card';
-import { FaHeart } from "react-icons/fa";
+import { FaHeart, FaTrash } from "react-icons/fa";
 import Layout from "@/components/Layout";
 import { Textarea } from "@/components/ui/textarea";
 import { IoIosSend } from "react-icons/io";
@@ -18,6 +18,15 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import { IoIosArrowDown } from "react-icons/io"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 interface CodeSnippet {
     id: string;
@@ -31,42 +40,15 @@ interface CodeSnippet {
 }
 
 const highlightLanguages = [
-    {
-        value: "html",
-        label: "HTML",
-    },
-    {
-        value: "css",
-        label: "CSS",
-    },
-    {
-        value: "javascript",
-        label: "JavaScript",
-    },
-    {
-        value: "typescript",
-        label: "TypeScript",
-    },
-    {
-        value: "python",
-        label: "Python",
-    },
-    {
-        value: "ruby",
-        label: "Ruby",
-    },
-    {
-        value: "swift",
-        label: "Swift",
-    },
-    {
-        value: "rust",
-        label: "Rust",
-    },
-    {
-        value: "go",
-        label: "Golang",
-    },
+    { value: "html", label: "HTML" },
+    { value: "css", label: "CSS" },
+    { value: "javascript", label: "JavaScript" },
+    { value: "typescript", label: "TypeScript" },
+    { value: "python", label: "Python" },
+    { value: "ruby", label: "Ruby" },
+    { value: "swift", label: "Swift" },
+    { value: "rust", label: "Rust" },
+    { value: "go", label: "Golang" },
 ]
 highlightLanguages.sort((a, b) => a.label.localeCompare(b.label));
 
@@ -184,6 +166,26 @@ const CodeShare: React.FC = () => {
         }
     };
 
+    const deleteSnippet = async (snippetId: string) => {
+        if (!user) return;
+
+        const snippetRef = doc(db, 'codes', snippetId);
+        const snippetDoc = await getDoc(snippetRef);
+
+        if (snippetDoc.exists() && snippetDoc.data().userId === user.uid) {
+            await deleteDoc(snippetRef);
+
+            // Optionally, delete related likes (not necessary but good for cleanup)
+            const likeQuery = query(collection(db, 'likes'), orderBy('timestamp', 'desc'));
+            const likesSnapshot = await getDocs(likeQuery);
+            likesSnapshot.forEach(async (likeDoc) => {
+                if (likeDoc.id.includes(snippetId)) {
+                    await deleteDoc(likeDoc.ref);
+                }
+            });
+        }
+    };
+
     if (!user) {
         return <div>Loading...</div>;
     }
@@ -225,6 +227,11 @@ const CodeShare: React.FC = () => {
                             <span className="ml-2.5 text-xs text-slate-500 font-light">
                                 {snippet.timestamp ? new Date(snippet.timestamp.toDate()).toLocaleString() : 'No timestamp'}
                             </span>
+                            {snippet.userId === user.uid && (
+                                <Button onClick={() => deleteSnippet(snippet.id)} className="ml-auto bg-transparent hover:bg-transparent h-0 p-0">
+                                    <FaTrash className="text-lg text-red-500 hover:text-red-700" />
+                                </Button>
+                            )}
                         </div>
                         <div className="mb-2.5 text-sm">{snippet.description}</div>
                         {snippet.language && (
@@ -240,7 +247,7 @@ const CodeShare: React.FC = () => {
                         )}
                         <div className="flex items-center mt-2.5 pt-2.5 pb-[7.5px]">
                             <Button onClick={() => likeSnippet(snippet.id)} className="bg-transparent hover:bg-transparent h-0 p-0">
-                                <FaHeart className={`text-lg mr-[10px] transition-all ${userLikes[snippet.id] ? 'text-red-500' : 'text-slate-300'}`} />
+                                <FaHeart className={`text-lg mr-[10px] transition-all ${userLikes[snippet.id] ? 'text-red-500' : 'text-slate-300'} hover:text-red-500`} />
                             </Button>
                             <span className="text-sm text-slate-500">{snippet.likes}</span>
                         </div>
