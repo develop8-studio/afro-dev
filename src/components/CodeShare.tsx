@@ -9,6 +9,17 @@ import { FaHeart } from "react-icons/fa"
 import Layout from "@/components/Layout"
 import { Textarea } from "@/components/ui/textarea"
 import { IoIosSend } from "react-icons/io"
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 interface CodeSnippet {
     id: string;
@@ -27,6 +38,7 @@ const CodeShare: React.FC = () => {
     const [codeSnippets, setCodeSnippets] = useState<CodeSnippet[]>([]);
     const [userIcons, setUserIcons] = useState<{ [userId: string]: string }>({});
     const [userLikes, setUserLikes] = useState<{ [snippetId: string]: number }>({});
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -99,8 +111,7 @@ const CodeShare: React.FC = () => {
         const likeDocRef = doc(db, 'likes', `${user.uid}_${snippetId}`);
         const likeDoc = await getDoc(likeDocRef);
 
-        if (likeDoc.exists() && likeDoc.data().count >= 5) {
-            alert('You can only like a feed up to 5 times.');
+        if (likeDoc.exists() && likeDoc.data().count >= 1) {
             return;
         }
 
@@ -158,7 +169,7 @@ const CodeShare: React.FC = () => {
                             <pre className="bg-slate-100 dark:bg-slate-900 p-2.5 rounded-md text-sm">{snippet.code}</pre>
                             <div className="flex items-center mt-2.5 pt-2.5 pb-[7.5px]">
                                 <Button onClick={() => likeSnippet(snippet.id)} className="bg-transparent hover:bg-transparent h-0 p-0">
-                                    <FaHeart className="text-lg mr-[10px] transition-all text-slate-300 hover:text-red-500" />
+                                    <FaHeart className={`text-lg mr-[10px] transition-all ${userLikes[snippet.id] ? 'text-red-500' : 'text-slate-300'} hover:text-red-500`} />
                                 </Button>
                                 <span className="text-sm text-slate-500">{snippet.likes}</span>
                             </div>
@@ -167,6 +178,21 @@ const CodeShare: React.FC = () => {
                 </div>
             </div>
         </div>
+        {error && (
+            <AlertDialog open>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                <AlertDialogTitle>Error</AlertDialogTitle>
+                <AlertDialogDescription>
+                    {error}
+                </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                <AlertDialogCancel onClick={() => setError(null)} className="rounded-full">Close</AlertDialogCancel>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+            </AlertDialog>
+        )}
         </Layout>
     );
 }
