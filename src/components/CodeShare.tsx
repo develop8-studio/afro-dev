@@ -269,7 +269,7 @@ const CodeShare: React.FC = () => {
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog> */}
-            <div className="flex flex-col h-full">
+            {/* <div className="flex flex-col h-full">
                 <div className="contents sm:flex flex-col sm:flex-row">
                     <div className="sm:flex-grow">
                         <Select
@@ -299,13 +299,13 @@ const CodeShare: React.FC = () => {
                                 style={{ display: 'none' }}
                             />
                         </Button>
-                        {/* <Input type="file" onChange={handleImageChange} className="mb-3 sm:hidden"/> */}
+                        {/* <Input type="file" onChange={handleImageChange} className="mb-3 sm:hidden"/>
                         <Button onClick={shareCode} className="ml-0 sm:ml-3 mb-3 sm:mb-0">Share<IoIosSend className="ml-[5px] text-lg" /></Button>
                     </div>
                 </div>
             <Textarea value={code} onChange={(e) => setCode(e.target.value)} placeholder="Enter your code..." />
-            </div>
-            <div className="mt-5 flex-1 space-y-[15px]">
+            </div> */}
+            <div className="flex-1 space-y-[15px]">
                 {codeSnippets.map(snippet => (
                     <Card key={snippet.id} className="px-5 py-[17.5px] shadow-none">
                         <div className="flex items-center mb-2.5">
