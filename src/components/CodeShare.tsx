@@ -29,6 +29,17 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import { BsThreeDotsVertical } from "react-icons/bs"
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 interface CodeSnippet {
     id: string;
@@ -217,26 +228,33 @@ const CodeShare: React.FC = () => {
 
     return (
         <>
-            <div className="flex flex-col h-full">
-                <div className="contents sm:flex">
-                    <Select
-                        value={language}
-                        onValueChange={(value) => setLanguage(value)}
-                    >
-                        <SelectTrigger className="w-full sm:w-[150px] mb-3 sm:mb-0 sm:mr-3">
-                            <SelectValue placeholder="Language" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {highlightLanguages.map((highlightLanguage) => (
-                                <SelectItem key={highlightLanguage.value} value={highlightLanguage.value}>
-                                    {highlightLanguage.label}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                    <div className="flex w-full">
-                        <Input value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Enter description..." className="mb-3"/>
-                        <Button onClick={() => fileInputRef.current?.click()} className={`ml-3 hidden sm:block`} variant={uploadButtonVariant}>
+            <AlertDialog>
+                <AlertDialogTrigger>Share Code</AlertDialogTrigger>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                    <AlertDialogTitle>Share Code</AlertDialogTitle>
+                    <AlertDialogDescription>
+                    Let's share the awesome code you've created with everyone!
+                    </AlertDialogDescription>
+                    </AlertDialogHeader>
+                        <Select
+                            value={language}
+                            onValueChange={(value) => setLanguage(value)}
+                        >
+                            <SelectTrigger className="w-full sm:w-[150px] mb-3 sm:mb-0 sm:mr-3">
+                                <SelectValue placeholder="Language" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {highlightLanguages.map((highlightLanguage) => (
+                                    <SelectItem key={highlightLanguage.value} value={highlightLanguage.value}>
+                                        {highlightLanguage.label}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        <Input value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Enter description..." />
+                        <Textarea value={code} onChange={(e) => setCode(e.target.value)} placeholder="Enter your code..." />
+                        <Button onClick={() => fileInputRef.current?.click()} variant={uploadButtonVariant}>
                             Upload
                             <input
                                 ref={fileInputRef}
@@ -245,11 +263,47 @@ const CodeShare: React.FC = () => {
                                 style={{ display: 'none' }}
                             />
                         </Button>
-                        <Input type="file" onChange={handleImageChange} className="mb-3 block sm:hidden"/>
-                        <Button onClick={shareCode} className="ml-3">Share<IoIosSend className="ml-[5px] text-lg" /></Button>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <Button onClick={shareCode} className="">Share<IoIosSend className="ml-[5px] text-lg hidden md:block" /></Button>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+            <div className="flex flex-col h-full">
+                <div className="contents sm:flex flex-col sm:flex-row">
+                    <div className="sm:flex-grow">
+                        <Select
+                            value={language}
+                            onValueChange={(value) => setLanguage(value)}
+                        >
+                            <SelectTrigger className="w-full sm:w-[150px] mb-3 sm:mb-0 sm:mr-3">
+                                <SelectValue placeholder="Language" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {highlightLanguages.map((highlightLanguage) => (
+                                    <SelectItem key={highlightLanguage.value} value={highlightLanguage.value}>
+                                        {highlightLanguage.label}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <div className="flex flex-col sm:flex-row w-full">
+                        <Input value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Enter description..." className="mb-3"/>
+                        <Button onClick={() => fileInputRef.current?.click()} className={`ml-0 sm:ml-3`} variant={uploadButtonVariant}>
+                            Upload
+                            <input
+                                ref={fileInputRef}
+                                type="file"
+                                onChange={handleImageChange}
+                                style={{ display: 'none' }}
+                            />
+                        </Button>
+                        {/* <Input type="file" onChange={handleImageChange} className="mb-3 sm:hidden"/> */}
+                        <Button onClick={shareCode} className="ml-0 sm:ml-3 mb-3 sm:mb-0">Share<IoIosSend className="ml-[5px] text-lg" /></Button>
                     </div>
                 </div>
-                <Textarea value={code} onChange={(e) => setCode(e.target.value)} placeholder="Enter your code..." />
+            <Textarea value={code} onChange={(e) => setCode(e.target.value)} placeholder="Enter your code..." />
             </div>
             <div className="mt-5 flex-1 space-y-[15px]">
                 {codeSnippets.map(snippet => (
