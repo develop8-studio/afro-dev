@@ -207,8 +207,11 @@ export default function Header({ current }: HeaderProps) {
                     </Button> */}
                     <AlertDialog>
                         <AlertDialogTrigger>
-                            <Button className="flex bg-blue-500 hover:bg-blue-600 dark:text-white h-[37.5px]">
+                            <Button className="hidden sm:flex bg-blue-500 hover:bg-blue-600 dark:text-white h-[37.5px]">
                                 Share Code
+                            </Button>
+                            <Button className="flex sm:hidden bg-blue-500 hover:bg-blue-600 dark:text-white h-[37.5px]">
+                                Code
                             </Button>
                         </AlertDialogTrigger>
                         <AlertDialogContent>
