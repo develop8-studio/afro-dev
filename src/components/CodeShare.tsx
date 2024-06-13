@@ -1,24 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { collection, doc, addDoc, updateDoc, query, orderBy, onSnapshot, serverTimestamp, getDoc, setDoc, deleteDoc, getDocs } from 'firebase/firestore';
-import { db, auth, storage } from '@/firebase/firebaseConfig';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { onAuthStateChanged, User } from 'firebase/auth';
-import { Card } from '@/components/ui/card';
-import { FaHeart, FaTrash } from "react-icons/fa";
-import Layout from "@/components/Layout";
-import { Textarea } from "@/components/ui/textarea";
-import { IoIosSend } from "react-icons/io";
-import 'highlight.js/styles/default.css';
-import CodeBlock from '@/components/CodeBlock';
+import React, { useEffect, useState, useRef } from 'react'
+import { collection, doc, addDoc, updateDoc, query, orderBy, onSnapshot, serverTimestamp, getDoc, setDoc, deleteDoc, getDocs } from 'firebase/firestore'
+import { db, auth, storage } from '@/firebase/firebaseConfig'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { onAuthStateChanged, User } from 'firebase/auth'
+import { Card } from '@/components/ui/card'
+import { FaHeart, FaTrash } from "react-icons/fa"
+import Layout from "@/components/Layout"
+import { Textarea } from '@/components/ui/textarea'
+import { IoIosSend } from "react-icons/io"
+import 'highlight.js/styles/default.css'
+import CodeBlock from '@/components/CodeBlock'
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select";
-import { IoIosArrowDown } from "react-icons/io";
+} from "@/components/ui/select"
+import { IoIosArrowDown } from "react-icons/io"
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -26,8 +26,9 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+} from "@/components/ui/dropdown-menu"
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
+import { BsThreeDotsVertical } from "react-icons/bs"
 
 interface CodeSnippet {
     id: string;
@@ -63,6 +64,8 @@ const CodeShare: React.FC = () => {
     const [userLikes, setUserLikes] = useState<{ [snippetId: string]: boolean }>({});
     const [language, setLanguage] = useState<string>('');
     const [imageFile, setImageFile] = useState<File | null>(null);
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
+    const [uploadButtonVariant, setUploadButtonVariant] = useState<'outline' | 'secondary'>('outline');
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -137,6 +140,7 @@ const CodeShare: React.FC = () => {
             setDescription('');
             setLanguage('');
             setImageFile(null);
+            setUploadButtonVariant('outline');
         }
     };
 
@@ -198,6 +202,15 @@ const CodeShare: React.FC = () => {
         }
     };
 
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            setImageFile(e.target.files[0]);
+            setUploadButtonVariant('secondary');
+        } else {
+            setUploadButtonVariant('outline');
+        }
+    };
+
     if (!user) {
         return <div>Loading...</div>;
     }
@@ -223,11 +236,20 @@ const CodeShare: React.FC = () => {
                     </Select>
                     <div className="flex w-full">
                         <Input value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Enter description..." className="mb-3"/>
+                        <Button onClick={() => fileInputRef.current?.click()} className={`ml-3 hidden sm:block`} variant={uploadButtonVariant}>
+                            Upload
+                            <input
+                                ref={fileInputRef}
+                                type="file"
+                                onChange={handleImageChange}
+                                style={{ display: 'none' }}
+                            />
+                        </Button>
+                        <Input type="file" onChange={handleImageChange} className="mb-3 block sm:hidden"/>
                         <Button onClick={shareCode} className="ml-3">Share<IoIosSend className="ml-[5px] text-lg" /></Button>
                     </div>
                 </div>
-                <Textarea value={code} onChange={(e) => setCode(e.target.value)} placeholder="Enter your code..." className="mb-3"/>
-                <Input type="file" onChange={(e) => setImageFile(e.target.files ? e.target.files[0] : null)} />
+                <Textarea value={code} onChange={(e) => setCode(e.target.value)} placeholder="Enter your code..." />
             </div>
             <div className="mt-5 flex-1 space-y-[15px]">
                 {codeSnippets.map(snippet => (
@@ -240,16 +262,28 @@ const CodeShare: React.FC = () => {
                             <span className="ml-2.5 text-xs text-slate-500 font-light">
                                 {snippet.timestamp ? new Date(snippet.timestamp.toDate()).toLocaleString() : 'No timestamp'}
                             </span>
-                            {snippet.userId === user.uid && (
+                            <DropdownMenu>
+                            <DropdownMenuTrigger className='ml-auto'><BsThreeDotsVertical className="text-lg" /></DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                                {snippet.userId === user.uid && (
+                                    <DropdownMenuItem onClick={() => deleteSnippet(snippet.id)}>
+                                        {/* <Button onClick={() => deleteSnippet(snippet.id)} className="ml-auto bg-transparent hover:bg-transparent h-0 p-0">
+                                            {/* <FaTrash className="text-lg text-red-500 hover:text-red-700" />
+                                            Delete
+                                        </Button> */}
+                                        Delete
+                                    </DropdownMenuItem>
+                                )}
+                            </DropdownMenuContent>
+                            </DropdownMenu>
+                            {/* {snippet.userId === user.uid && (
                                 <Button onClick={() => deleteSnippet(snippet.id)} className="ml-auto bg-transparent hover:bg-transparent h-0 p-0">
                                     <FaTrash className="text-lg text-red-500 hover:text-red-700" />
                                 </Button>
-                            )}
+                            )} */}
                         </div>
                         <div className="mb-2.5 text-sm">{snippet.description}</div>
-                        {snippet.imageUrl && (
-                            <img src={snippet.imageUrl} alt="Snippet Image" className="mb-2.5 max-w-full md:max-w-60 h-auto rounded-md" />
-                        )}
+
                         {snippet.language && (
                             <>
                                 <CodeBlock language={snippet.language}>
@@ -260,6 +294,9 @@ const CodeShare: React.FC = () => {
                         )}
                         {!snippet.language && (
                             <pre className="bg-[#F3F3F3] dark:bg-slate-900 p-2.5 text-sm whitespace-pre-wrap">{snippet.code}</pre>
+                        )}
+                        {snippet.imageUrl && (
+                            <img src={snippet.imageUrl} alt="Snippet Image" className="mt-[15px] max-w-full md:max-w-[250px] h-auto rounded-md" />
                         )}
                         <div className="flex items-center mt-2.5 pt-2.5 pb-[7.5px]">
                             <Button onClick={() => likeSnippet(snippet.id)} className="bg-transparent hover:bg-transparent h-0 p-0">
