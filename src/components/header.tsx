@@ -205,54 +205,53 @@ export default function Header({ current }: HeaderProps) {
                     {/* <Button className="hidden md:flex bg-blue-500 hover:bg-blue-600 dark:text-white h-[37.5px]">
                         Share Code
                     </Button> */}
-                    <AlertDialog>
-                        <AlertDialogTrigger>
-                            <Button className="hidden sm:flex bg-blue-500 hover:bg-blue-600 dark:text-white h-[37.5px]">
-                                Share Code
-                            </Button>
-                            <Button className="flex sm:hidden bg-blue-500 hover:bg-blue-600 dark:text-white h-[37.5px]">
-                                Code
-                            </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                            <AlertDialogHeader>
-                            <AlertDialogTitle>Share Code</AlertDialogTitle>
-                            <AlertDialogDescription>
-                            Let&apos;s share the awesome code you&apos;ve created with everyone!
-                            </AlertDialogDescription>
-                            </AlertDialogHeader>
-                                <Select
-                                    value={language}
-                                    onValueChange={(value) => setLanguage(value)}
-                                >
-                                    <SelectTrigger className="w-full sm:w-[150px] mb-3 sm:mb-0 sm:mr-3">
-                                        <SelectValue placeholder="Language" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {highlightLanguages.map((highlightLanguage) => (
-                                            <SelectItem key={highlightLanguage.value} value={highlightLanguage.value}>
-                                                {highlightLanguage.label}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                                <Input value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Enter description..." />
-                                <Textarea value={code} onChange={(e) => setCode(e.target.value)} placeholder="Enter your code..." />
-                                <Button onClick={() => fileInputRef.current?.click()} variant={uploadButtonVariant}>
-                                    Upload
-                                    <input
-                                        ref={fileInputRef}
-                                        type="file"
-                                        onChange={handleImageChange}
-                                        style={{ display: 'none' }}
-                                    />
+                    <div className="hidden sm:block">
+                        <AlertDialog>
+                            <AlertDialogTrigger>
+                                <Button className="hidden sm:flex bg-blue-500 hover:bg-blue-600 dark:text-white h-[37.5px]">
+                                    Share Code
                                 </Button>
-                            <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <Button onClick={shareCode} className="">Share<IoIosSend className="ml-[5px] text-lg hidden md:block" /></Button>
-                            </AlertDialogFooter>
-                        </AlertDialogContent>
-                    </AlertDialog>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                <AlertDialogTitle>Share Code</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                Let&apos;s share the awesome code you&apos;ve created with everyone!
+                                </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                    <Select
+                                        value={language}
+                                        onValueChange={(value) => setLanguage(value)}
+                                    >
+                                        <SelectTrigger className="w-full sm:w-[150px] mb-3 sm:mb-0 sm:mr-3">
+                                            <SelectValue placeholder="Language" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {highlightLanguages.map((highlightLanguage) => (
+                                                <SelectItem key={highlightLanguage.value} value={highlightLanguage.value}>
+                                                    {highlightLanguage.label}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    <Input value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Enter description..." />
+                                    <Textarea value={code} onChange={(e) => setCode(e.target.value)} placeholder="Enter your code..." />
+                                    <Button onClick={() => fileInputRef.current?.click()} variant={uploadButtonVariant}>
+                                        Upload
+                                        <input
+                                            ref={fileInputRef}
+                                            type="file"
+                                            onChange={handleImageChange}
+                                            style={{ display: 'none' }}
+                                        />
+                                    </Button>
+                                <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <Button onClick={shareCode} className="">Share<IoIosSend className="ml-[5px] text-lg hidden md:block" /></Button>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
+                    </div>
                 </>
             ) : (
                 <Button className="h-[35px] bg-blue-500 hover:bg-blue-600 dark:text-white" asChild>
