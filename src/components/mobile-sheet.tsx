@@ -5,6 +5,7 @@ import { Menu, Package2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Si9Gag } from "react-icons/si"
+import { RiMenu2Fill } from "react-icons/ri"
 
 type MobileSheetProps = {
     current: string;
@@ -14,7 +15,7 @@ export default function MobileSheet({ current }: MobileSheetProps) {
     return (
         <Sheet>
             <SheetTrigger asChild>
-                <Menu className="cursor-pointer md:hidden" />
+                <RiMenu2Fill className="cursor-pointer md:hidden text-2xl" />
             </SheetTrigger>
             <SheetContent side="left">
                 <nav className="grid gap-5 text-base">

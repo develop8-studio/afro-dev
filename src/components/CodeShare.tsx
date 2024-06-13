@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { collection, doc, addDoc, updateDoc, query, orderBy, onSnapshot, serverTimestamp, getDoc, setDoc, deleteDoc, getDocs } from 'firebase/firestore';
-import { db, auth } from '@/firebase/firebaseConfig';
+import { db, auth, storage } from '@/firebase/firebaseConfig';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { onAuthStateChanged, User } from 'firebase/auth';
@@ -17,8 +17,8 @@ import {
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select"
-import { IoIosArrowDown } from "react-icons/io"
+} from "@/components/ui/select";
+import { IoIosArrowDown } from "react-icons/io";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -26,7 +26,8 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 
 interface CodeSnippet {
     id: string;
@@ -37,6 +38,7 @@ interface CodeSnippet {
     timestamp: any;
     likes: number;
     language: string;
+    imageUrl?: string;
 }
 
 const highlightLanguages = [
@@ -49,7 +51,7 @@ const highlightLanguages = [
     { value: "swift", label: "Swift" },
     { value: "rust", label: "Rust" },
     { value: "go", label: "Golang" },
-]
+];
 highlightLanguages.sort((a, b) => a.label.localeCompare(b.label));
 
 const CodeShare: React.FC = () => {
@@ -60,6 +62,7 @@ const CodeShare: React.FC = () => {
     const [userIcons, setUserIcons] = useState<{ [userId: string]: string }>({});
     const [userLikes, setUserLikes] = useState<{ [snippetId: string]: boolean }>({});
     const [language, setLanguage] = useState<string>('');
+    const [imageFile, setImageFile] = useState<File | null>(null);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -111,6 +114,13 @@ const CodeShare: React.FC = () => {
     const shareCode = async () => {
         if (!code.trim() || !description.trim()) return;
 
+        let imageUrl = '';
+        if (imageFile) {
+            const storageRef = ref(storage, `images/${user?.uid}_${Date.now()}`);
+            await uploadBytes(storageRef, imageFile);
+            imageUrl = await getDownloadURL(storageRef);
+        }
+
         if (user) {
             await addDoc(collection(db, 'codes'), {
                 code,
@@ -119,12 +129,14 @@ const CodeShare: React.FC = () => {
                 userName: user.displayName,
                 timestamp: serverTimestamp(),
                 likes: 0,
-                language
+                language,
+                imageUrl
             });
 
             setCode('');
             setDescription('');
             setLanguage('');
+            setImageFile(null);
         }
     };
 
@@ -215,6 +227,7 @@ const CodeShare: React.FC = () => {
                     </div>
                 </div>
                 <Textarea value={code} onChange={(e) => setCode(e.target.value)} placeholder="Enter your code..." className="mb-3"/>
+                <Input type="file" onChange={(e) => setImageFile(e.target.files ? e.target.files[0] : null)} />
             </div>
             <div className="mt-5 flex-1 space-y-[15px]">
                 {codeSnippets.map(snippet => (
@@ -234,6 +247,9 @@ const CodeShare: React.FC = () => {
                             )}
                         </div>
                         <div className="mb-2.5 text-sm">{snippet.description}</div>
+                        {snippet.imageUrl && (
+                            <img src={snippet.imageUrl} alt="Snippet Image" className="mb-2.5 max-w-full md:max-w-60 h-auto rounded-md" />
+                        )}
                         {snippet.language && (
                             <>
                                 <CodeBlock language={snippet.language}>
@@ -256,6 +272,6 @@ const CodeShare: React.FC = () => {
             </div>
         </>
     );
-}
+};
 
 export default CodeShare;
