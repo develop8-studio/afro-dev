@@ -215,7 +215,7 @@ export default function Header({ current }: HeaderProps) {
                             <AlertDialogHeader>
                             <AlertDialogTitle>Share Code</AlertDialogTitle>
                             <AlertDialogDescription>
-                            Let's share the awesome code you've created with everyone!
+                            Let&apos;s share the awesome code you&apos;ve created with everyone!
                             </AlertDialogDescription>
                             </AlertDialogHeader>
                                 <Select
