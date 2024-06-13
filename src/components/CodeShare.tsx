@@ -244,7 +244,7 @@ const CodeShare: React.FC = () => {
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <Select value={language} onValueChange={(value) => setLanguage(value)}>
-                        <SelectTrigger className="w-full sm:w-[150px] mb-3 sm:mb-0 sm:mr-3">
+                        <SelectTrigger className="w-full sm:w-[150px] sm:mr-3">
                                 <SelectValue placeholder="Language" />
                         </SelectTrigger>
                         <SelectContent>
