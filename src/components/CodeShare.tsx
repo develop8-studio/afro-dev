@@ -247,7 +247,7 @@ const CodeShare: React.FC = () => {
                         )}
                         <div className="flex items-center mt-2.5 pt-2.5 pb-[7.5px]">
                             <Button onClick={() => likeSnippet(snippet.id)} className="bg-transparent hover:bg-transparent h-0 p-0">
-                                <FaHeart className={`text-lg mr-[10px] transition-all ${userLikes[snippet.id] ? 'text-red-500' : 'text-slate-300'} hover:text-red-500`} />
+                                <FaHeart className={`text-lg mr-[10px] transition-all ${userLikes[snippet.id] ? 'text-red-500' : 'text-slate-300'}`} />
                             </Button>
                             <span className="text-sm text-slate-500">{snippet.likes}</span>
                         </div>
