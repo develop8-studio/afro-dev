@@ -228,7 +228,7 @@ const CodeShare: React.FC = () => {
 
     return (
         <>
-            <AlertDialog>
+            {/* <AlertDialog>
                 <AlertDialogTrigger>Share Code</AlertDialogTrigger>
                 <AlertDialogContent>
                     <AlertDialogHeader>
@@ -268,7 +268,7 @@ const CodeShare: React.FC = () => {
                         <Button onClick={shareCode} className="">Share<IoIosSend className="ml-[5px] text-lg hidden md:block" /></Button>
                     </AlertDialogFooter>
                 </AlertDialogContent>
-            </AlertDialog>
+            </AlertDialog> */}
             <div className="flex flex-col h-full">
                 <div className="contents sm:flex flex-col sm:flex-row">
                     <div className="sm:flex-grow">
