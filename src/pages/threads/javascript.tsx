@@ -16,10 +16,10 @@ export default function DashboardPage() {
             <title>Thread about JavaScript -Afro.dev</title>
         </Head>
         <Header current="threads" />
-        <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 bg-slate-50 dark:bg-muted/40">
+        <Layout>
             <RoomSelector currentRoom={currentRoom} setCurrentRoom={setCurrentRoom} topic="javascript" />
             {currentRoom && <Chat currentRoom={currentRoom} topic="javascript" />}
-        </main>
+        </Layout>
         </div>
     )
 }
