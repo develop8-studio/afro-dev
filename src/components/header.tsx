@@ -26,8 +26,8 @@ import Layout from "@/components/Layout"
 import { Textarea } from '@/components/ui/textarea'
 import { IoIosSend } from "react-icons/io"
 import 'highlight.js/styles/default.css'
-import CodeBlock from '@/components/CodeBlock'
-import CodeShareButton from "./CodeShareButton";
+import CodeBlock from "./Code/CodeBlock";
+import CodeShareButton from "./Code/CodeShareButton";
 import {
     Select,
     SelectContent,
@@ -117,7 +117,7 @@ export default function Header({ current }: HeaderProps) {
                 <>
                     <SearchMenu />
                     <UserMenu />
-                    <div className="hidden sm:block">
+                    <div className="hidden md:block">
                         <CodeShareButton />
                     </div>
                 </>
