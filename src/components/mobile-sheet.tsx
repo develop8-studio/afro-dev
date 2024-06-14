@@ -14,10 +14,10 @@ type MobileSheetProps = {
 export default function MobileSheet({ current }: MobileSheetProps) {
     return (
         <Sheet>
-            <SheetTrigger asChild>
+            <SheetTrigger>
                 {/* <RiMenu2Fill className="cursor-pointer md:hidden text-2xl" /> */}
-                <Image src="/afro-black-text.png" alt="" width={100} height={100} className="w-[60px] block dark:hidden" />
-                <Image src="/afro-white-text.png" alt="" width={100} height={100} className="w-[60px] hidden dark:block" />
+                <Image src="/afro-black-text.png" alt="" width={100} height={100} className="mt-1.5 w-[60px] block dark:hidden md:hidden" />
+                <Image src="/afro-white-text.png" alt="" width={100} height={100} className="mt-1.5 w-[60px] hidden dark:block md:hidden" />
             </SheetTrigger>
             <SheetContent side="left">
                 <nav className="grid gap-5 text-base">
