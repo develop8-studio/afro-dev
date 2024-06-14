@@ -86,7 +86,7 @@ export default function ThreadsList() {
                         className="rounded-full w-full"
                     />
                 </div>
-                <div className="flex flex-col space-y-3 lg:mt-10">
+                <div className="flex flex-col space-y-3 lg:mt-[50px]">
                     {filteredRooms.map(room => (
                         <Card key={room.id} className="flex justify-center items-center overflow-hidden p-[17.5px]">
                             <div className="flex-grow mr-3">
