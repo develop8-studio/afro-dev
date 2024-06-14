@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { onAuthStateChanged, User } from 'firebase/auth'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { FaHeart } from "react-icons/fa"
+import { IoIosSend } from 'react-icons/io'
 
 interface Message {
     id: string;
@@ -142,7 +143,7 @@ const Chat: React.FC<ChatProps> = ({ currentRoom, topic }) => {
                             style={{ display: 'none' }}
                         />
                     </Button>
-                    <Button onClick={sendMessage} className="ml-3">Send</Button>
+                    <Button onClick={sendMessage} className="ml-3">Send<IoIosSend className="ml-[5px] text-lg hidden md:block" /></Button>
                 </div>
                 <Input ref={fileInputRef} type="file" onChange={handleImageChange} className="mb-3 block sm:hidden" />
                 <div className="mt-3 flex-1 w-full space-y-3">
