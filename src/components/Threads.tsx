@@ -75,27 +75,31 @@ export default function ThreadsList() {
     );
 
     return (
-        <Layout>
-            <Input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search for topics..."
-                className="w-full rounded-full"
-            />
-            <div className="flex flex-col space-y-3">
-                {filteredRooms.map(room => (
-                    <Card key={room.id} className="flex justify-center items-center overflow-hidden p-[17.5px]">
-                        <div className="flex-grow mr-3">
-                            <h3 className="text-lg font-semibold mb-1">{room.name}</h3>
-                            <DescriptionWithReadMore description={room.description} />
-                        </div>
-                        <Button className="rounded-full" asChild>
-                            <Link href={room.link}>View</Link>
-                        </Button>
-                    </Card>
-                ))}
-            </div>
-        </Layout>
+        <>
+            <Layout>
+                <div className="lg:fixed lg:top-[60px] lg:left-0 lg:right-0 lg:bg-white lg:z-10 lg:px-5 lg:py-2.5">
+                    <Input
+                        type="text"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        placeholder="Search for topics..."
+                        className="rounded-full w-full"
+                    />
+                </div>
+                <div className="flex flex-col space-y-3 lg:mt-10">
+                    {filteredRooms.map(room => (
+                        <Card key={room.id} className="flex justify-center items-center overflow-hidden p-[17.5px]">
+                            <div className="flex-grow mr-3">
+                                <h3 className="text-lg font-semibold mb-1">{room.name}</h3>
+                                <DescriptionWithReadMore description={room.description} />
+                            </div>
+                            <Button className="rounded-full" asChild>
+                                <Link href={room.link}>View</Link>
+                            </Button>
+                        </Card>
+                    ))}
+                </div>
+            </Layout>
+        </>
     )
 }
