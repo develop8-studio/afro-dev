@@ -17,7 +17,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <link rel="apple-touch-icon" href="/afro-mobile-icon.png" />
         {/* <link rel="apple-touch-icon" href="/apple-touch-icon.png" /> */}
       </Head>
-      <div className="m-0 p-0 font-sans">
+      <div className="m-0 p-0">
         <Component {...pageProps} />
       </div>
     </ThemeProvider>
