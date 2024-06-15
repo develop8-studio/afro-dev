@@ -47,7 +47,7 @@ export default function MobileSheet({ current }: MobileSheetProps) {
                     {/* <Link href="/tools">
                         Tools
                     </Link> */}
-                    <Link href="/codes">
+                    <Link href="/">
                         Codes
                     </Link>
                     <Link href="/threads">
