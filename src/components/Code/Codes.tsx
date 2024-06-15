@@ -302,12 +302,12 @@ const Codes: React.FC = () => {
                             </div>
                             <div className="my-2.5">
                                 {showComments[snippet.id] && comments[snippet.id]?.map(comment => (
-                                    <div key={comment.id} className='border-b py-3.5'>
+                                    <div key={comment.id} className='border-b py-[15px]'>
                                         <div className="flex items-center mb-1.5">
                                             {userIcons[comment.userId] && (
-                                                <img src={userIcons[comment.userId]} alt="User Icon" className="w-[35px] h-[35px] rounded-full mr-2 border" />
+                                                <img src={userIcons[comment.userId]} alt="User Icon" className="w-[30px] h-[30px] rounded-full mr-2 border" />
                                             )}
-                                            <span className="font-semibold">{comment.userName}</span>
+                                            <span className="font-semibold text-sm">{comment.userName}</span>
                                             <span className="ml-2.5 text-xs text-slate-400">{comment.timestamp ? (comment.timestamp.toDate ? new Date(comment.timestamp.toDate()).toLocaleString() : new Date(comment.timestamp).toLocaleString()) : 'No timestamp'}</span>
                                         </div>
                                         <div className="text-sm text-slate-700 dark:text-slate-400">{comment.text}</div>
