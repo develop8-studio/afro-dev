@@ -353,7 +353,7 @@ export default function CodesBookmark() {
                                         />
                                         <Button className="ml-3 bg-blue-500 hover:bg-blue-600 dark:text-white" onClick={() => addComment(snippet.id)}>Post<IoIosSend className="ml-[5px] text-lg hidden md:block" /></Button>
                                     </div>
-                                    <div className="my-2.5 mx-1">
+                                    <div className="my-2.5">
                                         {showComments[snippet.id] && comments[snippet.id]?.map(comment => (
                                         <div key={comment.id} className='pt-[10px] pb-[15px] border-b'>
                                             <div className="flex items-center">
