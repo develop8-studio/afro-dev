@@ -19,8 +19,8 @@ import * as React from "react"
 import { Switch } from "@/components/ui/switch"
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
 import { z } from "zod"
+import { useForm } from "react-hook-form"
 
 import Header from "@/components/header"
 import SettingsMenu from "@/components/settings"

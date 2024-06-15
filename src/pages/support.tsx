@@ -40,14 +40,14 @@ export default function SupportPage() {
                     <div className="grid gap-6">
                         <Card x-chunk="dashboard-04-chunk-1">
                             <CardHeader>
-                                <CardTitle>Account Creation</CardTitle>
+                                <h3 className="text-xl font-semibold">Account Creation</h3>
                                 <CardDescription>Creating an account is simple and flexible. You can sign up using your email and a password, or you can link your Google account for a quicker setup.</CardDescription>
                             </CardHeader>
                             <CardContent>
                                 <Accordion type="single" collapsible className="mx-5">
                                 <AccordionItem value="item-1">
-                                    <AccordionTrigger className="font-normal">How do I create an account?</AccordionTrigger>
-                                    <AccordionContent className="font-light">
+                                    <AccordionTrigger>How do I create an account?</AccordionTrigger>
+                                    <AccordionContent className="font-normal">
                                         You can create an account using your email and password or by linking your Google account. Just follow the prompts on the sign-up page.
                                     </AccordionContent>
                                 </AccordionItem>
@@ -56,26 +56,26 @@ export default function SupportPage() {
                         </Card>
                         <Card x-chunk="dashboard-04-chunk-2">
                             <CardHeader>
-                                <CardTitle>Profile Settings</CardTitle>
+                                <h3 className="text-xl font-semibold">Profile Settings</h3>
                                 <CardDescription>Once your account is created, you can personalize your profile by setting your icon and username through the Settings page.</CardDescription>
                             </CardHeader>
                             <CardContent>
                                 <Accordion type="single" collapsible className="mx-5">
                                 <AccordionItem value="item-1">
-                                    <AccordionTrigger className="font-normal">How can I set my icon and username?</AccordionTrigger>
-                                    <AccordionContent className="font-light">
+                                    <AccordionTrigger>How can I set my icon and username?</AccordionTrigger>
+                                    <AccordionContent className="font-normal">
                                         Go to the <Link href="/settings/account" className="underline">Settings</Link> page after creating your account. There, you can upload an icon and set your username to personalize your profile.
                                     </AccordionContent>
                                 </AccordionItem>
                                 <AccordionItem value="item-2">
-                                    <AccordionTrigger className="font-normal">Can I link my Google account after creating my account with email and password?</AccordionTrigger>
-                                    <AccordionContent className="font-light">
+                                    <AccordionTrigger>Can I link my Google account after creating my account with email and password?</AccordionTrigger>
+                                    <AccordionContent className="font-normal">
                                         Yes, you can link your Google account at any time through the <Link href="/settings/integrations" className="underline">Settings</Link> page.
                                     </AccordionContent>
                                 </AccordionItem>
                                 <AccordionItem value="item-3">
-                                    <AccordionTrigger className="font-normal">How do I switch between Light Mode and Dark Mode?</AccordionTrigger>
-                                    <AccordionContent className="font-light">
+                                    <AccordionTrigger>How do I switch between Light Mode and Dark Mode?</AccordionTrigger>
+                                    <AccordionContent className="font-normal">
                                         Navigate to the <Link href="/settings" className="underline">Settings</Link> page where you can select either Light Mode or Dark Mode to suit your preference.
                                     </AccordionContent>
                                 </AccordionItem>
