@@ -6,7 +6,7 @@ import { db, auth } from '@/firebase/firebaseConfig'
 import { Button } from '@/components/ui/button'
 import { onAuthStateChanged, User } from 'firebase/auth'
 import { Card } from '@/components/ui/card'
-import { FaHeart, FaComment } from 'react-icons/fa'
+import { FaHeart, FaReply } from 'react-icons/fa'
 import { FiCopy, FiTrash } from 'react-icons/fi'
 import 'highlight.js/styles/default.css'
 import CodeBlock from './CodeBlock'
@@ -278,12 +278,8 @@ const Codes: React.FC = () => {
                             <FaHeart className={`text-lg mr-[10px] transition-all ${userLikes[snippet.id] ? 'text-red-500' : 'text-slate-300'}`} />
                         </Button>
                         <span className="text-sm text-slate-500">{snippet.likes}</span>
-                        <Button
-                            variant="outline"
-                            className="ml-auto"
-                            onClick={() => toggleComments(snippet.id)}
-                        >
-                            Comments
+                        <Button onClick={() => toggleComments(snippet.id)} className="bg-transparent hover:bg-transparent h-0 p-0 ml-3">
+                            <FaReply className="text-lg text-blue-500" />
                         </Button>
                     </div>
                     {showComments[snippet.id] && (
