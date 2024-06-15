@@ -107,9 +107,9 @@ export default function Dashboard() {
             <SettingsMenu current="security" />
             <div className="grid gap-6">
             <Alert>
-                <RocketIcon className="h-4 w-4" />
+                <RocketIcon className="h-5 w-5" />
                 <AlertTitle>Sorry about that!</AlertTitle>
-                <AlertDescription className="font-light">
+                <AlertDescription>
                     For now, you&apos;ll need to use Google to set or change your password, but we&apos;re on it and will fix it soon!
                 </AlertDescription>
             </Alert>
