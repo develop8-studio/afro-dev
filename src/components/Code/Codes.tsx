@@ -246,10 +246,14 @@ const Codes: React.FC = () => {
                                 <BsThreeDotsVertical className="text-lg" />
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
-                                <DropdownMenuItem onClick={() => deleteSnippet(snippet.id)}>
-                                    <FiTrash className="mr-1.5" />Delete
-                                </DropdownMenuItem>
-                                <DropdownMenuSeparator />
+                                {user && snippet.userId === user.uid && (
+                                    <>
+                                        <DropdownMenuItem onClick={() => deleteSnippet(snippet.id)}>
+                                            <FiTrash className="mr-1.5" />Delete
+                                        </DropdownMenuItem>
+                                        <DropdownMenuSeparator />
+                                    </>
+                                )}
                                 <DropdownMenuItem onClick={() => copyToClipboard(snippet.code)}>
                                     <FiCopy className="mr-1.5" />Copy Code
                                 </DropdownMenuItem>
