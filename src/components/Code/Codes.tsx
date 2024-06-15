@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { Card } from '@/components/ui/card';
 import { FaHeart } from 'react-icons/fa';
-import { FiCopy } from 'react-icons/fi';
+import { FiCopy, FiTrash } from 'react-icons/fi';
 import 'highlight.js/styles/default.css';
 import CodeBlock from './CodeBlock';
 import {
@@ -179,22 +179,24 @@ const Codes: React.FC = () => {
                         <span className="ml-2.5 text-xs text-slate-500 font-light">
                             {snippet.timestamp ? new Date(snippet.timestamp.toDate()).toLocaleString() : 'No timestamp'}
                         </span>
-                        <Button onClick={() => copyToClipboard(snippet.code)} className="bg-transparent hover:bg-transparent h-0 p-0 ml-2.5 hidden md:flex">
+                        {/* <Button onClick={() => copyToClipboard(snippet.code)} className="bg-transparent hover:bg-transparent h-0 p-0 ml-2.5 hidden md:flex">
                             <FiCopy className="text-lg transition-all text-slate-500 hover:text-slate-700" />
-                        </Button>
+                        </Button> */}
                         <DropdownMenu>
                             <DropdownMenuTrigger className="ml-auto">
                                 <BsThreeDotsVertical className="text-lg" />
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
                                 {snippet.userId === user.uid && (
-                                    <DropdownMenuItem onClick={() => deleteSnippet(snippet.id)}>Delete</DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => deleteSnippet(snippet.id)}><FiTrash className='mr-1.5' />Delete</DropdownMenuItem>
                                 )}
-                                <DropdownMenuItem onClick={() => copyToClipboard(snippet.code)} className="block md:hidden">Copy Code</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => copyToClipboard(snippet.code)}><FiCopy className='mr-1.5' />Copy Code</DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
-                    <div className="mb-2.5 text-sm">{snippet.description}</div>
+                    <div className="mb-2.5 text-sm flex">
+                        {snippet.description}
+                    </div>
                     {snippet.language && (
                         <>
                             <CodeBlock language={snippet.language}>
