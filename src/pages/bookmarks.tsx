@@ -336,7 +336,7 @@ export default function CodesBookmark() {
                                     <FaReply className={`text-lg ${comments[snippet.id]?.some(comment => comment.userId === user?.uid) ? 'text-blue-500 dark:text-blue-400' : 'text-slate-300'}`} />
                                 </Button>
                                 <Button onClick={() => bookmarkSnippet(snippet.id)} className="bg-transparent hover:bg-transparent h-0 p-0 ml-3">
-                                    <FaBookmark className={`text-lg ${userBookmarks[snippet.id] ? 'text-yellow-500' : 'text-slate-300'}`} />
+                                    <FaBookmark className={`text-lg ${userBookmarks[snippet.id] ? 'text-yellow-500 dark:text-yellow-400' : 'text-slate-300'}`} />
                                 </Button>
                             </div>
                             {showComments[snippet.id] && (

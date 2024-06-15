@@ -112,7 +112,7 @@ export default function UserMenu() {
                         )}
                     </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
+                <DropdownMenuContent align="end" className="w-[150px]">
                 {/* <DropdownMenuLabel>{user?.displayName ? `${user.displayName}` : 'My Account'}</DropdownMenuLabel> */}
                 {/* <DropdownMenuSeparator /> */}
                 <Link href="/settings"><DropdownMenuItem><Settings className="mr-2 h-4 w-4 text-slate-500 dark:text-slate-300" />General</DropdownMenuItem></Link>
@@ -120,7 +120,7 @@ export default function UserMenu() {
                 <DropdownMenuSeparator />
                 <Link href="/bookmarks"><DropdownMenuItem><Bookmark className="mr-2 h-4 w-4 text-slate-500 dark:text-slate-300" />Bookmarks</DropdownMenuItem></Link>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleLogout}><LogOut className="mr-2 h-4 w-4 text-slate-500 dark:text-slate-300" />Logout</DropdownMenuItem>
+                <DropdownMenuItem onClick={handleLogout}><LogOut className="ml-px mr-2 h-4 w-4 text-slate-500 dark:text-slate-300" />Logout</DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
             {error && (
