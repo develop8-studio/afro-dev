@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/accordion"
 
 import Header from "@/components/header";
-import UserMenu from "@/components/user";
+import UserMenu from "@/components/User";
 import SettingsMenu from "@/components/settings";
 import MobileSheet from "@/components/mobile-sheet";
 

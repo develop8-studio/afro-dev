@@ -38,7 +38,7 @@ import {
 } from "@/components/ui/table"
 
 import SearchMenu from "@/components/search"
-import UserMenu from "@/components/user"
+import UserMenu from "@/components/User"
 import MobileSheet from "@/components/mobile-sheet"
 import Header from "@/components/header"
 

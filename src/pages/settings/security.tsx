@@ -46,7 +46,7 @@ import { initializeApp } from "firebase/app";
 
 import Header from "@/components/header"
 import SearchMenu from "@/components/search"
-import UserMenu from "@/components/user"
+import UserMenu from "@/components/User"
 import SettingsMenu from "@/components/settings"
 import MobileSheet from "@/components/mobile-sheet"
 

@@ -353,20 +353,24 @@ export default function CodesBookmark() {
                                         />
                                         <Button className="ml-3 bg-blue-500 hover:bg-blue-600 dark:text-white" onClick={() => addComment(snippet.id)}>Post<IoIosSend className="ml-[5px] text-lg hidden md:block" /></Button>
                                     </div>
-                                    <div className="my-2.5">
+                                    <div className="my-2.5 mx-1">
                                         {showComments[snippet.id] && comments[snippet.id]?.map(comment => (
-                                            <div key={comment.id} className='pt-2.5 pb-3 border-b'>
-                                                <div className="flex items-center">
-                                                    {userIcons[comment.userId] && (
-                                                        <img src={userIcons[comment.userId]} alt="User Icon" className="w-[30px] h-[30px] rounded-full mr-[10px] border" />
-                                                    )}
-                                                    <span className="font-semibold text-sm">{comment.userName}</span>
-                                                    <span className="ml-2.5 text-xs text-slate-400">
-                                                        {comment.timestamp ? (comment.timestamp.toDate ? new Date(comment.timestamp.toDate()).toLocaleString() : new Date(comment.timestamp).toLocaleString()) : 'No timestamp'}
-                                                    </span>
-                                                </div>
-                                                <div className="text-sm ml-10">{comment.text}</div>
+                                        <div key={comment.id} className='pt-[10px] pb-[15px] border-b'>
+                                            <div className="flex items-center">
+                                                {userIcons[comment.userId] && (
+                                                    <img
+                                                        src={userIcons[comment.userId]}
+                                                        alt="User Icon"
+                                                        className="w-[30px] h-[30px] rounded-full mr-2.5 border"
+                                                    />
+                                                )}
+                                                <span className="font-semibold text-sm">{comment.userName}</span>
+                                                <span className="text-xs text-slate-400 ml-2.5">{comment.timestamp ? (comment.timestamp.toDate ? new Date(comment.timestamp.toDate()).toLocaleString() : new Date(comment.timestamp).toLocaleString()) : 'No timestamp'}</span>
                                             </div>
+                                            <div className="text-sm text-slate-700 dark:text-slate-400 ml-10">
+                                                {comment.text}
+                                            </div>
+                                        </div>
                                         ))}
                                     </div>
                                 </div>

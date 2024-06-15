@@ -42,7 +42,7 @@ import { FaGoogle } from "react-icons/fa";
 import { getAuth, updateProfile, GoogleAuthProvider, signInWithPopup, reauthenticateWithPopup, deleteUser } from "firebase/auth";
 
 import Header from "@/components/header";
-import UserMenu from "@/components/user";
+import UserMenu from "@/components/User";
 import SettingsMenu from "@/components/settings";
 import MobileSheet from "@/components/mobile-sheet";
 
