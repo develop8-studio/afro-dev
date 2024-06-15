@@ -283,7 +283,7 @@ const Codes: React.FC = () => {
                         </Button>
                         <span className="text-sm text-slate-500 dark:text-slate-400">{snippet.likes}</span>
                         <Button onClick={() => toggleComments(snippet.id)} className="bg-transparent hover:bg-transparent h-0 p-0 ml-3">
-                            <FaReply className="text-lg text-blue-500 dark:text-blue-400" />
+                            <FaReply className={`text-lg ${comments[snippet.id]?.some(comment => comment.userId === user?.uid) ? 'text-blue-500 dark:text-blue-400' : 'text-slate-300'}`} />
                         </Button>
                     </div>
                     {showComments[snippet.id] && (
