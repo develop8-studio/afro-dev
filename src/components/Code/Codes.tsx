@@ -6,7 +6,7 @@ import { db, auth } from '@/firebase/firebaseConfig'
 import { Button } from '@/components/ui/button'
 import { onAuthStateChanged, User } from 'firebase/auth'
 import { Card } from '@/components/ui/card'
-import { FaHeart, FaReply } from 'react-icons/fa'
+import { FaHeart, FaReply, FaBookmark } from 'react-icons/fa'
 import { FiCopy, FiTrash } from 'react-icons/fi'
 import 'highlight.js/styles/default.css'
 import CodeBlock from './CodeBlock'
@@ -62,10 +62,14 @@ const Codes: React.FC = () => {
     const [newComment, setNewComment] = useState<{ [snippetId: string]: string }>({});
     const [error, setError] = useState<string | null>(null);
     const [showComments, setShowComments] = useState<{ [snippetId: string]: boolean }>({});
+    const [userBookmarks, setUserBookmarks] = useState<{ [snippetId: string]: boolean }>({});
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser);
+            if (currentUser) {
+                fetchUserBookmarks(currentUser.uid);
+            }
         });
         return () => unsubscribe();
     }, []);
@@ -229,6 +233,33 @@ const Codes: React.FC = () => {
         }));
     };
 
+    const fetchUserBookmarks = async (userId: string) => {
+        const bookmarksSnapshot = await getDocs(collection(db, 'users', userId, 'bookmarks'));
+        const bookmarksData: { [key: string]: boolean } = {};
+        bookmarksSnapshot.docs.forEach((doc) => {
+            bookmarksData[doc.id] = true;
+        });
+        setUserBookmarks(bookmarksData);
+    };
+
+    const bookmarkSnippet = async (snippetId: string) => {
+        if (!user) return;
+        const bookmarkRef = doc(db, 'users', user.uid, 'bookmarks', snippetId);
+        if (userBookmarks[snippetId]) {
+            await deleteDoc(bookmarkRef);
+            setUserBookmarks((prevState) => ({
+                ...prevState,
+                [snippetId]: false,
+            }));
+        } else {
+            await setDoc(bookmarkRef, {});
+            setUserBookmarks((prevState) => ({
+                ...prevState,
+                [snippetId]: true,
+            }));
+        }
+    };
+
     return (
         <div className="flex-1 space-y-[15px]">
             {codeSnippets.map((snippet) => (
@@ -285,10 +316,13 @@ const Codes: React.FC = () => {
                         <Button onClick={() => toggleComments(snippet.id)} className="bg-transparent hover:bg-transparent h-0 p-0 ml-3">
                             <FaReply className={`text-lg ${comments[snippet.id]?.some(comment => comment.userId === user?.uid) ? 'text-blue-500 dark:text-blue-400' : 'text-slate-300'}`} />
                         </Button>
+                        <Button onClick={() => bookmarkSnippet(snippet.id)} className="bg-transparent hover:bg-transparent h-0 p-0 ml-3">
+                            <FaBookmark className={`text-lg ${userBookmarks[snippet.id] ? 'text-yellow-500' : 'text-slate-300'}`} />
+                        </Button>
                     </div>
                     {showComments[snippet.id] && (
                         <div className="mt-5">
-                            <div className="flex items-center mt-3">
+                            <div className="flex items-center">
                                 <Input
                                     type="text"
                                     placeholder="Add a comment..."
@@ -302,15 +336,15 @@ const Codes: React.FC = () => {
                             </div>
                             <div className="my-2.5">
                                 {showComments[snippet.id] && comments[snippet.id]?.map(comment => (
-                                    <div key={comment.id} className='border-b py-[15px]'>
-                                        <div className="flex items-center mb-1.5">
+                                    <div key={comment.id} className='pt-2.5 pb-3 border-b'>
+                                        <div className="flex items-center">
                                             {userIcons[comment.userId] && (
-                                                <img src={userIcons[comment.userId]} alt="User Icon" className="w-[30px] h-[30px] rounded-full mr-2 border" />
+                                                <img src={userIcons[comment.userId]} alt="User Icon" className="w-[30px] h-[30px] rounded-full mr-[10px] border" />
                                             )}
                                             <span className="font-semibold text-sm">{comment.userName}</span>
                                             <span className="ml-2.5 text-xs text-slate-400">{comment.timestamp ? (comment.timestamp.toDate ? new Date(comment.timestamp.toDate()).toLocaleString() : new Date(comment.timestamp).toLocaleString()) : 'No timestamp'}</span>
                                         </div>
-                                        <div className="text-sm text-slate-700 dark:text-slate-400">{comment.text}</div>
+                                        <div className="text-sm text-slate-700 dark:text-slate-400 ml-10">{comment.text}</div>
                                     </div>
                                 ))}
                             </div>
