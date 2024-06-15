@@ -114,10 +114,10 @@ export default function UserMenu() {
                 <DropdownMenuContent align="end">
                 {/* <DropdownMenuLabel>{user?.displayName ? `${user.displayName}` : 'My Account'}</DropdownMenuLabel> */}
                 {/* <DropdownMenuSeparator /> */}
-                <Link href="/settings"><DropdownMenuItem className="p-1.5"><Settings className="mr-2 h-4 w-4 text-slate-500 dark:text-slate-300" />General</DropdownMenuItem></Link>
-                <Link href="/settings/account"><DropdownMenuItem className="p-1.5"><User className="mr-2 h-4 w-4 text-slate-500 dark:text-slate-300" />Account</DropdownMenuItem></Link>
+                <Link href="/settings"><DropdownMenuItem><Settings className="mr-2 h-4 w-4 text-slate-500 dark:text-slate-300" />General</DropdownMenuItem></Link>
+                <Link href="/settings/account"><DropdownMenuItem><User className="mr-2 h-4 w-4 text-slate-500 dark:text-slate-300" />Account</DropdownMenuItem></Link>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleLogout} className="p-1.5"><LogOut className="mr-2 h-4 w-4 text-slate-500 dark:text-slate-300" />Logout</DropdownMenuItem>
+                <DropdownMenuItem onClick={handleLogout}><LogOut className="mr-2 h-4 w-4 text-slate-500 dark:text-slate-300" />Logout</DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
             {error && (

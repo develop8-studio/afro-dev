@@ -279,11 +279,11 @@ const Codes: React.FC = () => {
                     )}
                     <div className="flex items-center mt-2.5 pt-2.5">
                         <Button onClick={() => likeSnippet(snippet.id)} className="bg-transparent hover:bg-transparent h-0 p-0">
-                            <FaHeart className={`text-lg mr-[10px] transition-all ${userLikes[snippet.id] ? 'text-red-500' : 'text-slate-300'}`} />
+                            <FaHeart className={`text-lg mr-[10px] transition-all ${userLikes[snippet.id] ? 'text-red-500 dark:text-red-400' : 'text-slate-300'}`} />
                         </Button>
-                        <span className="text-sm text-slate-500">{snippet.likes}</span>
+                        <span className="text-sm text-slate-500 dark:text-slate-400">{snippet.likes}</span>
                         <Button onClick={() => toggleComments(snippet.id)} className="bg-transparent hover:bg-transparent h-0 p-0 ml-3">
-                            <FaReply className="text-lg text-blue-500" />
+                            <FaReply className="text-lg text-blue-500 dark:text-blue-400" />
                         </Button>
                     </div>
                     {showComments[snippet.id] && (
@@ -298,7 +298,7 @@ const Codes: React.FC = () => {
                                         [snippet.id]: e.target.value,
                                     })}
                                 />
-                                <Button className="ml-3 bg-blue-500 hover:bg-blue-600" onClick={() => addComment(snippet.id)}>Post<IoIosSend className="ml-[5px] text-lg hidden md:block" /></Button>
+                                <Button className="ml-3 bg-blue-500 hover:bg-blue-600 dark:text-white" onClick={() => addComment(snippet.id)}>Post<IoIosSend className="ml-[5px] text-lg hidden md:block" /></Button>
                             </div>
                             <div className="my-2.5">
                                 {showComments[snippet.id] && comments[snippet.id]?.map(comment => (
@@ -310,7 +310,7 @@ const Codes: React.FC = () => {
                                             <span className="font-semibold">{comment.userName}</span>
                                             <span className="ml-2.5 text-xs text-slate-400">{comment.timestamp ? (comment.timestamp.toDate ? new Date(comment.timestamp.toDate()).toLocaleString() : new Date(comment.timestamp).toLocaleString()) : 'No timestamp'}</span>
                                         </div>
-                                        <div className="text-sm text-slate-700">{comment.text}</div>
+                                        <div className="text-sm text-slate-700 dark:text-slate-400">{comment.text}</div>
                                     </div>
                                 ))}
                             </div>

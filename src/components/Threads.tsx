@@ -77,7 +77,7 @@ export default function ThreadsList() {
     return (
         <>
             <Layout>
-                <div className="lg:fixed lg:top-[60px] lg:left-0 lg:right-0 lg:bg-white lg:z-10 lg:px-5 lg:py-2.5">
+                <div className="lg:fixed lg:top-[60px] lg:left-0 lg:right-0 lg:bg-white dark:lg:bg-slate-950 lg:z-10 lg:px-5 lg:py-2.5">
                     <Input
                         type="text"
                         value={searchQuery}
