@@ -63,9 +63,9 @@ export default function Dashboard() {
             <div className="grid gap-6">
             <Card x-chunk="dashboard-04-chunk-1">
                 <CardHeader>
-                    <CardTitle>Mode</CardTitle>
+                    <h3 className="text-xl font-semibold">Mode</h3>
                 </CardHeader>
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center">
                     <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
                     <CardContent>
                     <Card className="flex flex-row items-center justify-between p-3">

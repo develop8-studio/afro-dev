@@ -116,7 +116,7 @@ export default function Dashboard() {
             <div className="grid gap-6">
                 <Card x-chunk="dashboard-04-chunk-1">
                     <CardHeader>
-                        <CardTitle>Integration</CardTitle>
+                        <h3 className="text-xl font-semibold">Integration</h3>
                         <CardDescription>Link your account with Google.</CardDescription>
                     </CardHeader>
                     <CardContent>

@@ -115,7 +115,7 @@ export default function Dashboard() {
             </Alert>
             <Card x-chunk="dashboard-04-chunk-1">
                 <CardHeader>
-                    <CardTitle>Change Password</CardTitle>
+                    <h3 className="text-xl font-semibold">Change Password</h3>
                     <CardDescription>
                         Update your account password.
                     </CardDescription>

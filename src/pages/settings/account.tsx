@@ -206,7 +206,7 @@ export default function AccountSettingsPage() {
                     <div className="grid gap-6">
                         <Card x-chunk="dashboard-04-chunk-1">
                             <CardHeader>
-                                <CardTitle>Profile Icon</CardTitle>
+                                <h3 className="text-xl font-semibold">Profile Icon</h3>
                                 <CardDescription>
                                     Upload a new profile icon.
                                 </CardDescription>
@@ -227,7 +227,7 @@ export default function AccountSettingsPage() {
                         </Card>
                         <Card x-chunk="dashboard-04-chunk-2">
                             <CardHeader>
-                                <CardTitle>Username</CardTitle>
+                                <h3 className="text-xl font-semibold">Username</h3>
                                 <CardDescription>
                                     Update your display name.
                                 </CardDescription>
@@ -249,7 +249,7 @@ export default function AccountSettingsPage() {
                         </Card>
                         <Card x-chunk="dashboard-04-chunk-3">
                             <CardHeader>
-                                <CardTitle>Delete Account</CardTitle>
+                                <h3 className="text-xl font-semibold">Delete Account</h3>
                                 <CardDescription>
                                     Delete your account permanently.
                                 </CardDescription>

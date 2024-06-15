@@ -12,6 +12,7 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
+    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { BsThreeDotsVertical } from 'react-icons/bs';
@@ -25,6 +26,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import { DropdownMenuLabel } from '@radix-ui/react-dropdown-menu';
 
 interface CodeSnippet {
     id: string;
@@ -188,7 +190,10 @@ const Codes: React.FC = () => {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
                                 {snippet.userId === user.uid && (
-                                    <DropdownMenuItem onClick={() => deleteSnippet(snippet.id)}><FiTrash className='mr-1.5' />Delete</DropdownMenuItem>
+                                    <>
+                                        <DropdownMenuItem onClick={() => deleteSnippet(snippet.id)}><FiTrash className='mr-1.5' />Delete</DropdownMenuItem>
+                                        <DropdownMenuSeparator />
+                                    </>
                                 )}
                                 <DropdownMenuItem onClick={() => copyToClipboard(snippet.code)}><FiCopy className='mr-1.5' />Copy Code</DropdownMenuItem>
                             </DropdownMenuContent>
