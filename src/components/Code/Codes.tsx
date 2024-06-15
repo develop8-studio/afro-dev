@@ -1,32 +1,24 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { collection, doc, addDoc, updateDoc, query, orderBy, onSnapshot, serverTimestamp, getDoc, setDoc, deleteDoc, getDocs } from 'firebase/firestore';
-import { db, auth } from '@/firebase/firebaseConfig';
-import { Button } from '@/components/ui/button';
-import { onAuthStateChanged, User } from 'firebase/auth';
-import { Card } from '@/components/ui/card';
-import { FaHeart } from 'react-icons/fa';
-import { FiCopy, FiTrash } from 'react-icons/fi';
-import 'highlight.js/styles/default.css';
-import CodeBlock from './CodeBlock';
+import React, { useEffect, useState } from 'react'
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { BsThreeDotsVertical } from 'react-icons/bs';
+    collection, doc, addDoc, updateDoc, query, orderBy, onSnapshot, serverTimestamp, getDoc, setDoc, deleteDoc, getDocs
+} from 'firebase/firestore'
+import { db, auth } from '@/firebase/firebaseConfig'
+import { Button } from '@/components/ui/button'
+import { onAuthStateChanged, User } from 'firebase/auth'
+import { Card } from '@/components/ui/card'
+import { FaHeart, FaComment } from 'react-icons/fa'
+import { FiCopy, FiTrash } from 'react-icons/fi'
+import 'highlight.js/styles/default.css'
+import CodeBlock from './CodeBlock'
 import {
-    AlertDialog,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
+    DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { BsThreeDotsVertical } from 'react-icons/bs'
+import { IoIosSend } from 'react-icons/io'
+import {
+    AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { DropdownMenuLabel } from '@radix-ui/react-dropdown-menu';
+import { Input } from '../ui/input'
 
 interface CodeSnippet {
     id: string;
@@ -38,6 +30,14 @@ interface CodeSnippet {
     likes: number;
     language: string;
     imageUrl?: string;
+}
+
+interface Comment {
+    id: string;
+    userId: string;
+    userName: string;
+    text: string;
+    timestamp: any;
 }
 
 const highlightLanguages = [
@@ -58,7 +58,10 @@ const Codes: React.FC = () => {
     const [codeSnippets, setCodeSnippets] = useState<CodeSnippet[]>([]);
     const [userIcons, setUserIcons] = useState<{ [userId: string]: string }>({});
     const [userLikes, setUserLikes] = useState<{ [snippetId: string]: boolean }>({});
+    const [comments, setComments] = useState<{ [snippetId: string]: Comment[] }>({});
+    const [newComment, setNewComment] = useState<{ [snippetId: string]: string }>({});
     const [error, setError] = useState<string | null>(null);
+    const [showComments, setShowComments] = useState<{ [snippetId: string]: boolean }>({});
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -80,6 +83,7 @@ const Codes: React.FC = () => {
                 if (user) {
                     fetchUserLikes(snippet.id);
                 }
+                fetchComments(snippet.id);
             });
         });
 
@@ -98,13 +102,29 @@ const Codes: React.FC = () => {
     };
 
     const fetchUserLikes = async (snippetId: string) => {
-        const likeDoc = await getDoc(doc(db, 'likes', `${user?.uid}_${snippetId}`));
+        if (!user) return; // Ensure user is not null
+        const likeDoc = await getDoc(doc(db, 'likes', `${user.uid}_${snippetId}`));
         if (likeDoc.exists()) {
             setUserLikes((prevState) => ({
                 ...prevState,
                 [snippetId]: true,
             }));
         }
+    };
+
+    const fetchComments = async (snippetId: string) => {
+        const commentsQuery = query(collection(db, 'codes', snippetId, 'comments'), orderBy('timestamp', 'asc'));
+        const commentsSnapshot = await getDocs(commentsQuery);
+        const commentsData = commentsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Comment));
+        setComments(prevState => ({
+            ...prevState,
+            [snippetId]: commentsData,
+        }));
+        commentsData.forEach(comment => {
+            if (!userIcons[comment.userId]) {
+                fetchUserIcon(comment.userId);
+            }
+        });
     };
 
     const likeSnippet = async (snippetId: string) => {
@@ -165,9 +185,49 @@ const Codes: React.FC = () => {
         });
     };
 
-    if (!user) {
-        return <div>Loading...</div>;
-    }
+    const addComment = async (snippetId: string) => {
+        if (!user) return;
+        const commentText = newComment[snippetId];
+        if (!commentText.trim()) return;
+
+        const commentsRef = collection(db, 'codes', snippetId, 'comments');
+        const commentDoc = await addDoc(commentsRef, {
+            userId: user.uid,
+            userName: user.displayName || 'Anonymous',
+            text: commentText,
+            timestamp: serverTimestamp(),
+        });
+
+        const commentData: Comment = {
+            id: commentDoc.id,
+            userId: user.uid,
+            userName: user.displayName || 'Anonymous',
+            text: commentText,
+            timestamp: new Date(), // Use local date until Firestore timestamp is available
+        };
+
+        setComments(prevState => ({
+            ...prevState,
+            [snippetId]: [...(prevState[snippetId] || []), commentData],
+        }));
+
+        setNewComment(prevState => ({
+            ...prevState,
+            [snippetId]: '',
+        }));
+
+        // Fetch and update user icon for the new comment
+        if (!userIcons[user.uid]) {
+            fetchUserIcon(user.uid);
+        }
+    };
+
+    const toggleComments = (snippetId: string) => {
+        setShowComments(prevState => ({
+            ...prevState,
+            [snippetId]: !prevState[snippetId]
+        }));
+    };
 
     return (
         <div className="flex-1 space-y-[15px]">
@@ -178,24 +238,21 @@ const Codes: React.FC = () => {
                             <img src={userIcons[snippet.userId]} alt="User Icon" className="w-10 h-10 rounded-full mr-2.5 border" />
                         )}
                         <span className="font-bold">{snippet.userName}</span>
-                        <span className="ml-2.5 text-xs text-slate-500 font-light">
-                            {snippet.timestamp ? new Date(snippet.timestamp.toDate()).toLocaleString() : 'No timestamp'}
+                        <span className="ml-2.5 text-xs text-slate-400">
+                            {snippet.timestamp ? (snippet.timestamp.toDate ? new Date(snippet.timestamp.toDate()).toLocaleString() : new Date(snippet.timestamp).toLocaleString()) : 'No timestamp'}
                         </span>
-                        {/* <Button onClick={() => copyToClipboard(snippet.code)} className="bg-transparent hover:bg-transparent h-0 p-0 ml-2.5 hidden md:flex">
-                            <FiCopy className="text-lg transition-all text-slate-500 hover:text-slate-700" />
-                        </Button> */}
                         <DropdownMenu>
                             <DropdownMenuTrigger className="ml-auto">
                                 <BsThreeDotsVertical className="text-lg" />
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
-                                {snippet.userId === user.uid && (
-                                    <>
-                                        <DropdownMenuItem onClick={() => deleteSnippet(snippet.id)}><FiTrash className='mr-1.5' />Delete</DropdownMenuItem>
-                                        <DropdownMenuSeparator />
-                                    </>
-                                )}
-                                <DropdownMenuItem onClick={() => copyToClipboard(snippet.code)}><FiCopy className='mr-1.5' />Copy Code</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => deleteSnippet(snippet.id)}>
+                                    <FiTrash className="mr-1.5" />Delete
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem onClick={() => copyToClipboard(snippet.code)}>
+                                    <FiCopy className="mr-1.5" />Copy Code
+                                </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
@@ -216,12 +273,49 @@ const Codes: React.FC = () => {
                     {snippet.imageUrl && (
                         <img src={snippet.imageUrl} alt="Snippet Image" className="mt-[15px] max-w-full md:max-w-[250px] h-auto rounded-md" />
                     )}
-                    <div className="flex items-center mt-2.5 pt-2.5 pb-[7.5px]">
+                    <div className="flex items-center mt-2.5 pt-2.5">
                         <Button onClick={() => likeSnippet(snippet.id)} className="bg-transparent hover:bg-transparent h-0 p-0">
                             <FaHeart className={`text-lg mr-[10px] transition-all ${userLikes[snippet.id] ? 'text-red-500' : 'text-slate-300'}`} />
                         </Button>
                         <span className="text-sm text-slate-500">{snippet.likes}</span>
+                        <Button
+                            variant="outline"
+                            className="ml-auto"
+                            onClick={() => toggleComments(snippet.id)}
+                        >
+                            Comments
+                        </Button>
                     </div>
+                    {showComments[snippet.id] && (
+                        <div className="mt-5">
+                            <div className="flex items-center mt-3">
+                                <Input
+                                    type="text"
+                                    placeholder="Add a comment..."
+                                    value={newComment[snippet.id] || ''}
+                                    onChange={(e) => setNewComment({
+                                        ...newComment,
+                                        [snippet.id]: e.target.value,
+                                    })}
+                                />
+                                <Button className="ml-3 bg-blue-500 hover:bg-blue-600" onClick={() => addComment(snippet.id)}>Post<IoIosSend className="ml-[5px] text-lg hidden md:block" /></Button>
+                            </div>
+                            <div className="my-2.5">
+                                {showComments[snippet.id] && comments[snippet.id]?.map(comment => (
+                                    <div key={comment.id} className='border-b py-3.5'>
+                                        <div className="flex items-center mb-1.5">
+                                            {userIcons[comment.userId] && (
+                                                <img src={userIcons[comment.userId]} alt="User Icon" className="w-[35px] h-[35px] rounded-full mr-2 border" />
+                                            )}
+                                            <span className="font-semibold">{comment.userName}</span>
+                                            <span className="ml-2.5 text-xs text-slate-400">{comment.timestamp ? (comment.timestamp.toDate ? new Date(comment.timestamp.toDate()).toLocaleString() : new Date(comment.timestamp).toLocaleString()) : 'No timestamp'}</span>
+                                        </div>
+                                        <div className="text-sm text-slate-700">{comment.text}</div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </Card>
             ))}
             {error && (
