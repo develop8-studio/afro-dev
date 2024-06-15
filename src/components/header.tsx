@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import SearchMenu from "@/components/search"
-import UserMenu from "@/components/User"
+import UserMenu from "@/components/user"
 import MobileSheet from "@/components/mobile-sheet"
 import { Button } from "@/components/ui/button"
 import {

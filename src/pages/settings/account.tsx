@@ -43,7 +43,7 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage"
 
 import Header from "@/components/header"
 import SearchMenu from "@/components/search"
-import UserMenu from "@/components/User"
+import UserMenu from "@/components/user"
 import SettingsMenu from "@/components/settings"
 import MobileSheet from "@/components/mobile-sheet"
 
