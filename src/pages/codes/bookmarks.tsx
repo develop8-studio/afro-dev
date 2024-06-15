@@ -17,6 +17,9 @@ import { BsThreeDotsVertical } from 'react-icons/bs';
 import { IoIosSend } from 'react-icons/io';
 import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Input } from '@/components/ui/input';
+import { ChevronLeft } from 'lucide-react';
+import { FaArrowLeft } from "react-icons/fa6";
+import Link from "next/link";
 
 interface CodeSnippet {
     id: string;
@@ -274,6 +277,9 @@ export default function CodesBookmark() {
             </Head>
             <Header current="codes" />
             <Layout>
+                <Link href="/codes" className="flex justify-center items-center hover:underline">
+                    <FaArrowLeft className="mr-1.5" />Return to previous page
+                </Link>
                 {bookmarkedSnippets.length > 0 ? (
                     bookmarkedSnippets.map((snippet: CodeSnippet) => (
                         <Card key={snippet.id} className="px-5 py-[17.5px] shadow-none">

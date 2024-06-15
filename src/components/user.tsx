@@ -33,10 +33,10 @@ import {
     Settings,
     UserPlus,
     Users,
-    User
+    User,
+    Bookmark
 } from "lucide-react"
 import { FaRegUser } from "react-icons/fa6"
-import { PiBookmarkSimpleLight } from "react-icons/pi"
 
 import { useState } from "react"
 import { useRouter } from "next/router"
@@ -118,7 +118,7 @@ export default function UserMenu() {
                 <Link href="/settings"><DropdownMenuItem><Settings className="mr-2 h-4 w-4 text-slate-500 dark:text-slate-300" />General</DropdownMenuItem></Link>
                 <Link href="/settings/account"><DropdownMenuItem><User className="mr-2 h-4 w-4 text-slate-500 dark:text-slate-300" />Account</DropdownMenuItem></Link>
                 <DropdownMenuSeparator />
-                <Link href="/codes/bookmarks"><DropdownMenuItem><PiBookmarkSimpleLight className="mr-2 h-4 w-4 text-slate-500 dark:text-slate-300" />Bookmarks</DropdownMenuItem></Link>
+                <Link href="/codes/bookmarks"><DropdownMenuItem><Bookmark className="mr-2 h-4 w-4 text-slate-500 dark:text-slate-300" />Bookmarks</DropdownMenuItem></Link>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout}><LogOut className="mr-2 h-4 w-4 text-slate-500 dark:text-slate-300" />Logout</DropdownMenuItem>
                 </DropdownMenuContent>
