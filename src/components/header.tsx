@@ -100,7 +100,7 @@ export default function Header({ current }: HeaderProps) {
                 </Link>
             </nav>
             <nav className="hidden flex-col gap-5 md:flex md:flex-row md:items-center md:text-sm">
-                <Link href="/codes" className={`${current === "codes" ? 'text-foreground bg-slate-100 dark:bg-slate-800' : 'text-muted-foreground'} p-2.5 rounded-md transition-colors hover:text-foreground`}>
+                <Link href="/" className={`${current === "codes" ? 'text-foreground bg-slate-100 dark:bg-slate-800' : 'text-muted-foreground'} p-2.5 rounded-md transition-colors hover:text-foreground`}>
                     Codes
                 </Link>
                 <Link href="/threads" className={`${current === "threads" ? 'text-foreground bg-slate-100 dark:bg-slate-800' : 'text-muted-foreground'} p-2.5 rounded-md transition-colors hover:text-foreground`}>
