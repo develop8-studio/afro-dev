@@ -91,7 +91,7 @@ export default function UserMenu() {
     };
 
     return (
-        <div className="h-auto">
+        <div className="h-auto mt-1">
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button
