@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Input } from '../ui/input'
 import { Skeleton } from "@/components/ui/skeleton"
+import Link from 'next/link'
 
 interface CodeSnippet {
     id: string;
@@ -330,7 +331,7 @@ const Codes: React.FC = () => {
                         <DropdownMenu>
                             <DropdownMenuTrigger>
                                 {userIcons[snippet.userId] && (
-                                    <img src={userIcons[snippet.userId]} alt="User Icon" className="w-10 h-10 rounded-full border" />
+                                    <img src={userIcons[snippet.userId]} alt="" className="w-10 h-10 rounded-full border" />
                                 )}
                             </DropdownMenuTrigger>
                             <DropdownMenuContent className="p-2.5 space-x-[10px]">
@@ -350,7 +351,11 @@ const Codes: React.FC = () => {
                         {/* {userIcons[snippet.userId] && (
                             <img src={userIcons[snippet.userId]} alt="User Icon" className="w-10 h-10 rounded-full mr-2.5 border" />
                         )} */}
-                        <span className="font-bold ml-2.5">{snippet.userName}</span>
+                        <span className="font-bold ml-2.5">
+                            <Link href={`/profile?user=${snippet.userId}`}>
+                                {snippet.userName}
+                            </Link>
+                        </span>
                         <span className="ml-2.5 text-xs text-slate-400">
                             {snippet.timestamp ? (snippet.timestamp.toDate ? new Date(snippet.timestamp.toDate()).toLocaleString() : new Date(snippet.timestamp).toLocaleString()) : 'No timestamp'}
                         </span>
@@ -423,11 +428,15 @@ const Codes: React.FC = () => {
                                             {userIcons[comment.userId] && (
                                                 <img
                                                     src={userIcons[comment.userId]}
-                                                    alt="User Icon"
+                                                    alt=""
                                                     className="w-[30px] h-[30px] rounded-full mr-2.5 border"
                                                 />
                                             )}
-                                            <span className="font-semibold text-sm">{comment.userName}</span>
+                                            <span className="font-semibold text-sm">
+                                                <Link href={`/profile?user=${comment.userId}`}>
+                                                    {comment.userName}
+                                                </Link>
+                                            </span>
                                             <span className="text-xs text-slate-400 ml-2.5">{comment.timestamp ? (comment.timestamp.toDate ? new Date(comment.timestamp.toDate()).toLocaleString() : new Date(comment.timestamp).toLocaleString()) : 'No timestamp'}</span>
                                         </div>
                                         <div className="text-sm text-slate-700 dark:text-slate-400 ml-10">

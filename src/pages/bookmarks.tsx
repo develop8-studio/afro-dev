@@ -2,7 +2,6 @@ import Head from "next/head";
 import Header from "@/components/header";
 import useAuthRedirect from "@/components/useAuthRedirect";
 import Layout from "@/components/Layout";
-import CodeShare from "@/components/CodeShare";
 import { useEffect, useState } from 'react';
 import { collection, query, where, getDocs, orderBy, doc, deleteDoc, onSnapshot, getDoc, setDoc, updateDoc, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db, auth } from '@/firebase/firebaseConfig';
@@ -17,8 +16,6 @@ import { BsThreeDotsVertical } from 'react-icons/bs';
 import { IoIosSend } from 'react-icons/io';
 import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Input } from '@/components/ui/input';
-import { ChevronLeft } from 'lucide-react';
-import { FaArrowLeft } from "react-icons/fa6";
 import Link from "next/link";
 
 interface CodeSnippet {
@@ -54,16 +51,53 @@ export default function CodesBookmark() {
     const [showComments, setShowComments] = useState<{ [snippetId: string]: boolean }>({});
     const [userBookmarks, setUserBookmarks] = useState<{ [snippetId: string]: boolean }>({});
     const [codeSnippets, setCodeSnippets] = useState<CodeSnippet[]>([]);
+    const [userFollowing, setUserFollowing] = useState<{ [userId: string]: boolean }>({});
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser);
             if (currentUser) {
                 fetchUserBookmarks(currentUser.uid);
+                fetchUserFollowing(currentUser.uid);
             }
         });
         return () => unsubscribe();
     }, []);
+
+    const fetchUserFollowing = async (userId: string) => {
+        const followingSnapshot = await getDocs(collection(db, 'users', userId, 'following'));
+        const followingData: { [key: string]: boolean } = {};
+        followingSnapshot.docs.forEach((doc) => {
+            followingData[doc.id] = true;
+        });
+        setUserFollowing(followingData);
+    };
+
+    const followUser = async (userIdToFollow: string) => {
+        if (!user) return;
+        const followRef = doc(db, 'users', user.uid, 'following', userIdToFollow);
+        const followerRef = doc(db, 'users', userIdToFollow, 'followers', user.uid);
+
+        await setDoc(followRef, {});
+        await setDoc(followerRef, {});
+        setUserFollowing((prevState) => ({
+            ...prevState,
+            [userIdToFollow]: true,
+        }));
+    };
+
+    const unfollowUser = async (userIdToUnfollow: string) => {
+        if (!user) return;
+        const followRef = doc(db, 'users', user.uid, 'following', userIdToUnfollow);
+        const followerRef = doc(db, 'users', userIdToUnfollow, 'followers', user.uid);
+
+        await deleteDoc(followRef);
+        await deleteDoc(followerRef);
+        setUserFollowing((prevState) => ({
+            ...prevState,
+            [userIdToUnfollow]: false,
+        }));
+    };
 
     useEffect(() => {
         if (user) {
@@ -281,11 +315,35 @@ export default function CodesBookmark() {
                     bookmarkedSnippets.map((snippet: CodeSnippet) => (
                         <Card key={snippet.id} className="px-5 py-[17.5px] shadow-none">
                             <div className="flex items-center mb-2.5">
+                            {user && snippet.userId !== user.uid && (
+                        <DropdownMenu>
+                            <DropdownMenuTrigger>
                                 {userIcons[snippet.userId] && (
-                                    <img src={userIcons[snippet.userId]} alt="User Icon" className="w-10 h-10 rounded-full mr-2.5 border" />
+                                    <img src={userIcons[snippet.userId]} alt="" className="w-10 h-10 rounded-full border" />
                                 )}
-                                <span className="font-bold">{snippet.userName}</span>
-                                <span className="ml-2.5 text-xs text-slate-400">
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent className="p-2.5 space-x-[10px]">
+                                <span className="font-semibold">{snippet.userName}</span>
+                                    {userFollowing[snippet.userId] ? (
+                                        <Button onClick={() => unfollowUser(snippet.userId)} className="bg-slate-500 hover:bg-slate-400 w-[75px] h-[30px] text-white">
+                                            Unfollow
+                                        </Button>
+                                    ) : (
+                                        <Button onClick={() => followUser(snippet.userId)} className="bg-blue-500 hover:bg-blue-600 w-[75px] h-[30px] text-white">
+                                            Follow
+                                        </Button>
+                                    )}
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                        )}
+                        {user && snippet.userId === user.uid && (
+                            <img src={userIcons[snippet.userId]} alt="" className="w-10 h-10 rounded-full border" />
+                        )}
+                                <span className="font-bold ml-2.5">
+                                    <Link href={`/profile?user=${snippet.userId}`}>
+                                        {snippet.userName}
+                                    </Link>
+                                </span>                                <span className="ml-2.5 text-xs text-slate-400">
                                     {snippet.timestamp ? new Date(snippet.timestamp.toDate()).toLocaleString() : 'No timestamp'}
                                 </span>
                                 <DropdownMenu>
@@ -361,7 +419,11 @@ export default function CodesBookmark() {
                                                         className="w-[30px] h-[30px] rounded-full mr-2.5 border"
                                                     />
                                                 )}
-                                                <span className="font-semibold text-sm">{comment.userName}</span>
+                                                <span className="font-semibold text-sm">
+                                                    <Link href={`/profile?user=${comment.userId}`}>
+                                                        {comment.userName}
+                                                    </Link>
+                                                </span>
                                                 <span className="text-xs text-slate-400 ml-2.5">{comment.timestamp ? (comment.timestamp.toDate ? new Date(comment.timestamp.toDate()).toLocaleString() : new Date(comment.timestamp).toLocaleString()) : 'No timestamp'}</span>
                                             </div>
                                             <div className="text-sm text-slate-700 dark:text-slate-400 ml-10">
