@@ -92,7 +92,7 @@ const UserProfile: React.FC = () => {
                                 <p className="text-sm text-gray-500">{userProfile.email}</p>
                             </div>
                         </div>
-                        <h3 className="text-lg font-semibold mb-2">{userDisplayName}'s Posts</h3>
+                        <h3 className="text-lg font-semibold mb-2">{userDisplayName}</h3>
                         {userPosts.length > 0 ? (
                             userPosts.map((post) => (
                                 <Card key={post.id} className="px-5 py-5 shadow-none">
