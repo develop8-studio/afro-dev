@@ -322,10 +322,34 @@ const Codes: React.FC = () => {
             {codeSnippets.map((snippet) => (
                 <Card key={snippet.id} className="px-5 py-[17.5px] shadow-none">
                     <div className="flex items-center mb-2.5">
-                        {userIcons[snippet.userId] && (
+                        <DropdownMenu>
+                            <DropdownMenuTrigger>
+                                {userIcons[snippet.userId] && (
+                                    <img src={userIcons[snippet.userId]} alt="User Icon" className="w-10 h-10 rounded-full border" />
+                                )}
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent className="p-2.5 space-x-[10px]">
+                                <span className="font-bold">{snippet.userName}</span>
+                                {user && snippet.userId !== user.uid && (
+                                <>
+                                    {userFollowing[snippet.userId] ? (
+                                        <Button onClick={() => unfollowUser(snippet.userId)} className="bg-gray-500 hover:bg-gray-600 w-[75px] h-[30px] text-white">
+                                            Unfollow
+                                        </Button>
+                                    ) : (
+                                        <Button onClick={() => followUser(snippet.userId)} className="bg-blue-500 hover:bg-blue-600 w-[75px] h-[30px] text-white">
+                                            {/* <FaBookmark className="bg-sky-500 hover:bg-sky-600" /> */}
+                                            Follow
+                                        </Button>
+                                    )}
+                                </>
+                                )}
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                        {/* {userIcons[snippet.userId] && (
                             <img src={userIcons[snippet.userId]} alt="User Icon" className="w-10 h-10 rounded-full mr-2.5 border" />
-                        )}
-                        <span className="font-bold">{snippet.userName}</span>
+                        )} */}
+                        <span className="font-bold ml-2.5">{snippet.userName}</span>
                         <span className="ml-2.5 text-xs text-slate-400">
                             {snippet.timestamp ? (snippet.timestamp.toDate ? new Date(snippet.timestamp.toDate()).toLocaleString() : new Date(snippet.timestamp).toLocaleString()) : 'No timestamp'}
                         </span>
@@ -345,19 +369,6 @@ const Codes: React.FC = () => {
                                 <DropdownMenuItem onClick={() => copyToClipboard(snippet.code)}>
                                     <FiCopy className="mr-1.5 text-slate-500 dark:text-slate-300" />Copy Code
                                 </DropdownMenuItem>
-                                {user && snippet.userId !== user.uid && (
-                                    <>
-                                        {userFollowing[snippet.userId] ? (
-                                            <DropdownMenuItem onClick={() => unfollowUser(snippet.userId)}>
-                                                <FaBookmark className="mr-1.5 text-slate-500 dark:text-slate-300" />Unfollow
-                                            </DropdownMenuItem>
-                                        ) : (
-                                            <DropdownMenuItem onClick={() => followUser(snippet.userId)}>
-                                                <FaBookmark className="mr-1.5 text-slate-500 dark:text-slate-300" />Follow
-                                            </DropdownMenuItem>
-                                        )}
-                                    </>
-                                )}
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
