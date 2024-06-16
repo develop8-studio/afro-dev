@@ -37,6 +37,7 @@ import {
 } from "@/components/ui/select"
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import CodeShare from "./CodeShare";
+import Notices from "./Notices";
 
 type HeaderProps = {
     current: string;
@@ -116,6 +117,7 @@ export default function Header({ current }: HeaderProps) {
             {user ? (
                 <>
                     <SearchMenu />
+                    <Notices />
                     <UserMenu />
                     <div className="hidden md:block">
                         <CodeShareButton />

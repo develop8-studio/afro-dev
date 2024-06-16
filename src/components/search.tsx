@@ -37,6 +37,14 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import {
+    collection,
+    query,
+    orderBy,
+    onSnapshot
+} from 'firebase/firestore';
+import { useEffect, useState } from 'react';
+import { db } from '@/firebase/firebaseConfig';
 
 export default function ProductsEditPage() {
     const [open, setOpen] = React.useState(false)
@@ -58,9 +66,8 @@ export default function ProductsEditPage() {
     }, [])
 
     return (
-        <div className="relative ml-auto flex-1 md:grow-0 h-full flex justify-center items-center pb-1">
-            <FiSearch onClick={toggleDialog} size="22.5" className="text-slate-500 dark:text-slate-300 cursor-pointer mr-[15px]" />
-            <FiBell size="22.5" className="text-slate-500 dark:text-slate-300 cursor-pointer" />
+        <div className="relative h-full flex items-center pb-1">
+            <FiSearch onClick={toggleDialog} size="22.5" className="text-slate-500 dark:text-slate-300 cursor-pointer" />
             <CommandDialog open={open} onOpenChange={setOpen}>
                 <CommandInput placeholder="Type a command or search..." />
                 <CommandList>

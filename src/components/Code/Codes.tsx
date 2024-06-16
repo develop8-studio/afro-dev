@@ -134,33 +134,51 @@ const Codes: React.FC = () => {
 
     const likeSnippet = async (snippetId: string) => {
         if (!user) return;
-
+    
         const likeDocRef = doc(db, 'likes', `${user.uid}_${snippetId}`);
         const snippetRef = doc(db, 'codes', snippetId);
         const likeDoc = await getDoc(likeDocRef);
+        const snippetDoc = await getDoc(snippetRef);
 
-        if (likeDoc.exists()) {
-            // Unlike the snippet
-            await deleteDoc(likeDocRef);
-            await updateDoc(snippetRef, {
-                likes: (await (await getDoc(snippetRef)).data())?.likes - 1,
-            });
-            setUserLikes((prevState) => ({
-                ...prevState,
-                [snippetId]: false,
-            }));
-        } else {
-            // Like the snippet
-            await setDoc(likeDocRef, {
-                count: 1,
-            });
-            await updateDoc(snippetRef, {
-                likes: (await (await getDoc(snippetRef)).data())?.likes + 1,
-            });
-            setUserLikes((prevState) => ({
-                ...prevState,
-                [snippetId]: true,
-            }));
+        if (snippetDoc.exists()) {
+            const snippetData = snippetDoc.data();
+
+            if (likeDoc.exists()) {
+                // Unlike the snippet
+                await deleteDoc(likeDocRef);
+                await updateDoc(snippetRef, {
+                    likes: (snippetData.likes || 0) - 1,
+                });
+                setUserLikes((prevState) => ({
+                    ...prevState,
+                    [snippetId]: false,
+                }));
+            } else {
+                // Like the snippet
+                await setDoc(likeDocRef, {
+                    count: 1,
+                });
+                await updateDoc(snippetRef, {
+                    likes: (snippetData.likes || 0) + 1,
+                });
+                setUserLikes((prevState) => ({
+                    ...prevState,
+                    [snippetId]: true,
+                }));
+
+                // Add a notification for the snippet owner
+                if (user.uid !== snippetData.userId) {
+                    await addDoc(collection(db, 'notifications'), {
+                        type: 'like',
+                        userId: snippetData.userId,
+                        likedBy: user.uid,
+                        likedByName: user.displayName || 'Anonymous',
+                        snippetId: snippetId,
+                        snippetDescription: snippetData.description,
+                        timestamp: serverTimestamp(),
+                    });
+                }
+            }
         }
     };
 
