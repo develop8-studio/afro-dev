@@ -65,15 +65,53 @@ const Codes: React.FC = () => {
     const [showComments, setShowComments] = useState<{ [snippetId: string]: boolean }>({});
     const [userBookmarks, setUserBookmarks] = useState<{ [snippetId: string]: boolean }>({});
 
+    const [userFollowing, setUserFollowing] = useState<{ [userId: string]: boolean }>({});
+
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser);
             if (currentUser) {
                 fetchUserBookmarks(currentUser.uid);
+                fetchUserFollowing(currentUser.uid);
             }
         });
         return () => unsubscribe();
     }, []);
+
+    const fetchUserFollowing = async (userId: string) => {
+        const followingSnapshot = await getDocs(collection(db, 'users', userId, 'following'));
+        const followingData: { [key: string]: boolean } = {};
+        followingSnapshot.docs.forEach((doc) => {
+            followingData[doc.id] = true;
+        });
+        setUserFollowing(followingData);
+    };
+
+    const followUser = async (userIdToFollow: string) => {
+        if (!user) return;
+        const followRef = doc(db, 'users', user.uid, 'following', userIdToFollow);
+        const followerRef = doc(db, 'users', userIdToFollow, 'followers', user.uid);
+
+        await setDoc(followRef, {});
+        await setDoc(followerRef, {});
+        setUserFollowing((prevState) => ({
+            ...prevState,
+            [userIdToFollow]: true,
+        }));
+    };
+
+    const unfollowUser = async (userIdToUnfollow: string) => {
+        if (!user) return;
+        const followRef = doc(db, 'users', user.uid, 'following', userIdToUnfollow);
+        const followerRef = doc(db, 'users', userIdToUnfollow, 'followers', user.uid);
+
+        await deleteDoc(followRef);
+        await deleteDoc(followerRef);
+        setUserFollowing((prevState) => ({
+            ...prevState,
+            [userIdToUnfollow]: false,
+        }));
+    };
 
     useEffect(() => {
         const q = query(collection(db, 'codes'), orderBy('timestamp', 'desc'));
@@ -134,7 +172,7 @@ const Codes: React.FC = () => {
 
     const likeSnippet = async (snippetId: string) => {
         if (!user) return;
-    
+
         const likeDocRef = doc(db, 'likes', `${user.uid}_${snippetId}`);
         const snippetRef = doc(db, 'codes', snippetId);
         const likeDoc = await getDoc(likeDocRef);
@@ -299,14 +337,27 @@ const Codes: React.FC = () => {
                                 {user && snippet.userId === user.uid && (
                                     <>
                                         <DropdownMenuItem onClick={() => deleteSnippet(snippet.id)}>
-                                            <FiTrash className="mr-1.5" />Delete
+                                            <FiTrash className="mr-1.5 text-slate-500 dark:text-slate-300" />Delete
                                         </DropdownMenuItem>
                                         <DropdownMenuSeparator />
                                     </>
                                 )}
                                 <DropdownMenuItem onClick={() => copyToClipboard(snippet.code)}>
-                                    <FiCopy className="mr-1.5" />Copy Code
+                                    <FiCopy className="mr-1.5 text-slate-500 dark:text-slate-300" />Copy Code
                                 </DropdownMenuItem>
+                                {user && snippet.userId !== user.uid && (
+                                    <>
+                                        {userFollowing[snippet.userId] ? (
+                                            <DropdownMenuItem onClick={() => unfollowUser(snippet.userId)}>
+                                                <FaBookmark className="mr-1.5 text-slate-500 dark:text-slate-300" />Unfollow
+                                            </DropdownMenuItem>
+                                        ) : (
+                                            <DropdownMenuItem onClick={() => followUser(snippet.userId)}>
+                                                <FaBookmark className="mr-1.5 text-slate-500 dark:text-slate-300" />Follow
+                                            </DropdownMenuItem>
+                                        )}
+                                    </>
+                                )}
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>

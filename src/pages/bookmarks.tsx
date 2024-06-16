@@ -277,7 +277,7 @@ export default function CodesBookmark() {
             </Head>
             <Header current="codes" />
             <Layout>
-                <Link href="/codes" className="flex justify-center items-center hover:underline">
+                <Link href="/" className="flex justify-center items-center hover:underline">
                     <FaArrowLeft className="mr-1.5" />Return to previous page
                 </Link>
                 {bookmarkedSnippets.length > 0 ? (

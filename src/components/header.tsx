@@ -4,6 +4,7 @@ import SearchMenu from "@/components/search"
 import UserMenu from "@/components/user"
 import MobileSheet from "@/components/mobile-sheet"
 import { Button } from "@/components/ui/button"
+import { FiSearch } from "react-icons/fi"
 import {
     AlertDialog,
     AlertDialogAction,
@@ -79,7 +80,7 @@ export default function Header({ current }: HeaderProps) {
     }, []);
 
     return (
-        <header className="sticky top-0 flex h-16 items-center gap-5 bg-background px-5 z-10">
+        <header className="sticky top-0 flex h-[60px] items-center gap-5 bg-background px-5 z-10">
             <nav className="hidden flex-col gap-5 md:flex md:flex-row md:items-center mr-[5px] lg:mr-[10px]">
                 <Link href="/" className="">
                     <div className="relative w-[60px] h-[60px]">
@@ -116,7 +117,9 @@ export default function Header({ current }: HeaderProps) {
             </div>
             {user ? (
                 <>
-                    <SearchMenu />
+                    <Link href="/search">
+                        <FiSearch size="22.5" className="text-slate-500 dark:text-slate-300 cursor-pointer mb-1" />
+                    </Link>
                     <Notices />
                     <UserMenu />
                     <div className="hidden md:block">
