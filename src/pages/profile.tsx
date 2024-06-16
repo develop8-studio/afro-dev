@@ -1,22 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
-import Head from 'next/head';
-import Link from 'next/link';
-import { collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
-import { db } from '@/firebase/firebaseConfig';
-import { Card } from '@/components/ui/card';
-import CodeBlock from '@/components/Code/CodeBlock';
-import Layout from "@/components/Layout";
-import { Button } from '@/components/ui/button';
-import { FaHeart, FaReply, FaBookmark } from 'react-icons/fa';
-import { FiCopy, FiTrash } from 'react-icons/fi';
+import React, { useEffect, useState } from 'react'
+import {
+    collection, doc, addDoc, updateDoc, query, orderBy, onSnapshot, serverTimestamp, getDoc, setDoc, deleteDoc, getDocs
+} from 'firebase/firestore'
+import { db, auth } from '@/firebase/firebaseConfig'
+import { Button } from '@/components/ui/button'
+import { onAuthStateChanged, User } from 'firebase/auth'
+import { Card } from '@/components/ui/card'
+import { FaHeart, FaReply, FaBookmark } from 'react-icons/fa'
+import { FiCopy, FiTrash } from 'react-icons/fi'
+import 'highlight.js/styles/default.css'
+import CodeBlock from '@/components/Code/CodeBlock'
 import {
     DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { BsThreeDotsVertical } from 'react-icons/bs';
-import { IoIosSend } from 'react-icons/io';
-import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
-import { Input } from '@/components/ui/input';
+} from '@/components/ui/dropdown-menu'
+import { BsThreeDotsVertical } from 'react-icons/bs'
+import { IoIosSend } from 'react-icons/io'
+import { Input } from '@/components/ui/input'
+import Link from 'next/link'
+import { useRouter } from 'next/router';
+import Layout from "@/components/Layout"
+import Header from "@/components/header"
 
 interface CodeSnippet {
     id: string;
@@ -30,93 +33,436 @@ interface CodeSnippet {
     imageUrl?: string;
 }
 
-const UserProfile: React.FC = () => {
+interface Comment {
+    id: string;
+    userId: string;
+    userName: string;
+    text: string;
+    timestamp: any;
+}
+
+const highlightLanguages = [
+    { value: 'html', label: 'HTML' },
+    { value: 'css', label: 'CSS' },
+    { value: 'javascript', label: 'JavaScript' },
+    { value: 'typescript', label: 'TypeScript' },
+    { value: 'python', label: 'Python' },
+    { value: 'ruby', label: 'Ruby' },
+    { value: 'swift', label: 'Swift' },
+    { value: 'rust', label: 'Rust' },
+    { value: 'go', label: 'Golang' },
+];
+highlightLanguages.sort((a, b) => a.label.localeCompare(b.label));
+
+const Codes: React.FC = () => {
+    const [user, setUser] = useState<User | null>(null);
+    const [codeSnippets, setCodeSnippets] = useState<CodeSnippet[]>([]);
+    const [userIcons, setUserIcons] = useState<{ [userId: string]: string }>({});
+    const [userLikes, setUserLikes] = useState<{ [snippetId: string]: boolean }>({});
+    const [comments, setComments] = useState<{ [snippetId: string]: Comment[] }>({});
+    const [newComment, setNewComment] = useState<{ [snippetId: string]: string }>({});
+    const [error, setError] = useState<string | null>(null);
+    const [showComments, setShowComments] = useState<{ [snippetId: string]: boolean }>({});
+    const [userBookmarks, setUserBookmarks] = useState<{ [snippetId: string]: boolean }>({});
+
+    const [userFollowing, setUserFollowing] = useState<{ [userId: string]: boolean }>({});
+
     const router = useRouter();
-    const { user: userId } = router.query;
-    const [userProfile, setUserProfile] = useState<any>(null);
-    const [userPosts, setUserPosts] = useState<CodeSnippet[]>([]);
-    const [userDisplayName, setUserDisplayName] = useState<string>('');
+    const { user: userQuery } = router.query;
 
     useEffect(() => {
-        if (userId) {
-            fetchUserProfile(userId as string);
-            fetchUserPosts(userId as string);
-        }
-    }, [userId]);
-
-    const fetchUserProfile = async (userId: string) => {
-        try {
-            const userDoc = await getDoc(doc(db, 'users', userId));
-            if (userDoc.exists()) {
-                setUserProfile(userDoc.data());
-                setUserDisplayName(userDoc.data().displayName);
-            } else {
-                console.log('User document not found');
-                setUserProfile(null);
+        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+            setUser(currentUser);
+            if (currentUser) {
+                fetchUserBookmarks(currentUser.uid);
+                fetchUserFollowing(currentUser.uid);
             }
-        } catch (error) {
-            console.error('Error fetching user profile:', error);
-        }
+        });
+        return () => unsubscribe();
+    }, []);
+
+    const fetchUserFollowing = async (userId: string) => {
+        const followingSnapshot = await getDocs(collection(db, 'users', userId, 'following'));
+        const followingData: { [key: string]: boolean } = {};
+        followingSnapshot.docs.forEach((doc) => {
+            followingData[doc.id] = true;
+        });
+        setUserFollowing(followingData);
     };
 
-    const fetchUserPosts = async (userId: string) => {
-        try {
-            const q = query(collection(db, 'codes'), where('userId', '==', userId));
-            const querySnapshot = await getDocs(q);
-            const posts: CodeSnippet[] = [];
-            querySnapshot.forEach((doc) => {
-                posts.push({ id: doc.id, ...doc.data() } as CodeSnippet);
+    const followUser = async (userIdToFollow: string) => {
+        if (!user) return;
+        const followRef = doc(db, 'users', user.uid, 'following', userIdToFollow);
+        const followerRef = doc(db, 'users', userIdToFollow, 'followers', user.uid);
+
+        await setDoc(followRef, {});
+        await setDoc(followerRef, {});
+        setUserFollowing((prevState) => ({
+            ...prevState,
+            [userIdToFollow]: true,
+        }));
+    };
+
+    const unfollowUser = async (userIdToUnfollow: string) => {
+        if (!user) return;
+        const followRef = doc(db, 'users', user.uid, 'following', userIdToUnfollow);
+        const followerRef = doc(db, 'users', userIdToUnfollow, 'followers', user.uid);
+
+        await deleteDoc(followRef);
+        await deleteDoc(followerRef);
+        setUserFollowing((prevState) => ({
+            ...prevState,
+            [userIdToUnfollow]: false,
+        }));
+    };
+
+    useEffect(() => {
+        const q = query(collection(db, 'codes'), orderBy('timestamp', 'desc'));
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            const snippets = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as CodeSnippet));
+            const filteredSnippets = userQuery ? snippets.filter(snippet => snippet.userId === userQuery) : snippets;
+            setCodeSnippets(filteredSnippets);
+            filteredSnippets.forEach((snippet) => {
+                const userId = snippet.userId;
+                if (!userIcons[userId]) {
+                    fetchUserIcon(userId);
+                }
+                if (user) {
+                    fetchUserLikes(snippet.id);
+                }
+                fetchComments(snippet.id);
             });
-            setUserPosts(posts);
-        } catch (error) {
-            console.error('Error fetching user posts:', error);
+        });
+
+        return () => unsubscribe();
+    }, [user, userQuery]);
+
+    const fetchUserIcon = async (userId: string) => {
+        const userDoc = await getDoc(doc(db, 'users', userId));
+        if (userDoc.exists()) {
+            const userData = userDoc.data();
+            setUserIcons((prevState) => ({
+                ...prevState,
+                [userId]: userData.iconUrl || '',
+            }));
         }
     };
 
-    if (!userId || !userProfile) {
-        return <div>Loading...</div>;
-    }
+    const fetchUserLikes = async (snippetId: string) => {
+        if (!user) return; // Ensure user is not null
+        const likeDoc = await getDoc(doc(db, 'likes', `${user.uid}_${snippetId}`));
+        if (likeDoc.exists()) {
+            setUserLikes((prevState) => ({
+                ...prevState,
+                [snippetId]: true,
+            }));
+        }
+    };
+
+    const fetchComments = async (snippetId: string) => {
+        const commentsQuery = query(collection(db, 'codes', snippetId, 'comments'), orderBy('timestamp', 'asc'));
+        const commentsSnapshot = await getDocs(commentsQuery);
+        const commentsData = commentsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Comment));
+        setComments(prevState => ({
+            ...prevState,
+            [snippetId]: commentsData,
+        }));
+        commentsData.forEach(comment => {
+            if (!userIcons[comment.userId]) {
+                fetchUserIcon(comment.userId);
+            }
+        });
+    };
+
+    const likeSnippet = async (snippetId: string) => {
+        if (!user) return;
+
+        const likeDocRef = doc(db, 'likes', `${user.uid}_${snippetId}`);
+        const snippetRef = doc(db, 'codes', snippetId);
+        const likeDoc = await getDoc(likeDocRef);
+        const snippetDoc = await getDoc(snippetRef);
+
+        if (snippetDoc.exists()) {
+            const snippetData = snippetDoc.data();
+
+            if (likeDoc.exists()) {
+                // Unlike the snippet
+                await deleteDoc(likeDocRef);
+                await updateDoc(snippetRef, {
+                    likes: (snippetData.likes || 0) - 1,
+                });
+                setUserLikes((prevState) => ({
+                    ...prevState,
+                    [snippetId]: false,
+                }));
+            } else {
+                // Like the snippet
+                await setDoc(likeDocRef, {
+                    count: 1,
+                });
+                await updateDoc(snippetRef, {
+                    likes: (snippetData.likes || 0) + 1,
+                });
+                setUserLikes((prevState) => ({
+                    ...prevState,
+                    [snippetId]: true,
+                }));
+
+                // Add a notification for the snippet owner
+                if (user.uid !== snippetData.userId) {
+                    await addDoc(collection(db, 'notifications'), {
+                        type: 'like',
+                        userId: snippetData.userId,
+                        likedBy: user.uid,
+                        likedByName: user.displayName || 'Anonymous',
+                        snippetId: snippetId,
+                        snippetDescription: snippetData.description,
+                        timestamp: serverTimestamp(),
+                    });
+                }
+            }
+        }
+    };
+
+    const deleteSnippet = async (snippetId: string) => {
+        if (!user) return;
+
+        const snippetRef = doc(db, 'codes', snippetId);
+        const snippetDoc = await getDoc(snippetRef);
+
+        if (snippetDoc.exists() && snippetDoc.data().userId === user.uid) {
+            // Delete the comments first
+            const commentsQuery = query(collection(db, 'codes', snippetId, 'comments'));
+            const commentsSnapshot = await getDocs(commentsQuery);
+            commentsSnapshot.forEach(async (commentDoc) => {
+                await deleteDoc(commentDoc.ref);
+            });
+
+            // Then delete the snippet itself
+            await deleteDoc(snippetRef);
+
+            // Optionally, delete related likes (not necessary but good for cleanup)
+            const likeQuery = query(collection(db, 'likes'), orderBy('timestamp', 'desc'));
+            const likesSnapshot = await getDocs(likeQuery);
+            likesSnapshot.forEach(async (likeDoc) => {
+                if (likeDoc.id.includes(snippetId)) {
+                    await deleteDoc(likeDoc.ref);
+                }
+            });
+        }
+    };
+
+    const copyToClipboard = (text: string) => {
+        navigator.clipboard.writeText(text).catch((err) => {
+            setError("Failed to copy text.");
+        });
+    };
+
+    const addComment = async (snippetId: string) => {
+        if (!user) return;
+        const commentText = newComment[snippetId];
+        if (!commentText.trim()) return;
+
+        const commentsRef = collection(db, 'codes', snippetId, 'comments');
+        const commentDoc = await addDoc(commentsRef, {
+            userId: user.uid,
+            userName: user.displayName || 'Anonymous',
+            text: commentText,
+            timestamp: serverTimestamp(),
+        });
+
+        const commentData: Comment = {
+            id: commentDoc.id,
+            userId: user.uid,
+            userName: user.displayName || 'Anonymous',
+            text: commentText,
+            timestamp: new Date(), // Use local date until Firestore timestamp is available
+        };
+
+        setComments(prevState => ({
+            ...prevState,
+            [snippetId]: [...(prevState[snippetId] || []), commentData],
+        }));
+
+        setNewComment(prevState => ({
+            ...prevState,
+            [snippetId]: '',
+        }));
+
+        // Fetch and update user icon for the new comment
+        if (!userIcons[user.uid]) {
+            fetchUserIcon(user.uid);
+        }
+    };
+
+    const toggleComments = (snippetId: string) => {
+        setShowComments(prevState => ({
+            ...prevState,
+            [snippetId]: !prevState[snippetId]
+        }));
+    };
+
+    const fetchUserBookmarks = async (userId: string) => {
+        const bookmarksSnapshot = await getDocs(collection(db, 'users', userId, 'bookmarks'));
+        const bookmarksData: { [key: string]: boolean } = {};
+        bookmarksSnapshot.docs.forEach((doc) => {
+            bookmarksData[doc.id] = true;
+        });
+        setUserBookmarks(bookmarksData);
+    };
+
+    const bookmarkSnippet = async (snippetId: string) => {
+        if (!user) return;
+        const bookmarkRef = doc(db, 'users', user.uid, 'bookmarks', snippetId);
+        if (userBookmarks[snippetId]) {
+            await deleteDoc(bookmarkRef);
+            setUserBookmarks((prevState) => ({
+                ...prevState,
+                [snippetId]: false,
+            }));
+        } else {
+            await setDoc(bookmarkRef, {});
+            setUserBookmarks((prevState) => ({
+                ...prevState,
+                [snippetId]: true,
+            }));
+        }
+    };
 
     return (
-        <div className="flex min-h-screen w-full flex-col">
-            <Head>
-                <title>{userProfile.displayName} - Afro.dev</title>
-            </Head>
-            <Layout>
-                <div className="flex-1 space-y-10">
-                    <Card className="px-5 py-5 shadow-none">
-                        <div className="flex items-center mb-4">
-                            <img src={userProfile.iconUrl} alt="User Icon" className="w-10 h-10 rounded-full border mr-3" />
-                            <div>
-                                <h2 className="text-xl font-bold">{userProfile.displayName}</h2>
-                                <p className="text-sm text-gray-500">{userProfile.email}</p>
-                            </div>
+        <div className="flex flex-col w-full min-h-screen">
+        <Header current="none" />
+        <Layout>
+            <div className="flex-1 space-y-[15px]">
+                {codeSnippets.map((snippet) => (
+                    <Card key={snippet.id} className="px-5 py-[17.5px] shadow-none">
+                        <div className="flex items-center mb-2.5">
+                        {user && snippet.userId !== user.uid && (
+                            <DropdownMenu>
+                                <DropdownMenuTrigger>
+                                    {userIcons[snippet.userId] && (
+                                        <img src={userIcons[snippet.userId]} alt="" className="w-10 h-10 rounded-full border" />
+                                    )}
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent className="p-2.5 space-x-[10px]">
+                                    <span className="font-semibold">{snippet.userName}</span>
+                                        {userFollowing[snippet.userId] ? (
+                                            <Button onClick={() => unfollowUser(snippet.userId)} className="bg-slate-500 hover:bg-slate-400 w-[75px] h-[30px] text-white">
+                                                Unfollow
+                                            </Button>
+                                        ) : (
+                                            <Button onClick={() => followUser(snippet.userId)} className="bg-blue-500 hover:bg-blue-600 w-[75px] h-[30px] text-white">
+                                                Follow
+                                            </Button>
+                                        )}
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                            )}
+                            {user && snippet.userId === user.uid && (
+                                <img src={userIcons[snippet.userId]} alt="" className="w-10 h-10 rounded-full border" />
+                            )}
+                            <span className="font-bold ml-2.5">
+                                <Link href={`/profile?user=${snippet.userId}`}>
+                                    {snippet.userName}
+                                </Link>
+                            </span>
+                            <span className="ml-2.5 text-xs text-slate-400">
+                                {snippet.timestamp ? (snippet.timestamp.toDate ? new Date(snippet.timestamp.toDate()).toLocaleString() : new Date(snippet.timestamp).toLocaleString()) : 'No timestamp'}
+                            </span>
+                            <DropdownMenu>
+                                <DropdownMenuTrigger className="ml-auto">
+                                    <BsThreeDotsVertical className="text-lg" />
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent>
+                                    {user && snippet.userId === user.uid && (
+                                        <>
+                                            <DropdownMenuItem onClick={() => deleteSnippet(snippet.id)}>
+                                                <FiTrash className="mr-1.5 text-slate-500 dark:text-slate-300" />Delete
+                                            </DropdownMenuItem>
+                                            <DropdownMenuSeparator />
+                                        </>
+                                    )}
+                                    <DropdownMenuItem onClick={() => copyToClipboard(snippet.code)}>
+                                        <FiCopy className="mr-1.5 text-slate-500 dark:text-slate-300" />Copy Code
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
                         </div>
-                        <h3 className="text-lg font-semibold mb-2">{userDisplayName}</h3>
-                        {userPosts.length > 0 ? (
-                            userPosts.map((post) => (
-                                <Card key={post.id} className="px-5 py-5 shadow-none">
-                                    <div className="flex items-center mb-4">
-                                        <h3 className="text-lg font-semibold">{post.description}</h3>
-                                    </div>
-                                    <div className="mb-4">
-                                        <CodeBlock language={post.language}>
-                                            <pre className="bg-gray-200 p-3 rounded-md text-sm whitespace-pre-wrap">{post.code}</pre>
-                                        </CodeBlock>
-                                    </div>
-                                    <div className="flex items-center">
-                                        <span className="text-sm text-gray-500">{post.likes}</span>
-                                    </div>
-                                </Card>
-                            ))
-                        ) : (
-                            <p>No posts found.</p>
+                        <div className="mb-2.5 text-sm flex">
+                            {snippet.description}
+                        </div>
+                        {snippet.language && (
+                            <>
+                                <CodeBlock language={snippet.language}>
+                                    <pre className="bg-slate-100 dark:bg-slate-900 p-2.5 rounded-md text-sm whitespace-pre-wrap">{snippet.code}</pre>
+                                </CodeBlock>
+                                <pre className="hidden dark:block bg-slate-100 dark:bg-slate-900 p-2.5 text-sm whitespace-pre-wrap">{snippet.code}</pre>
+                            </>
+                        )}
+                        {!snippet.language && (
+                            <pre className="bg-[#F3F3F3] dark:bg-slate-900 p-2.5 text-sm whitespace-pre-wrap">{snippet.code}</pre>
+                        )}
+                        {snippet.imageUrl && (
+                            <img src={snippet.imageUrl} alt="Snippet Image" className="mt-[15px] max-w-full md:max-w-[250px] h-auto rounded-md" />
+                        )}
+                        <div className="flex items-center mt-2.5 pt-2.5">
+                            <Button onClick={() => likeSnippet(snippet.id)} className="bg-transparent hover:bg-transparent h-0 p-0">
+                                <FaHeart className={`text-lg mr-[10px] transition-all ${userLikes[snippet.id] ? 'text-red-500 dark:text-red-400' : 'text-slate-300'}`} />
+                            </Button>
+                            <span className="text-sm text-slate-500 dark:text-slate-400">{snippet.likes}</span>
+                            <Button onClick={() => toggleComments(snippet.id)} className="bg-transparent hover:bg-transparent h-0 p-0 ml-3">
+                                <FaReply className={`text-lg ${comments[snippet.id]?.some(comment => comment.userId === user?.uid) ? 'text-blue-500 dark:text-blue-400' : 'text-slate-300'}`} />
+                            </Button>
+                            <Button onClick={() => bookmarkSnippet(snippet.id)} className="bg-transparent hover:bg-transparent h-0 p-0 ml-3">
+                                <FaBookmark className={`text-lg ${userBookmarks[snippet.id] ? 'text-yellow-500 dark:text-yellow-400' : 'text-slate-300'}`} />
+                            </Button>
+                        </div>
+                        {showComments[snippet.id] && (
+                            <div className="mt-5">
+                                <div className="flex items-center">
+                                    <Input
+                                        type="text"
+                                        placeholder="Add a comment..."
+                                        value={newComment[snippet.id] || ''}
+                                        onChange={(e) => setNewComment({
+                                            ...newComment,
+                                            [snippet.id]: e.target.value,
+                                        })}
+                                    />
+                                    <Button className="ml-3 bg-blue-500 hover:bg-blue-600 dark:text-white" onClick={() => addComment(snippet.id)}>Post<IoIosSend className="ml-[5px] text-lg hidden md:block" /></Button>
+                                </div>
+                                <div className="my-2.5">
+                                    {showComments[snippet.id] && comments[snippet.id]?.map(comment => (
+                                        <div key={comment.id} className='pt-[10px] pb-[15px] border-b'>
+                                            <div className="flex items-center">
+                                                {userIcons[comment.userId] && (
+                                                    <img
+                                                        src={userIcons[comment.userId]}
+                                                        alt=""
+                                                        className="w-[30px] h-[30px] rounded-full mr-2.5 border"
+                                                    />
+                                                )}
+                                                <span className="font-semibold text-sm">
+                                                    <Link href={`/profile?user=${comment.userId}`}>
+                                                        {comment.userName}
+                                                    </Link>
+                                                </span>
+                                                <span className="text-xs text-slate-400 ml-2.5">{comment.timestamp ? (comment.timestamp.toDate ? new Date(comment.timestamp.toDate()).toLocaleString() : new Date(comment.timestamp).toLocaleString()) : 'No timestamp'}</span>
+                                            </div>
+                                            <div className="text-sm text-slate-700 dark:text-slate-400 ml-10">
+                                                {comment.text}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
                         )}
                     </Card>
-                </div>
-            </Layout>
+                ))}
+            </div>
+        </Layout>
         </div>
     );
 };
 
-export default UserProfile;
+export default Codes;
