@@ -330,11 +330,11 @@ const Codes: React.FC = () => {
                                 )}
                             </DropdownMenuTrigger>
                             <DropdownMenuContent className="p-2.5 space-x-[10px]">
-                                <span className="font-bold">{snippet.userName}</span>
+                                <span className="font-semibold">{snippet.userName}</span>
                                 {user && snippet.userId !== user.uid && (
                                 <>
                                     {userFollowing[snippet.userId] ? (
-                                        <Button onClick={() => unfollowUser(snippet.userId)} className="bg-slate-400 hover:bg-slate-500 w-[75px] h-[30px] text-white">
+                                        <Button onClick={() => unfollowUser(snippet.userId)} className="bg-slate-500 hover:bg-slate-400 w-[75px] h-[30px] text-white">
                                             Unfollow
                                         </Button>
                                     ) : (

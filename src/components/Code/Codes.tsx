@@ -333,7 +333,7 @@ const Codes: React.FC = () => {
                                 {user && snippet.userId !== user.uid && (
                                 <>
                                     {userFollowing[snippet.userId] ? (
-                                        <Button onClick={() => unfollowUser(snippet.userId)} className="bg-slate-400 hover:bg-slate-500 w-[75px] h-[30px] text-white">
+                                        <Button onClick={() => unfollowUser(snippet.userId)} className="bg-slate-500 hover:bg-slate-400 w-[75px] h-[30px] text-white">
                                             Unfollow
                                         </Button>
                                     ) : (
