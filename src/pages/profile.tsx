@@ -363,16 +363,24 @@ const Codes: React.FC = () => {
                         {userIcons[userQuery as string] && (
                             <img src={userIcons[userQuery as string]} alt="User Icon" className="w-10 h-10 rounded-full border" />
                         )}
-                        <h3 className="font-bold ml-2.5">{profileUserName || codeSnippets.find(snippet => snippet.userId === userQuery)?.userName}</h3>                        {user && userQuery !== user.uid && (
+                        <h3 className="font-bold ml-2.5">{profileUserName || codeSnippets.find(snippet => snippet.userId === userQuery)?.userName}</h3>
+                        {user && userQuery !== user.uid && (
                             userFollowing[userQuery as string] ? (
-                                <Button onClick={() => unfollowUser(userQuery as string)} className="bg-slate-500 hover:bg-slate-400 w-[75px] h-[30px] text-white ml-auto">
+                                <Button onClick={() => unfollowUser(userQuery as string)} className="bg-slate-500 hover:bg-slate-400 w-[75px] h-[35px] text-white ml-auto">
                                     Unfollow
                                 </Button>
                             ) : (
-                                <Button onClick={() => followUser(userQuery as string)} className="bg-blue-500 hover:bg-blue-600 w-[75px] h-[30px] text-white ml-auto">
+                                <Button onClick={() => followUser(userQuery as string)} className="bg-blue-500 hover:bg-blue-600 w-[75px] h-[35px] text-white ml-auto">
                                     Follow
                                 </Button>
                             )
+                        )}
+                        {user && userQuery === user.uid && (
+                            <Button variant="outline" className="w-[100px] h-[35px] ml-auto" asChild>
+                                <Link href="/settings/account">
+                                    Edit profile
+                                </Link>
+                            </Button>
                         )}
                     </div>
                 )}
