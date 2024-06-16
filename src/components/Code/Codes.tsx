@@ -227,6 +227,14 @@ const Codes: React.FC = () => {
         const snippetDoc = await getDoc(snippetRef);
 
         if (snippetDoc.exists() && snippetDoc.data().userId === user.uid) {
+            // Delete the comments first
+            const commentsQuery = query(collection(db, 'codes', snippetId, 'comments'));
+            const commentsSnapshot = await getDocs(commentsQuery);
+            commentsSnapshot.forEach(async (commentDoc) => {
+                await deleteDoc(commentDoc.ref);
+            });
+
+            // Then delete the snippet itself
             await deleteDoc(snippetRef);
 
             // Optionally, delete related likes (not necessary but good for cleanup)
@@ -322,6 +330,7 @@ const Codes: React.FC = () => {
             {codeSnippets.map((snippet) => (
                 <Card key={snippet.id} className="px-5 py-[17.5px] shadow-none">
                     <div className="flex items-center mb-2.5">
+                    {user && snippet.userId !== user.uid && (
                         <DropdownMenu>
                             <DropdownMenuTrigger>
                                 {userIcons[snippet.userId] && (
@@ -329,9 +338,7 @@ const Codes: React.FC = () => {
                                 )}
                             </DropdownMenuTrigger>
                             <DropdownMenuContent className="p-2.5 space-x-[10px]">
-                                <span className="font-bold">{snippet.userName}</span>
-                                {user && snippet.userId !== user.uid && (
-                                <>
+                                <span className="font-semibold">{snippet.userName}</span>
                                     {userFollowing[snippet.userId] ? (
                                         <Button onClick={() => unfollowUser(snippet.userId)} className="bg-slate-500 hover:bg-slate-400 w-[75px] h-[30px] text-white">
                                             Unfollow
@@ -341,10 +348,12 @@ const Codes: React.FC = () => {
                                             Follow
                                         </Button>
                                     )}
-                                </>
-                                )}
                             </DropdownMenuContent>
                         </DropdownMenu>
+                        )}
+                        {user && snippet.userId === user.uid && (
+                            <img src={userIcons[snippet.userId]} alt="User Icon" className="w-10 h-10 rounded-full border" />
+                        )}
                         {/* {userIcons[snippet.userId] && (
                             <img src={userIcons[snippet.userId]} alt="User Icon" className="w-10 h-10 rounded-full mr-2.5 border" />
                         )} */}

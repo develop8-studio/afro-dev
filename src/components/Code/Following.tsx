@@ -320,9 +320,13 @@ const Codes: React.FC = () => {
 
     return (
         <div className="flex-1 space-y-[15px]">
+            {codeSnippets.length === 0 && (
+                <div className="text-center text-gray-500">I can't find anyone you're following.</div>
+            )}
             {codeSnippets.map((snippet) => (
                 <Card key={snippet.id} className="px-5 py-[17.5px] shadow-none">
                     <div className="flex items-center mb-2.5">
+                    {user && snippet.userId !== user.uid && (
                         <DropdownMenu>
                             <DropdownMenuTrigger>
                                 {userIcons[snippet.userId] && (
@@ -331,8 +335,6 @@ const Codes: React.FC = () => {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent className="p-2.5 space-x-[10px]">
                                 <span className="font-semibold">{snippet.userName}</span>
-                                {user && snippet.userId !== user.uid && (
-                                <>
                                     {userFollowing[snippet.userId] ? (
                                         <Button onClick={() => unfollowUser(snippet.userId)} className="bg-slate-500 hover:bg-slate-400 w-[75px] h-[30px] text-white">
                                             Unfollow
@@ -342,10 +344,9 @@ const Codes: React.FC = () => {
                                             Follow
                                         </Button>
                                     )}
-                                </>
-                                )}
                             </DropdownMenuContent>
                         </DropdownMenu>
+                        )}
                         {/* {userIcons[snippet.userId] && (
                             <img src={userIcons[snippet.userId]} alt="User Icon" className="w-10 h-10 rounded-full mr-2.5 border" />
                         )} */}

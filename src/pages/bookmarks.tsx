@@ -277,9 +277,6 @@ export default function CodesBookmark() {
             </Head>
             <Header current="codes" />
             <Layout>
-                <Link href="/" className="flex justify-center items-center hover:underline">
-                    <FaArrowLeft className="mr-1.5" />Return to previous page
-                </Link>
                 {bookmarkedSnippets.length > 0 ? (
                     bookmarkedSnippets.map((snippet: CodeSnippet) => (
                         <Card key={snippet.id} className="px-5 py-[17.5px] shadow-none">
@@ -378,7 +375,7 @@ export default function CodesBookmark() {
                         </Card>
                     ))
                 ) : (
-                    <p>No bookmarks found.</p>
+                    <div className="text-center text-gray-500">Bookmark not found.</div>
                 )}
             </Layout>
             {error && (

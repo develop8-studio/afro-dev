@@ -1,4 +1,4 @@
-# Afro.dev -Mega-sized Ideas!
+# Afro.dev
 Afro.dev is a casual platform for developers to chat.
 It also offers AI-assisted support and allows users to create threads on any topic.
 
@@ -19,4 +19,4 @@ We provide various tools to help developers.
 ## Contact
 If you have any inquiries about this service, please contact us at the account below.
 
-[@develop8-studio](https://x.com/develop8-studio)
+[@develop8-studio](https://x.com/develop8_studio)
