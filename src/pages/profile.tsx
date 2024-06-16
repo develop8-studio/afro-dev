@@ -4,7 +4,7 @@ import {
 } from 'firebase/firestore'
 import { db, auth } from '@/firebase/firebaseConfig'
 import { Button } from '@/components/ui/button'
-import { onAuthStateChanged, User } from 'firebase/auth'
+import { onAuthStateChanged, User, updateProfile } from 'firebase/auth'
 import { Card } from '@/components/ui/card'
 import { FaHeart, FaReply, FaBookmark } from 'react-icons/fa'
 import { FiCopy, FiTrash } from 'react-icons/fi'
@@ -64,11 +64,22 @@ const Codes: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [showComments, setShowComments] = useState<{ [snippetId: string]: boolean }>({});
     const [userBookmarks, setUserBookmarks] = useState<{ [snippetId: string]: boolean }>({});
-
+    const [profileUserName, setProfileUserName] = useState<string | null>(null);
     const [userFollowing, setUserFollowing] = useState<{ [userId: string]: boolean }>({});
 
     const router = useRouter();
     const { user: userQuery } = router.query;
+
+    useEffect(() => {
+        const fetchProfileUser = async () => {
+            if (userQuery) {
+                const userName = await fetchUserProfile(userQuery as string);
+                setProfileUserName(userName);
+            }
+        };
+
+        fetchProfileUser();
+    }, [userQuery]);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -80,6 +91,19 @@ const Codes: React.FC = () => {
         });
         return () => unsubscribe();
     }, []);
+
+    const fetchUserProfile = async (userId: string) => {
+        const userDoc = await getDoc(doc(db, 'users', userId));
+        if (userDoc.exists()) {
+            const userData = userDoc.data();
+            setUserIcons((prevState) => ({
+                ...prevState,
+                [userId]: userData.iconUrl || '',
+            }));
+            return userData.displayName || '';
+        }
+        return null;
+    };
 
     const fetchUserFollowing = async (userId: string) => {
         const followingSnapshot = await getDocs(collection(db, 'users', userId, 'following'));
@@ -333,34 +357,31 @@ const Codes: React.FC = () => {
         <div className="flex flex-col w-full min-h-screen">
         <Header current="none" />
         <Layout>
+            <Card className="px-5 py-[17.5px] shadow-none">
+                {userQuery && (
+                    <div className="flex items-center">
+                        {userIcons[userQuery as string] && (
+                            <img src={userIcons[userQuery as string]} alt="User Icon" className="w-10 h-10 rounded-full border" />
+                        )}
+                        <h3 className="font-bold ml-2.5">{profileUserName || codeSnippets.find(snippet => snippet.userId === userQuery)?.userName}</h3>                        {user && userQuery !== user.uid && (
+                            userFollowing[userQuery as string] ? (
+                                <Button onClick={() => unfollowUser(userQuery as string)} className="bg-slate-500 hover:bg-slate-400 w-[75px] h-[30px] text-white ml-auto">
+                                    Unfollow
+                                </Button>
+                            ) : (
+                                <Button onClick={() => followUser(userQuery as string)} className="bg-blue-500 hover:bg-blue-600 w-[75px] h-[30px] text-white ml-auto">
+                                    Follow
+                                </Button>
+                            )
+                        )}
+                    </div>
+                )}
+            </Card>
             <div className="flex-1 space-y-[15px]">
                 {codeSnippets.map((snippet) => (
                     <Card key={snippet.id} className="px-5 py-[17.5px] shadow-none">
                         <div className="flex items-center mb-2.5">
-                        {user && snippet.userId !== user.uid && (
-                            <DropdownMenu>
-                                <DropdownMenuTrigger>
-                                    {userIcons[snippet.userId] && (
-                                        <img src={userIcons[snippet.userId]} alt="" className="w-10 h-10 rounded-full border" />
-                                    )}
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent className="p-2.5 space-x-[10px]">
-                                    <span className="font-semibold">{snippet.userName}</span>
-                                        {userFollowing[snippet.userId] ? (
-                                            <Button onClick={() => unfollowUser(snippet.userId)} className="bg-slate-500 hover:bg-slate-400 w-[75px] h-[30px] text-white">
-                                                Unfollow
-                                            </Button>
-                                        ) : (
-                                            <Button onClick={() => followUser(snippet.userId)} className="bg-blue-500 hover:bg-blue-600 w-[75px] h-[30px] text-white">
-                                                Follow
-                                            </Button>
-                                        )}
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                            )}
-                            {user && snippet.userId === user.uid && (
-                                <img src={userIcons[snippet.userId]} alt="" className="w-10 h-10 rounded-full border" />
-                            )}
+                            <img src={userIcons[snippet.userId]} alt="" className="w-10 h-10 rounded-full border" />
                             <span className="font-bold ml-2.5">
                                 <Link href={`/profile?user=${snippet.userId}`}>
                                     {snippet.userName}

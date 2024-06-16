@@ -315,30 +315,7 @@ export default function CodesBookmark() {
                     bookmarkedSnippets.map((snippet: CodeSnippet) => (
                         <Card key={snippet.id} className="px-5 py-[17.5px] shadow-none">
                             <div className="flex items-center mb-2.5">
-                            {user && snippet.userId !== user.uid && (
-                        <DropdownMenu>
-                            <DropdownMenuTrigger>
-                                {userIcons[snippet.userId] && (
-                                    <img src={userIcons[snippet.userId]} alt="" className="w-10 h-10 rounded-full border" />
-                                )}
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent className="p-2.5 space-x-[10px]">
-                                <span className="font-semibold">{snippet.userName}</span>
-                                    {userFollowing[snippet.userId] ? (
-                                        <Button onClick={() => unfollowUser(snippet.userId)} className="bg-slate-500 hover:bg-slate-400 w-[75px] h-[30px] text-white">
-                                            Unfollow
-                                        </Button>
-                                    ) : (
-                                        <Button onClick={() => followUser(snippet.userId)} className="bg-blue-500 hover:bg-blue-600 w-[75px] h-[30px] text-white">
-                                            Follow
-                                        </Button>
-                                    )}
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                        )}
-                        {user && snippet.userId === user.uid && (
                             <img src={userIcons[snippet.userId]} alt="" className="w-10 h-10 rounded-full border" />
-                        )}
                                 <span className="font-bold ml-2.5">
                                     <Link href={`/profile?user=${snippet.userId}`}>
                                         {snippet.userName}
