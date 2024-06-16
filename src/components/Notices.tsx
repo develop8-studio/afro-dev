@@ -81,7 +81,7 @@ const Notices: React.FC = () => {
                 {notifications.map((notification) => (
                     <DropdownMenuItem key={notification.id}>
                         <img src={userIcons[notification.likedBy]} alt="User Icon" className="w-6 h-6 rounded-full mr-2.5 border" />
-                        <span>{notification.likedByName} liked your post: "{notification.snippetDescription}"</span>
+                        <span>{notification.likedByName} liked your post: &quot;{notification.snippetDescription}&quot:</span>
                     </DropdownMenuItem>
                 ))}
             </DropdownMenuContent>
