@@ -327,7 +327,7 @@ const Codes: React.FC = () => {
             {codeSnippets.map((snippet) => (
                 <Card key={snippet.id} className="px-5 py-[17.5px] shadow-none">
                     <div className="flex items-center mb-2.5">
-                    {user && snippet.userId !== user.uid && (
+                    {/* {user && snippet.userId !== user.uid && (
                         <DropdownMenu>
                             <DropdownMenuTrigger>
                                 {userIcons[snippet.userId] && (
@@ -347,7 +347,8 @@ const Codes: React.FC = () => {
                                     )}
                             </DropdownMenuContent>
                         </DropdownMenu>
-                        )}
+                        )} */}
+                        <img src={userIcons[snippet.userId]} alt="" className="w-10 h-10 rounded-full border" />
                         {/* {userIcons[snippet.userId] && (
                             <img src={userIcons[snippet.userId]} alt="User Icon" className="w-10 h-10 rounded-full mr-2.5 border" />
                         )} */}
