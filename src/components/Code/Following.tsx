@@ -67,17 +67,6 @@ const Codes: React.FC = () => {
 
     const [userFollowing, setUserFollowing] = useState<{ [userId: string]: boolean }>({});
 
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-            setUser(currentUser);
-            if (currentUser) {
-                fetchUserBookmarks(currentUser.uid);
-                fetchUserFollowing(currentUser.uid);
-            }
-        });
-        return () => unsubscribe();
-    }, []);
-
     const fetchUserFollowing = async (userId: string) => {
         const followingSnapshot = await getDocs(collection(db, 'users', userId, 'following'));
         const followingData: { [key: string]: boolean } = {};
@@ -85,6 +74,7 @@ const Codes: React.FC = () => {
             followingData[doc.id] = true;
         });
         setUserFollowing(followingData);
+        return followingData;
     };
 
     const followUser = async (userIdToFollow: string) => {
@@ -114,24 +104,35 @@ const Codes: React.FC = () => {
     };
 
     useEffect(() => {
-        const q = query(collection(db, 'codes'), orderBy('timestamp', 'desc'));
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-            const snippets = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as CodeSnippet));
-            setCodeSnippets(snippets);
-            snippets.forEach((snippet) => {
-                const userId = snippet.userId;
-                if (!userIcons[userId]) {
-                    fetchUserIcon(userId);
-                }
-                if (user) {
-                    fetchUserLikes(snippet.id);
-                }
-                fetchComments(snippet.id);
-            });
+        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+            setUser(currentUser);
+            if (currentUser) {
+                fetchUserBookmarks(currentUser.uid);
+                fetchUserFollowing(currentUser.uid).then(() => {
+                    const q = query(collection(db, 'codes'), orderBy('timestamp', 'desc'));
+                    const unsubscribeSnippets = onSnapshot(q, (snapshot) => {
+                        const snippets = snapshot.docs
+                            .map((doc) => ({ id: doc.id, ...doc.data() } as CodeSnippet))
+                            .filter((snippet) => userFollowing[snippet.userId]);
+                        setCodeSnippets(snippets);
+                        snippets.forEach((snippet) => {
+                            const userId = snippet.userId;
+                            if (!userIcons[userId]) {
+                                fetchUserIcon(userId);
+                            }
+                            if (user) {
+                                fetchUserLikes(snippet.id);
+                            }
+                            fetchComments(snippet.id);
+                        });
+                    });
+                    return () => unsubscribeSnippets();
+                });
+            }
         });
 
         return () => unsubscribe();
-    }, [user]);
+    }, [user, userFollowing]);
 
     const fetchUserIcon = async (userId: string) => {
         const userDoc = await getDoc(doc(db, 'users', userId));
