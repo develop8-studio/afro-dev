@@ -321,7 +321,7 @@ const Codes: React.FC = () => {
     return (
         <div className="flex-1 space-y-[15px]">
             {codeSnippets.length === 0 && (
-                <div className="text-center text-gray-500">I can't find anyone you're following.</div>
+                <div className="text-center text-gray-500">I can&apos;t find anyone you&apos;re following.</div>
             )}
             {codeSnippets.map((snippet) => (
                 <Card key={snippet.id} className="px-5 py-[17.5px] shadow-none">
