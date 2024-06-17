@@ -99,7 +99,7 @@ export default function UserMenu() {
                         )}
                     </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-[150px]">
+                <DropdownMenuContent align="end" className="w-40">
                     <Link href={`/profile?user=${user?.uid}`} className="font-semibold">
                         <DropdownMenuItem>
                             {user?.displayName ? `${user.displayName}` : 'My Account'}
