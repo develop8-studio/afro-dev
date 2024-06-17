@@ -5,52 +5,39 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {
     AlertDialog,
-    AlertDialogAction,
     AlertDialogCancel,
     AlertDialogContent,
     AlertDialogDescription,
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-    AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import {
-    Cloud,
-    CreditCard,
-    Keyboard,
-    LifeBuoy,
-    LogOut,
-    Mail,
-    MessageSquare,
-    Plus,
-    PlusCircle,
     Settings,
-    UserPlus,
-    Users,
     User,
+    Users,
+    LogOut,
     Bookmark
 } from "lucide-react"
 import { FaRegUser } from "react-icons/fa6"
+import { useEffect } from "react";
 
 import { useState } from "react"
 import { useRouter } from "next/router"
-import { getAuth, signOut, onAuthStateChanged } from "firebase/auth"
-import { collection, getFirestore, doc, updateDoc, getDoc, setDoc } from "firebase/firestore"
-
-import { useEffect } from "react"
+import { signOut, onAuthStateChanged } from "firebase/auth"
+import { doc, getDoc } from "firebase/firestore"
 import { auth, db } from "@/firebase/firebaseConfig"
 
 export default function UserMenu() {
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
     const [user, setUser] = useState<any>(null);
-    const [iconUrl, setIconUrl] = useState(null);
+    const [iconUrl, setIconUrl] = useState<string | null>(null);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -113,32 +100,64 @@ export default function UserMenu() {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-[150px]">
-                {/* <DropdownMenuLabel>{user?.displayName ? `${user.displayName}` : 'My Account'}</DropdownMenuLabel> */}
-                {/* <DropdownMenuSeparator /> */}
-                <Link href="/settings"><DropdownMenuItem><Settings className="mr-[10px] h-[15px] w-[15px] text-slate-500 dark:text-slate-300" />General</DropdownMenuItem></Link>
-                <Link href="/settings/account"><DropdownMenuItem><User className="mr-[10px] h-[15px] w-[15px] text-slate-500 dark:text-slate-300" />Account</DropdownMenuItem></Link>
-                <DropdownMenuSeparator />
-                <Link href="/following"><DropdownMenuItem><Users className="mr-[10px] h-[15px] w-[15px] text-slate-500 dark:text-slate-300" />Following</DropdownMenuItem></Link>
-                <Link href="/bookmarks"><DropdownMenuItem><Bookmark className="mr-[10px] h-[15px] w-[15px] text-slate-500 dark:text-slate-300" />Bookmarks</DropdownMenuItem></Link>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleLogout}><LogOut className="ml-0.5 mr-[10px] h-[15px] w-[15px] text-slate-500 dark:text-slate-300" />Logout</DropdownMenuItem>
+                    <Link href={`/profile?user=${user?.uid}`} className="font-semibold">
+                        <DropdownMenuItem>
+                            {user?.displayName ? `${user.displayName}` : 'My Account'}
+                            {/* {user?.uid && (
+                                <div className="text-xs text-gray-500">
+                                    {user.uid}
+                                </div>
+                            )} */}
+                        </DropdownMenuItem>
+                    </Link>
+                    <DropdownMenuSeparator />
+                    <Link href="/settings">
+                        <DropdownMenuItem>
+                            <Settings className="mr-[10px] h-[15px] w-[15px] text-slate-500 dark:text-slate-300" />
+                            General
+                        </DropdownMenuItem>
+                    </Link>
+                    <Link href="/settings/account">
+                        <DropdownMenuItem>
+                            <User className="mr-[10px] h-[15px] w-[15px] text-slate-500 dark:text-slate-300" />
+                            Account
+                        </DropdownMenuItem>
+                    </Link>
+                    <DropdownMenuSeparator />
+                    <Link href="/following">
+                        <DropdownMenuItem>
+                            <Users className="mr-[10px] h-[15px] w-[15px] text-slate-500 dark:text-slate-300" />
+                            Following
+                        </DropdownMenuItem>
+                    </Link>
+                    <Link href="/bookmarks">
+                        <DropdownMenuItem>
+                            <Bookmark className="mr-[10px] h-[15px] w-[15px] text-slate-500 dark:text-slate-300" />
+                            Bookmarks
+                        </DropdownMenuItem>
+                    </Link>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleLogout}>
+                        <LogOut className="ml-0.5 mr-[10px] h-[15px] w-[15px] text-slate-500 dark:text-slate-300" />
+                        Logout
+                    </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
             {error && (
                 <AlertDialog open>
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                    <AlertDialogTitle>Error</AlertDialogTitle>
-                    <AlertDialogDescription>
-                        {error}
-                    </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                    <AlertDialogCancel onClick={() => setError(null)}>Close</AlertDialogCancel>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>Error</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                {error}
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogCancel onClick={() => setError(null)}>Close</AlertDialogCancel>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
                 </AlertDialog>
             )}
         </div>
-    )
+    );
 }

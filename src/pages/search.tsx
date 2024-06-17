@@ -60,13 +60,15 @@ const Search: React.FC = () => {
             setCodeSnippets(snippets);
             snippets.forEach(snippet => {
                 fetchUserIcon(snippet.userId);
-                fetchUserLikes(snippet.id);
+                if (user) {
+                    fetchUserLikes(snippet.id);
+                }
                 fetchComments(snippet.id);
             });
         });
 
         return () => unsubscribe();
-    }, []);
+    }, [user]);
 
     useEffect(() => {
         if (searchTerm) {
@@ -97,6 +99,11 @@ const Search: React.FC = () => {
             setUserLikes((prevState) => ({
                 ...prevState,
                 [snippetId]: true,
+            }));
+        } else {
+            setUserLikes((prevState) => ({
+                ...prevState,
+                [snippetId]: false,
             }));
         }
     };
