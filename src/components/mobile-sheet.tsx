@@ -47,13 +47,13 @@ export default function MobileSheet({ current }: MobileSheetProps) {
                     {/* <Link href="/tools">
                         Tools
                     </Link> */}
-                    <Link href="/" className={`${current === "codes" ? 'bg-slate-100 text-foreground' : 'bg-slate-50 text-muted-foreground'} p-1.5 rounded-md transition-colors hover:text-foreground`}>
+                    <Link href="/">
                         Codes
                     </Link>
-                    <Link href="/threads" className={`${current === "threads" ? 'bg-slate-100 text-foreground' : 'bg-slate-50 text-muted-foreground'} p-1.5 rounded-md transition-colors hover:text-foreground`}>
+                    <Link href="/threads">
                         Threads
                     </Link>
-                    <Link href="/settings" className={`${current === "settings" ? 'bg-slate-100 text-foreground' : 'bg-slate-50 text-muted-foreground'} p-1.5 rounded-md transition-colors hover:text-foreground`}>
+                    <Link href="/settings">
                         Settings
                     </Link>
                 </nav>
