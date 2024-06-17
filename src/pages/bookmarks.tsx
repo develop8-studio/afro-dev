@@ -14,9 +14,9 @@ import { FiCopy, FiTrash } from 'react-icons/fi';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { IoIosSend } from 'react-icons/io';
-import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Input } from '@/components/ui/input';
 import Link from "next/link";
+import Bookmarks from "@/components/Bookmarks";
 
 interface CodeSnippet {
     id: string;
@@ -71,32 +71,6 @@ export default function CodesBookmark() {
             followingData[doc.id] = true;
         });
         setUserFollowing(followingData);
-    };
-
-    const followUser = async (userIdToFollow: string) => {
-        if (!user) return;
-        const followRef = doc(db, 'users', user.uid, 'following', userIdToFollow);
-        const followerRef = doc(db, 'users', userIdToFollow, 'followers', user.uid);
-
-        await setDoc(followRef, {});
-        await setDoc(followerRef, {});
-        setUserFollowing((prevState) => ({
-            ...prevState,
-            [userIdToFollow]: true,
-        }));
-    };
-
-    const unfollowUser = async (userIdToUnfollow: string) => {
-        if (!user) return;
-        const followRef = doc(db, 'users', user.uid, 'following', userIdToUnfollow);
-        const followerRef = doc(db, 'users', userIdToUnfollow, 'followers', user.uid);
-
-        await deleteDoc(followRef);
-        await deleteDoc(followerRef);
-        setUserFollowing((prevState) => ({
-            ...prevState,
-            [userIdToUnfollow]: false,
-        }));
     };
 
     useEffect(() => {
@@ -311,127 +285,8 @@ export default function CodesBookmark() {
             </Head>
             <Header current="codes" />
             <Layout>
-                {bookmarkedSnippets.length > 0 ? (
-                    bookmarkedSnippets.map((snippet: CodeSnippet) => (
-                        <Card key={snippet.id} className="px-5 py-[17.5px] shadow-none">
-                            <div className="flex items-center mb-2.5">
-                            <img src={userIcons[snippet.userId]} alt="" className="w-10 h-10 rounded-full border" />
-                                <span className="font-bold ml-2.5">
-                                    <Link href={`/profile?user=${snippet.userId}`}>
-                                        {snippet.userName}
-                                    </Link>
-                                </span>                                <span className="ml-2.5 text-xs text-slate-400">
-                                    {snippet.timestamp ? new Date(snippet.timestamp.toDate()).toLocaleString() : 'No timestamp'}
-                                </span>
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger className="ml-auto">
-                                        <BsThreeDotsVertical className="text-lg" />
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent>
-                                        {user && snippet.userId === user.uid && (
-                                            <>
-                                                <DropdownMenuItem onClick={() => deleteSnippet(snippet.id)}>
-                                                    <FiTrash className="mr-1.5" />Delete
-                                                </DropdownMenuItem>
-                                                <DropdownMenuSeparator />
-                                            </>
-                                        )}
-                                        <DropdownMenuItem onClick={() => copyToClipboard(snippet.code)}>
-                                            <FiCopy className="mr-1.5" />Copy Code
-                                        </DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            </div>
-                            <div className="mb-2.5 text-sm flex">
-                                {snippet.description}
-                            </div>
-                            {snippet.language && (
-                                <>
-                                    <CodeBlock language={snippet.language}>
-                                        <pre className="bg-slate-100 dark:bg-slate-900 p-2.5 rounded-md text-sm whitespace-pre-wrap">{snippet.code}</pre>
-                                    </CodeBlock>
-                                    <pre className="hidden dark:block bg-slate-100 dark:bg-slate-900 p-2.5 text-sm whitespace-pre-wrap">{snippet.code}</pre>
-                                </>
-                            )}
-                            {!snippet.language && (
-                                <pre className="bg-[#F3F3F3] dark:bg-slate-900 p-2.5 text-sm whitespace-pre-wrap">{snippet.code}</pre>
-                            )}
-                            {snippet.imageUrl && (
-                                <img src={snippet.imageUrl} alt="Snippet Image" className="mt-[15px] max-w-full md:max-w-[250px] h-auto rounded-md" />
-                            )}
-                            <div className="flex items-center mt-2.5 pt-2.5">
-                                <Button onClick={() => likeSnippet(snippet.id)} className="bg-transparent hover:bg-transparent h-0 p-0">
-                                    <FaHeart className={`text-lg mr-[10px] transition-all ${userLikes[snippet.id] ? 'text-red-500 dark:text-red-400' : 'text-slate-300'}`} />
-                                </Button>
-                                <span className="text-sm text-slate-500 dark:text-slate-400">{snippet.likes}</span>
-                                <Button onClick={() => toggleComments(snippet.id)} className="bg-transparent hover:bg-transparent h-0 p-0 ml-3">
-                                    <FaReply className={`text-lg ${comments[snippet.id]?.some(comment => comment.userId === user?.uid) ? 'text-blue-500 dark:text-blue-400' : 'text-slate-300'}`} />
-                                </Button>
-                                <Button onClick={() => bookmarkSnippet(snippet.id)} className="bg-transparent hover:bg-transparent h-0 p-0 ml-3">
-                                    <FaBookmark className={`text-lg ${userBookmarks[snippet.id] ? 'text-yellow-500 dark:text-yellow-400' : 'text-slate-300'}`} />
-                                </Button>
-                            </div>
-                            {showComments[snippet.id] && (
-                                <div className="mt-5">
-                                    <div className="flex items-center">
-                                        <Input
-                                            type="text"
-                                            placeholder="Add a comment..."
-                                            value={newComment[snippet.id] || ''}
-                                            onChange={(e) => setNewComment({
-                                                ...newComment,
-                                                [snippet.id]: e.target.value,
-                                            })}
-                                        />
-                                        <Button className="ml-3 bg-blue-500 hover:bg-blue-600 dark:text-white" onClick={() => addComment(snippet.id)}>Post<IoIosSend className="ml-[5px] text-lg hidden md:block" /></Button>
-                                    </div>
-                                    <div className="my-2.5">
-                                        {showComments[snippet.id] && comments[snippet.id]?.map(comment => (
-                                        <div key={comment.id} className='pt-[10px] pb-[15px] border-b'>
-                                            <div className="flex items-center">
-                                                {userIcons[comment.userId] && (
-                                                    <img
-                                                        src={userIcons[comment.userId]}
-                                                        alt="User Icon"
-                                                        className="w-[30px] h-[30px] rounded-full mr-2.5 border"
-                                                    />
-                                                )}
-                                                <span className="font-semibold text-sm">
-                                                    <Link href={`/profile?user=${comment.userId}`}>
-                                                        {comment.userName}
-                                                    </Link>
-                                                </span>
-                                                <span className="text-xs text-slate-400 ml-2.5">{comment.timestamp ? (comment.timestamp.toDate ? new Date(comment.timestamp.toDate()).toLocaleString() : new Date(comment.timestamp).toLocaleString()) : 'No timestamp'}</span>
-                                            </div>
-                                            <div className="text-sm text-slate-700 dark:text-slate-400 ml-10">
-                                                {comment.text}
-                                            </div>
-                                        </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-                        </Card>
-                    ))
-                ) : (
-                    <div className="text-center text-gray-500">Bookmark not found.</div>
-                )}
+                <Bookmarks />
             </Layout>
-            {error && (
-                <AlertDialog open>
-                    <AlertDialogContent>
-                        <AlertDialogHeader>
-                            <AlertDialogTitle>Error</AlertDialogTitle>
-                            <AlertDialogDescription>
-                                {error}
-                            </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                            <AlertDialogCancel onClick={() => setError(null)}>Close</AlertDialogCancel>
-                        </AlertDialogFooter>
-                    </AlertDialogContent>
-                </AlertDialog>
-            )}
         </div>
     )
 }

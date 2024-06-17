@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import {
-    collection, doc, addDoc, updateDoc, query, orderBy, onSnapshot, serverTimestamp, getDoc, setDoc, deleteDoc, getDocs
-} from 'firebase/firestore';
+// pages/Bookmarks.tsx
+import useAuthRedirect from "@/components/useAuthRedirect";
+import { useEffect, useState } from 'react';
+import { collection, query, where, getDocs, orderBy, doc, deleteDoc, onSnapshot, getDoc, setDoc, updateDoc, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db, auth } from '@/firebase/firebaseConfig';
 import { onAuthStateChanged, User } from 'firebase/auth';
-import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
-import SnippetCard from '../SnippetCard';
+import SnippetCard from '@/components/SnippetCard';
 
 interface CodeSnippet {
     id: string;
@@ -27,9 +26,10 @@ interface Comment {
     timestamp: any;
 }
 
-const Codes: React.FC = () => {
+export default function Bookmarks() {
+    useAuthRedirect();
     const [user, setUser] = useState<User | null>(null);
-    const [codeSnippets, setCodeSnippets] = useState<CodeSnippet[]>([]);
+    const [bookmarkedSnippets, setBookmarkedSnippets] = useState<CodeSnippet[]>([]);
     const [userIcons, setUserIcons] = useState<{ [userId: string]: string }>({});
     const [userLikes, setUserLikes] = useState<{ [snippetId: string]: boolean }>({});
     const [comments, setComments] = useState<{ [snippetId: string]: Comment[] }>({});
@@ -59,37 +59,16 @@ const Codes: React.FC = () => {
         setUserFollowing(followingData);
     };
 
-    const followUser = async (userIdToFollow: string) => {
-        if (!user) return;
-        const followRef = doc(db, 'users', user.uid, 'following', userIdToFollow);
-        const followerRef = doc(db, 'users', userIdToFollow, 'followers', user.uid);
-
-        await setDoc(followRef, {});
-        await setDoc(followerRef, {});
-        setUserFollowing((prevState) => ({
-            ...prevState,
-            [userIdToFollow]: true,
-        }));
-    };
-
-    const unfollowUser = async (userIdToUnfollow: string) => {
-        if (!user) return;
-        const followRef = doc(db, 'users', user.uid, 'following', userIdToUnfollow);
-        const followerRef = doc(db, 'users', userIdToUnfollow, 'followers', user.uid);
-
-        await deleteDoc(followRef);
-        await deleteDoc(followerRef);
-        setUserFollowing((prevState) => ({
-            ...prevState,
-            [userIdToUnfollow]: false,
-        }));
-    };
+    useEffect(() => {
+        if (user) {
+            fetchBookmarkedSnippets(user.uid);
+        }
+    }, [user]);
 
     useEffect(() => {
         const q = query(collection(db, 'codes'), orderBy('timestamp', 'desc'));
         const unsubscribe = onSnapshot(q, (snapshot) => {
             const snippets = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as CodeSnippet));
-            setCodeSnippets(snippets);
             snippets.forEach((snippet) => {
                 const userId = snippet.userId;
                 if (!userIcons[userId]) {
@@ -117,7 +96,7 @@ const Codes: React.FC = () => {
     };
 
     const fetchUserLikes = async (snippetId: string) => {
-        if (!user) return;
+        if (!user) return; // Ensure user is not null
         const likeDoc = await getDoc(doc(db, 'likes', `${user.uid}_${snippetId}`));
         if (likeDoc.exists()) {
             setUserLikes((prevState) => ({
@@ -148,44 +127,29 @@ const Codes: React.FC = () => {
         const likeDocRef = doc(db, 'likes', `${user.uid}_${snippetId}`);
         const snippetRef = doc(db, 'codes', snippetId);
         const likeDoc = await getDoc(likeDocRef);
-        const snippetDoc = await getDoc(snippetRef);
 
-        if (snippetDoc.exists()) {
-            const snippetData = snippetDoc.data();
-
-            if (likeDoc.exists()) {
-                await deleteDoc(likeDocRef);
-                await updateDoc(snippetRef, {
-                    likes: (snippetData.likes || 0) - 1,
-                });
-                setUserLikes((prevState) => ({
-                    ...prevState,
-                    [snippetId]: false,
-                }));
-            } else {
-                await setDoc(likeDocRef, {
-                    count: 1,
-                });
-                await updateDoc(snippetRef, {
-                    likes: (snippetData.likes || 0) + 1,
-                });
-                setUserLikes((prevState) => ({
-                    ...prevState,
-                    [snippetId]: true,
-                }));
-
-                if (user.uid !== snippetData.userId) {
-                    await addDoc(collection(db, 'notifications'), {
-                        type: 'like',
-                        userId: snippetData.userId,
-                        likedBy: user.uid,
-                        likedByName: user.displayName || 'Anonymous',
-                        snippetId: snippetId,
-                        snippetDescription: snippetData.description,
-                        timestamp: serverTimestamp(),
-                    });
-                }
-            }
+        if (likeDoc.exists()) {
+            // Unlike the snippet
+            await deleteDoc(likeDocRef);
+            await updateDoc(snippetRef, {
+                likes: (await (await getDoc(snippetRef)).data())?.likes - 1,
+            });
+            setUserLikes((prevState) => ({
+                ...prevState,
+                [snippetId]: false,
+            }));
+        } else {
+            // Like the snippet
+            await setDoc(likeDocRef, {
+                count: 1,
+            });
+            await updateDoc(snippetRef, {
+                likes: (await (await getDoc(snippetRef)).data())?.likes + 1,
+            });
+            setUserLikes((prevState) => ({
+                ...prevState,
+                [snippetId]: true,
+            }));
         }
     };
 
@@ -196,14 +160,9 @@ const Codes: React.FC = () => {
         const snippetDoc = await getDoc(snippetRef);
 
         if (snippetDoc.exists() && snippetDoc.data().userId === user.uid) {
-            const commentsQuery = query(collection(db, 'codes', snippetId, 'comments'));
-            const commentsSnapshot = await getDocs(commentsQuery);
-            commentsSnapshot.forEach(async (commentDoc) => {
-                await deleteDoc(commentDoc.ref);
-            });
-
             await deleteDoc(snippetRef);
 
+            // Optionally, delete related likes (not necessary but good for cleanup)
             const likeQuery = query(collection(db, 'likes'), orderBy('timestamp', 'desc'));
             const likesSnapshot = await getDocs(likeQuery);
             likesSnapshot.forEach(async (likeDoc) => {
@@ -218,6 +177,35 @@ const Codes: React.FC = () => {
         navigator.clipboard.writeText(text).catch((err) => {
             setError("Failed to copy text.");
         });
+    };
+
+    const fetchUserBookmarks = async (userId: string): Promise<void> => {
+        const bookmarksSnapshot = await getDocs(collection(db, 'users', userId, 'bookmarks'));
+        const bookmarksData: { [key: string]: boolean } = {};
+        bookmarksSnapshot.docs.forEach((doc) => {
+            bookmarksData[doc.id] = true;
+        });
+        setUserBookmarks(bookmarksData);
+    };
+
+    const fetchBookmarkedSnippets = async (userId: string): Promise<void> => {
+        const bookmarksSnapshot = await getDocs(collection(db, 'users', userId, 'bookmarks'));
+        const bookmarkedSnippetIds = bookmarksSnapshot.docs.map(doc => doc.id);
+        if (bookmarkedSnippetIds.length > 0) {
+            const snippetsQuery = query(collection(db, 'codes'), where('__name__', 'in', bookmarkedSnippetIds));
+            const snippetsSnapshot = await getDocs(snippetsQuery);
+            const snippetsData = snippetsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as CodeSnippet));
+            setBookmarkedSnippets(snippetsData);
+        } else {
+            setBookmarkedSnippets([]);
+        }
+    };
+
+    const toggleComments = (snippetId: string) => {
+        setShowComments(prevState => ({
+            ...prevState,
+            [snippetId]: !prevState[snippetId]
+        }));
     };
 
     const addComment = async (snippetId: string) => {
@@ -238,7 +226,7 @@ const Codes: React.FC = () => {
             userId: user.uid,
             userName: user.displayName || 'Anonymous',
             text: commentText,
-            timestamp: new Date(),
+            timestamp: new Date(), // Use local date until Firestore timestamp is available
         };
 
         setComments(prevState => ({
@@ -251,25 +239,10 @@ const Codes: React.FC = () => {
             [snippetId]: '',
         }));
 
+        // Fetch and update user icon for the new comment
         if (!userIcons[user.uid]) {
             fetchUserIcon(user.uid);
         }
-    };
-
-    const toggleComments = (snippetId: string) => {
-        setShowComments(prevState => ({
-            ...prevState,
-            [snippetId]: !prevState[snippetId]
-        }));
-    };
-
-    const fetchUserBookmarks = async (userId: string) => {
-        const bookmarksSnapshot = await getDocs(collection(db, 'users', userId, 'bookmarks'));
-        const bookmarksData: { [key: string]: boolean } = {};
-        bookmarksSnapshot.docs.forEach((doc) => {
-            bookmarksData[doc.id] = true;
-        });
-        setUserBookmarks(bookmarksData);
     };
 
     const bookmarkSnippet = async (snippetId: string) => {
@@ -291,45 +264,32 @@ const Codes: React.FC = () => {
     };
 
     return (
-        <div className="flex-1 space-y-[15px]">
-            {codeSnippets.map((snippet) => (
-                <SnippetCard
-                    key={snippet.id}
-                    snippet={snippet}
-                    user={user}
-                    userIcons={userIcons}
-                    userLikes={userLikes}
-                    comments={comments}
-                    newComment={newComment}
-                    showComments={showComments}
-                    userBookmarks={userBookmarks}
-                    onLikeSnippet={likeSnippet}
-                    onDeleteSnippet={deleteSnippet}
-                    onCopyToClipboard={copyToClipboard}
-                    onAddComment={addComment}
-                    onToggleComments={toggleComments}
-                    onBookmarkSnippet={bookmarkSnippet}
-                    onCommentChange={(snippetId, text) => setNewComment(prevState => ({ ...prevState, [snippetId]: text }))}
-                    onFetchUserIcon={fetchUserIcon}
-                />
-            ))}
-            {error && (
-                <AlertDialog open>
-                    <AlertDialogContent>
-                        <AlertDialogHeader>
-                            <AlertDialogTitle>Error</AlertDialogTitle>
-                            <AlertDialogDescription>
-                                {error}
-                            </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                            <AlertDialogCancel onClick={() => setError(null)}>Close</AlertDialogCancel>
-                        </AlertDialogFooter>
-                    </AlertDialogContent>
-                </AlertDialog>
+        <>
+            {bookmarkedSnippets.length > 0 ? (
+                bookmarkedSnippets.map((snippet: CodeSnippet) => (
+                    <SnippetCard
+                        key={snippet.id}
+                        snippet={snippet}
+                        user={user}
+                        userIcons={userIcons}
+                        userLikes={userLikes}
+                        comments={comments}
+                        newComment={newComment}
+                        showComments={showComments}
+                        userBookmarks={userBookmarks}
+                        onLikeSnippet={likeSnippet}
+                        onDeleteSnippet={deleteSnippet}
+                        onCopyToClipboard={copyToClipboard}
+                        onAddComment={addComment}
+                        onToggleComments={toggleComments}
+                        onBookmarkSnippet={bookmarkSnippet}
+                        onCommentChange={(snippetId, text) => setNewComment(prevState => ({ ...prevState, [snippetId]: text }))}
+                        onFetchUserIcon={fetchUserIcon}
+                    />
+                ))
+            ) : (
+                <div className="text-center text-gray-500">Bookmark not found.</div>
             )}
-        </div>
-    );
-};
-
-export default Codes;
+        </>
+    )
+}
