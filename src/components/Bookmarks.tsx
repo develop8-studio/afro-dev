@@ -1,4 +1,3 @@
-// pages/Bookmarks.tsx
 import useAuthRedirect from "@/components/useAuthRedirect";
 import { useEffect, useState } from 'react';
 import { collection, query, where, getDocs, orderBy, doc, deleteDoc, onSnapshot, getDoc, setDoc, updateDoc, addDoc, serverTimestamp } from 'firebase/firestore';
@@ -127,29 +126,44 @@ export default function Bookmarks() {
         const likeDocRef = doc(db, 'likes', `${user.uid}_${snippetId}`);
         const snippetRef = doc(db, 'codes', snippetId);
         const likeDoc = await getDoc(likeDocRef);
+        const snippetDoc = await getDoc(snippetRef);
 
-        if (likeDoc.exists()) {
-            // Unlike the snippet
-            await deleteDoc(likeDocRef);
-            await updateDoc(snippetRef, {
-                likes: (await (await getDoc(snippetRef)).data())?.likes - 1,
-            });
-            setUserLikes((prevState) => ({
-                ...prevState,
-                [snippetId]: false,
-            }));
-        } else {
-            // Like the snippet
-            await setDoc(likeDocRef, {
-                count: 1,
-            });
-            await updateDoc(snippetRef, {
-                likes: (await (await getDoc(snippetRef)).data())?.likes + 1,
-            });
-            setUserLikes((prevState) => ({
-                ...prevState,
-                [snippetId]: true,
-            }));
+        if (snippetDoc.exists()) {
+            const snippetData = snippetDoc.data();
+
+            if (likeDoc.exists()) {
+                // Unlike the snippet
+                await deleteDoc(likeDocRef);
+                await updateDoc(snippetRef, {
+                    likes: (snippetData.likes || 0) - 1,
+                });
+                setUserLikes((prevState) => ({
+                    ...prevState,
+                    [snippetId]: false,
+                }));
+                setBookmarkedSnippets((prevSnippets) =>
+                    prevSnippets.map((snippet) =>
+                        snippet.id === snippetId ? { ...snippet, likes: (snippet.likes || 0) - 1 } : snippet
+                    )
+                );
+            } else {
+                // Like the snippet
+                await setDoc(likeDocRef, {
+                    count: 1,
+                });
+                await updateDoc(snippetRef, {
+                    likes: (snippetData.likes || 0) + 1,
+                });
+                setUserLikes((prevState) => ({
+                    ...prevState,
+                    [snippetId]: true,
+                }));
+                setBookmarkedSnippets((prevSnippets) =>
+                    prevSnippets.map((snippet) =>
+                        snippet.id === snippetId ? { ...snippet, likes: (snippet.likes || 0) + 1 } : snippet
+                    )
+                );
+            }
         }
     };
 
@@ -170,6 +184,10 @@ export default function Bookmarks() {
                     await deleteDoc(likeDoc.ref);
                 }
             });
+
+            setBookmarkedSnippets((prevSnippets) =>
+                prevSnippets.filter((snippet) => snippet.id !== snippetId)
+            );
         }
     };
 
@@ -291,5 +309,5 @@ export default function Bookmarks() {
                 <div className="text-center text-gray-500">Bookmark not found.</div>
             )}
         </>
-    )
+    );
 }
