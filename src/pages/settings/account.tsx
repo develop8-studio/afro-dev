@@ -88,6 +88,12 @@ export default function AccountSettingsPage() {
                 await updateProfile(auth.currentUser, {
                     displayName: username,
                 });
+
+                // Firestoreの/users/ユーザーのuidドキュメントの更新
+                await setDoc(doc(db, 'users', auth.currentUser.uid), {
+                    userName: username,
+                }, { merge: true });
+
                 setSuccess(true);
             }
         } catch (err) {

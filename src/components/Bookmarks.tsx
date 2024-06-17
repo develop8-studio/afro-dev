@@ -129,21 +129,21 @@ export default function Bookmarks() {
         const snippetDoc = await getDoc(snippetRef);
 
         if (snippetDoc.exists()) {
-            const snippetData = snippetDoc.data();
+            const snippetData = snippetDoc.data() as CodeSnippet;
 
             if (likeDoc.exists()) {
                 // Unlike the snippet
                 await deleteDoc(likeDocRef);
                 await updateDoc(snippetRef, {
-                    likes: (snippetData.likes || 0) - 1,
+                    likes: snippetData.likes - 1,
                 });
                 setUserLikes((prevState) => ({
                     ...prevState,
                     [snippetId]: false,
                 }));
-                setBookmarkedSnippets((prevSnippets) =>
-                    prevSnippets.map((snippet) =>
-                        snippet.id === snippetId ? { ...snippet, likes: (snippet.likes || 0) - 1 } : snippet
+                setBookmarkedSnippets((prevSnippets) => 
+                    prevSnippets.map(snippet => 
+                        snippet.id === snippetId ? { ...snippet, likes: snippet.likes - 1 } : snippet
                     )
                 );
             } else {
@@ -152,17 +152,30 @@ export default function Bookmarks() {
                     count: 1,
                 });
                 await updateDoc(snippetRef, {
-                    likes: (snippetData.likes || 0) + 1,
+                    likes: snippetData.likes + 1,
                 });
                 setUserLikes((prevState) => ({
                     ...prevState,
                     [snippetId]: true,
                 }));
-                setBookmarkedSnippets((prevSnippets) =>
-                    prevSnippets.map((snippet) =>
-                        snippet.id === snippetId ? { ...snippet, likes: (snippet.likes || 0) + 1 } : snippet
+                setBookmarkedSnippets((prevSnippets) => 
+                    prevSnippets.map(snippet => 
+                        snippet.id === snippetId ? { ...snippet, likes: snippet.likes + 1 } : snippet
                     )
                 );
+
+                // Add a notification for the snippet owner
+                if (user.uid !== snippetData.userId) {
+                    await addDoc(collection(db, 'notifications'), {
+                        type: 'like',
+                        userId: snippetData.userId,
+                        likedBy: user.uid,
+                        likedByName: user.displayName || 'Anonymous',
+                        snippetId: snippetId,
+                        snippetDescription: snippetData.description,
+                        timestamp: serverTimestamp(),
+                    });
+                }
             }
         }
     };
@@ -184,10 +197,6 @@ export default function Bookmarks() {
                     await deleteDoc(likeDoc.ref);
                 }
             });
-
-            setBookmarkedSnippets((prevSnippets) =>
-                prevSnippets.filter((snippet) => snippet.id !== snippetId)
-            );
         }
     };
 

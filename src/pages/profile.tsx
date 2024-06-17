@@ -45,6 +45,7 @@ const UserProfile: React.FC = () => {
     const [userBookmarks, setUserBookmarks] = useState<{ [snippetId: string]: boolean }>({});
     const [profileUserName, setProfileUserName] = useState<string | null>(null);
     const [userFollowing, setUserFollowing] = useState<{ [userId: string]: boolean }>({});
+    const [followerCount, setFollowerCount] = useState<number>(0); // フォロワー数を保持するstate
 
     const router = useRouter();
     const { user: userQuery } = router.query;
@@ -66,6 +67,7 @@ const UserProfile: React.FC = () => {
             if (currentUser) {
                 fetchUserBookmarks(currentUser.uid);
                 fetchUserFollowing(currentUser.uid);
+                fetchFollowerCount(currentUser.uid); // フォロワー数を取得
             }
         });
         return () => unsubscribe();
@@ -79,7 +81,7 @@ const UserProfile: React.FC = () => {
                 ...prevState,
                 [userId]: userData.iconUrl || '',
             }));
-            return userData.displayName || '';
+            return userData.userName || '';
         }
         return null;
     };
@@ -93,6 +95,11 @@ const UserProfile: React.FC = () => {
         setUserFollowing(followingData);
     };
 
+    const fetchFollowerCount = async (userId: string) => {
+        const followersSnapshot = await getDocs(collection(db, 'users', userId, 'followers'));
+        setFollowerCount(followersSnapshot.size);
+    };
+
     const followUser = async (userIdToFollow: string) => {
         if (!user) return;
         const followRef = doc(db, 'users', user.uid, 'following', userIdToFollow);
@@ -104,6 +111,7 @@ const UserProfile: React.FC = () => {
             ...prevState,
             [userIdToFollow]: true,
         }));
+        setFollowerCount((prevCount) => prevCount + 1);
     };
 
     const unfollowUser = async (userIdToUnfollow: string) => {
@@ -117,6 +125,7 @@ const UserProfile: React.FC = () => {
             ...prevState,
             [userIdToUnfollow]: false,
         }));
+        setFollowerCount((prevCount) => prevCount - 1);
     };
 
     useEffect(() => {
@@ -345,7 +354,17 @@ const UserProfile: React.FC = () => {
                             {userIcons[userQuery as string] && (
                                 <img src={userIcons[userQuery as string]} alt="User Icon" className="w-10 h-10 rounded-full border" />
                             )}
-                            <h3 className="font-bold ml-2.5">{profileUserName || codeSnippets.find(snippet => snippet.userId === userQuery)?.userName}</h3>
+                            <div className="ml-2.5">
+                                <h3 className="font-bold">
+                                    {profileUserName ||
+                                    (codeSnippets.length > 0
+                                        ? codeSnippets.find(snippet => snippet.userId === userQuery)?.userName
+                                        : user && user.displayName) ||
+                                        'No Name'
+                                    }
+                                </h3>
+                                <span className="text-sm text-gray-500">{followerCount} Followers</span> {/* フォロワー数の表示 */}
+                            </div>
                             {user && userQuery !== user.uid && (
                                 userFollowing[userQuery as string] ? (
                                     <Button onClick={() => unfollowUser(userQuery as string)} className="w-[80px] h-[35px] ml-auto" variant="secondary">
@@ -368,27 +387,33 @@ const UserProfile: React.FC = () => {
                     )}
                 </Card>
                 <div className="flex-1 space-y-[15px]">
-                    {codeSnippets.map((snippet) => (
-                        <SnippetCard
-                            key={snippet.id}
-                            snippet={snippet}
-                            user={user}
-                            userIcons={userIcons}
-                            userLikes={userLikes}
-                            comments={comments}
-                            newComment={newComment}
-                            showComments={showComments}
-                            userBookmarks={userBookmarks}
-                            onLikeSnippet={likeSnippet}
-                            onDeleteSnippet={deleteSnippet}
-                            onCopyToClipboard={copyToClipboard}
-                            onAddComment={addComment}
-                            onToggleComments={toggleComments}
-                            onBookmarkSnippet={bookmarkSnippet}
-                            onCommentChange={(snippetId, text) => setNewComment(prevState => ({ ...prevState, [snippetId]: text }))}
-                            onFetchUserIcon={fetchUserIcon}
-                        />
-                    ))}
+                    {codeSnippets.length > 0 ? (
+                        codeSnippets.map((snippet) => (
+                            <SnippetCard
+                                key={snippet.id}
+                                snippet={snippet}
+                                user={user}
+                                userIcons={userIcons}
+                                userLikes={userLikes}
+                                comments={comments}
+                                newComment={newComment}
+                                showComments={showComments}
+                                userBookmarks={userBookmarks}
+                                onLikeSnippet={likeSnippet}
+                                onDeleteSnippet={deleteSnippet}
+                                onCopyToClipboard={copyToClipboard}
+                                onAddComment={addComment}
+                                onToggleComments={toggleComments}
+                                onBookmarkSnippet={bookmarkSnippet}
+                                onCommentChange={(snippetId, text) => setNewComment(prevState => ({ ...prevState, [snippetId]: text }))}
+                                onFetchUserIcon={fetchUserIcon}
+                            />
+                        ))
+                    ) : (
+                        <div className="text-center text-gray-500 mt-10">
+                            {profileUserName ? `${profileUserName} has no snippets.` : 'This user has no snippets.'}
+                        </div>
+                    )}
                 </div>
             </Layout>
         </div>

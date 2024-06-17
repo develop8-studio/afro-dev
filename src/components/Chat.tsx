@@ -8,6 +8,7 @@ import { onAuthStateChanged, User } from 'firebase/auth'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { FaHeart } from "react-icons/fa"
 import { IoIosSend } from 'react-icons/io'
+import Link from 'next/link'
 
 interface Message {
     id: string;
@@ -154,8 +155,12 @@ const Chat: React.FC<ChatProps> = ({ currentRoom, topic }) => {
                                 {userIcons[msg.userId] && (
                                     <img src={userIcons[msg.userId]} alt="User Icon" className="w-10 h-10 rounded-full mr-2.5 border" />
                                 )}
-                                <span className="font-bold">{msg.userName}</span>
-                                <span className="ml-2.5 text-xs text-slate-500 font-light">
+                                <span className="font-bold">
+                                    <Link href={`/profile?user=${msg.userId}`}>
+                                        {msg.userName}
+                                    </Link>
+                                </span>
+                                <span className="ml-2.5 text-xs text-slate-400 font-light">
                                     {msg.timestamp ? new Date(msg.timestamp.toDate()).toLocaleString() : 'No timestamp'}
                                 </span>
                             </div>
