@@ -247,6 +247,7 @@ const FollowingCards: React.FC = () => {
     };
 
     const fetchCodeSnippets = async () => {
+        if (!user) return;
         const q = query(collection(db, 'codes'), orderBy('timestamp', 'desc'));
         const querySnapshot = await getDocs(q);
         const snippets = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as CodeSnippet))
@@ -257,15 +258,14 @@ const FollowingCards: React.FC = () => {
             if (!userIcons[userId]) {
                 fetchUserIcon(userId);
             }
-            if (user) {
-                fetchUserLikes(snippet.id);
-            }
+            fetchUserLikes(snippet.id);
             fetchComments(snippet.id);
         });
         setNewSnippetsCount(0); // Reset new snippets count after reloading
     };
 
     const checkForNewSnippets = async () => {
+        if (!user) return;
         const q = query(collection(db, 'codes'), orderBy('timestamp', 'desc'));
         const querySnapshot = await getDocs(q);
         const snippets = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as CodeSnippet))
@@ -278,7 +278,7 @@ const FollowingCards: React.FC = () => {
     useEffect(() => {
         const interval = setInterval(() => {
             checkForNewSnippets();
-        }, 60000); // 1 minute interval to check for new snippets
+        }, 60000);
         return () => clearInterval(interval);
     }, [codeSnippets]);
 
