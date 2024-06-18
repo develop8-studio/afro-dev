@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import React, { useEffect, useState } from 'react';
 import {
-    collection, doc, addDoc, updateDoc, query, orderBy, onSnapshot, serverTimestamp, getDoc, setDoc, deleteDoc, getDocs, increment
+    collection, doc, addDoc, updateDoc, query, orderBy, onSnapshot, serverTimestamp, getDoc, setDoc, deleteDoc, getDocs
 } from 'firebase/firestore';
 import { db, auth } from '@/firebase/firebaseConfig';
 import { onAuthStateChanged, User } from 'firebase/auth';
@@ -55,6 +55,7 @@ const UserProfile: React.FC = () => {
             if (userQuery) {
                 const userName = await fetchUserProfile(userQuery as string);
                 setProfileUserName(userName);
+                await fetchFollowerCount(userQuery as string);
             }
         };
 
@@ -95,10 +96,10 @@ const UserProfile: React.FC = () => {
         setUserFollowing(followingData);
     };
 
-    // const fetchFollowerCount = async (userId: string) => {
-    //     const followersSnapshot = await getDocs(collection(db, 'users', userId, 'followers'));
-    //     setFollowerCount(followersSnapshot.size);
-    // };
+    const fetchFollowerCount = async (userId: string) => {
+        const followersSnapshot = await getDocs(collection(db, 'users', userId, 'followers'));
+        setFollowerCount(followersSnapshot.size);
+    };
 
     const followUser = async (userIdToFollow: string) => {
         if (!user) return;
@@ -111,11 +112,7 @@ const UserProfile: React.FC = () => {
             ...prevState,
             [userIdToFollow]: true,
         }));
-        // 正しくフォロワー数を更新
-        await updateDoc(doc(db, 'users', userIdToFollow), {
-            followerCount: increment(1),
-        });
-        setFollowerCount((prevCount) => prevCount + 1);
+        await fetchFollowerCount(userIdToFollow); // 追加: フォロワー数の再取得
     };
 
     const unfollowUser = async (userIdToUnfollow: string) => {
@@ -129,19 +126,7 @@ const UserProfile: React.FC = () => {
             ...prevState,
             [userIdToUnfollow]: false,
         }));
-        // 正しくフォロワー数を更新
-        await updateDoc(doc(db, 'users', userIdToUnfollow), {
-            followerCount: increment(-1),
-        });
-        setFollowerCount((prevCount) => prevCount - 1);
-    };
-
-    const fetchFollowerCount = async (userId: string) => {
-        const userDoc = await getDoc(doc(db, 'users', userId));
-        if (userDoc.exists()) {
-            const userData = userDoc.data();
-            setFollowerCount(userData.followerCount || 0);
-        }
+        await fetchFollowerCount(userIdToUnfollow); // 追加: フォロワー数の再取得
     };
 
     useEffect(() => {
