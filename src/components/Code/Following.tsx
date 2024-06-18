@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-    collection, doc, addDoc, updateDoc, query, orderBy, onSnapshot, serverTimestamp, getDoc, setDoc, deleteDoc, getDocs
+    collection, doc, addDoc, updateDoc, query, orderBy, serverTimestamp, getDoc, setDoc, deleteDoc, getDocs
 } from 'firebase/firestore';
 import { db, auth } from '@/firebase/firebaseConfig';
 import { onAuthStateChanged, User } from 'firebase/auth';
@@ -47,24 +47,7 @@ const FollowingCards: React.FC = () => {
             if (currentUser) {
                 fetchUserBookmarks(currentUser.uid);
                 fetchUserFollowing(currentUser.uid).then(() => {
-                    const q = query(collection(db, 'codes'), orderBy('timestamp', 'desc'));
-                    const unsubscribeSnippets = onSnapshot(q, (snapshot) => {
-                        const snippets = snapshot.docs
-                            .map((doc) => ({ id: doc.id, ...doc.data() } as CodeSnippet))
-                            .filter((snippet) => userFollowing[snippet.userId]);
-                        setCodeSnippets(snippets);
-                        snippets.forEach((snippet) => {
-                            const userId = snippet.userId;
-                            if (!userIcons[userId]) {
-                                fetchUserIcon(userId);
-                            }
-                            if (user) {
-                                fetchUserLikes(snippet.id);
-                            }
-                            fetchComments(snippet.id);
-                        });
-                    });
-                    return () => unsubscribeSnippets();
+                    fetchCodeSnippets();
                 });
             }
         });
@@ -302,8 +285,9 @@ const FollowingCards: React.FC = () => {
     return (
         <div className="flex-1 space-y-[15px]">
             {newSnippetsCount > 0 && (
-                <Button onClick={fetchCodeSnippets} className="bg-yellow-200 hover:bg-yellow-200 text-yellow-800 text-center mb-3 w-full font-normal">
-                    New post available.
+                <Button onClick={fetchCodeSnippets} className="bg-blue-500 text-white px-4 py-2 rounded-md mb-4 flex items-center">
+                    <FiRefreshCcw className="mr-2" />
+                    {newSnippetsCount}件の新しい投稿があります
                 </Button>
             )}
             {codeSnippets.length === 0 && (
