@@ -6,7 +6,6 @@ import { db, auth } from '@/firebase/firebaseConfig';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import SnippetCard from '@/components/SnippetCard';
 import { Button } from '@/components/ui/button';
-import { FiRefreshCcw } from 'react-icons/fi';
 
 interface CodeSnippet {
     id: string;
@@ -53,7 +52,7 @@ const FollowingCards: React.FC = () => {
         });
 
         return () => unsubscribe();
-    }, [user, userFollowing]);
+    }, []);
 
     const fetchUserFollowing = async (userId: string) => {
         const followingSnapshot = await getDocs(collection(db, 'users', userId, 'following'));
@@ -285,9 +284,8 @@ const FollowingCards: React.FC = () => {
     return (
         <div className="flex-1 space-y-[15px]">
             {newSnippetsCount > 0 && (
-                <Button onClick={fetchCodeSnippets} className="bg-blue-500 text-white px-4 py-2 rounded-md mb-4 flex items-center">
-                    <FiRefreshCcw className="mr-2" />
-                    {newSnippetsCount}件の新しい投稿があります
+                <Button onClick={fetchCodeSnippets} className="bg-yellow-200 hover:bg-yellow-200 text-yellow-800 text-center mb-3 w-full font-normal">
+                    New post available.
                 </Button>
             )}
             {codeSnippets.length === 0 && (
