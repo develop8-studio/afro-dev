@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import {
-    collection, doc, addDoc, updateDoc, query, orderBy, onSnapshot, serverTimestamp, getDoc, setDoc, deleteDoc, getDocs
+    collection, doc, addDoc, updateDoc, query, orderBy, serverTimestamp, getDoc, setDoc, deleteDoc, getDocs
 } from 'firebase/firestore';
 import { db, auth } from '@/firebase/firebaseConfig';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import SnippetCard from '../SnippetCard';
+import { Button } from '@/components/ui/button';
+import { FiRefreshCcw } from 'react-icons/fi';
 
 interface CodeSnippet {
     id: string;
@@ -38,6 +40,7 @@ const Codes: React.FC = () => {
     const [showComments, setShowComments] = useState<{ [snippetId: string]: boolean }>({});
     const [userBookmarks, setUserBookmarks] = useState<{ [snippetId: string]: boolean }>({});
     const [userFollowing, setUserFollowing] = useState<{ [userId: string]: boolean }>({});
+    const [newSnippetsCount, setNewSnippetsCount] = useState<number>(0);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -85,24 +88,42 @@ const Codes: React.FC = () => {
         }));
     };
 
-    useEffect(() => {
+    const fetchCodeSnippets = async () => {
         const q = query(collection(db, 'codes'), orderBy('timestamp', 'desc'));
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-            const snippets = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as CodeSnippet));
-            setCodeSnippets(snippets);
-            snippets.forEach((snippet) => {
-                const userId = snippet.userId;
-                if (!userIcons[userId]) {
-                    fetchUserIcon(userId);
-                }
-                if (user) {
-                    fetchUserLikes(snippet.id);
-                }
-                fetchComments(snippet.id);
-            });
+        const querySnapshot = await getDocs(q);
+        const snippets = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as CodeSnippet));
+        setCodeSnippets(snippets);
+        snippets.forEach((snippet) => {
+            const userId = snippet.userId;
+            if (!userIcons[userId]) {
+                fetchUserIcon(userId);
+            }
+            if (user) {
+                fetchUserLikes(snippet.id);
+            }
+            fetchComments(snippet.id);
         });
+        setNewSnippetsCount(0); // Reset new snippets count after reloading
+    };
 
-        return () => unsubscribe();
+    const checkForNewSnippets = async () => {
+        const q = query(collection(db, 'codes'), orderBy('timestamp', 'desc'));
+        const querySnapshot = await getDocs(q);
+        const snippets = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as CodeSnippet));
+        if (snippets.length > codeSnippets.length) {
+            setNewSnippetsCount(snippets.length - codeSnippets.length);
+        }
+    };
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            checkForNewSnippets();
+        }, 60000); // 1 minute interval to check for new snippets
+        return () => clearInterval(interval);
+    }, [codeSnippets]);
+
+    useEffect(() => {
+        fetchCodeSnippets();
     }, [user]);
 
     const fetchUserIcon = async (userId: string) => {
@@ -292,6 +313,17 @@ const Codes: React.FC = () => {
 
     return (
         <div className="flex-1 space-y-[15px]">
+            {newSnippetsCount > 0 && (
+                <>
+                    <div className="bg-yellow-200 text-yellow-800 px-4 py-2 rounded-md text-center mb-4">
+                        {newSnippetsCount}件の新しい投稿があります
+                    </div>
+                    <Button onClick={fetchCodeSnippets} className="bg-blue-500 text-white px-4 py-2 rounded-md mb-4 flex items-center">
+                        <FiRefreshCcw className="mr-2" />
+                        リロード
+                    </Button>
+                </>
+            )}
             {codeSnippets.map((snippet) => (
                 <SnippetCard
                     key={snippet.id}
