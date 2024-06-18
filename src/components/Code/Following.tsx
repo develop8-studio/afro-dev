@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import {
-    collection, doc, addDoc, updateDoc, query, orderBy, onSnapshot, serverTimestamp, getDoc, setDoc, deleteDoc, getDocs
+    collection, doc, addDoc, updateDoc, query, orderBy, serverTimestamp, getDoc, setDoc, deleteDoc, getDocs
 } from 'firebase/firestore';
 import { db, auth } from '@/firebase/firebaseConfig';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import SnippetCard from '@/components/SnippetCard';
+import { Button } from '@/components/ui/button';
+import { FiRefreshCcw } from 'react-icons/fi';
 
 interface CodeSnippet {
     id: string;
@@ -37,6 +39,7 @@ const FollowingCards: React.FC = () => {
     const [showComments, setShowComments] = useState<{ [snippetId: string]: boolean }>({});
     const [userBookmarks, setUserBookmarks] = useState<{ [snippetId: string]: boolean }>({});
     const [userFollowing, setUserFollowing] = useState<{ [userId: string]: boolean }>({});
+    const [newSnippetsCount, setNewSnippetsCount] = useState<number>(0);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -44,30 +47,13 @@ const FollowingCards: React.FC = () => {
             if (currentUser) {
                 fetchUserBookmarks(currentUser.uid);
                 fetchUserFollowing(currentUser.uid).then(() => {
-                    const q = query(collection(db, 'codes'), orderBy('timestamp', 'desc'));
-                    const unsubscribeSnippets = onSnapshot(q, (snapshot) => {
-                        const snippets = snapshot.docs
-                            .map((doc) => ({ id: doc.id, ...doc.data() } as CodeSnippet))
-                            .filter((snippet) => userFollowing[snippet.userId]);
-                        setCodeSnippets(snippets);
-                        snippets.forEach((snippet) => {
-                            const userId = snippet.userId;
-                            if (!userIcons[userId]) {
-                                fetchUserIcon(userId);
-                            }
-                            if (user) {
-                                fetchUserLikes(snippet.id);
-                            }
-                            fetchComments(snippet.id);
-                        });
-                    });
-                    return () => unsubscribeSnippets();
+                    fetchCodeSnippets();
                 });
             }
         });
 
         return () => unsubscribe();
-    }, [user, userFollowing]);
+    }, []);
 
     const fetchUserFollowing = async (userId: string) => {
         const followingSnapshot = await getDocs(collection(db, 'users', userId, 'following'));
@@ -91,7 +77,7 @@ const FollowingCards: React.FC = () => {
     };
 
     const fetchUserLikes = async (snippetId: string) => {
-        if (!user) return; // Ensure user is not null
+        if (!user) return;
         const likeDoc = await getDoc(doc(db, 'likes', `${user.uid}_${snippetId}`));
         if (likeDoc.exists()) {
             setUserLikes((prevState) => ({
@@ -128,7 +114,6 @@ const FollowingCards: React.FC = () => {
             const snippetData = snippetDoc.data();
 
             if (likeDoc.exists()) {
-                // Unlike the snippet
                 await deleteDoc(likeDocRef);
                 await updateDoc(snippetRef, {
                     likes: (snippetData.likes || 0) - 1,
@@ -138,7 +123,6 @@ const FollowingCards: React.FC = () => {
                     [snippetId]: false,
                 }));
             } else {
-                // Like the snippet
                 await setDoc(likeDocRef, {
                     count: 1,
                 });
@@ -150,7 +134,6 @@ const FollowingCards: React.FC = () => {
                     [snippetId]: true,
                 }));
 
-                // Add a notification for the snippet owner
                 if (user.uid !== snippetData.userId) {
                     await addDoc(collection(db, 'notifications'), {
                         type: 'like',
@@ -175,7 +158,6 @@ const FollowingCards: React.FC = () => {
         if (snippetDoc.exists() && snippetDoc.data().userId === user.uid) {
             await deleteDoc(snippetRef);
 
-            // Optionally, delete related likes (not necessary but good for cleanup)
             const likeQuery = query(collection(db, 'likes'), orderBy('timestamp', 'desc'));
             const likesSnapshot = await getDocs(likeQuery);
             likesSnapshot.forEach(async (likeDoc) => {
@@ -183,6 +165,8 @@ const FollowingCards: React.FC = () => {
                     await deleteDoc(likeDoc.ref);
                 }
             });
+
+            fetchCodeSnippets(); // Fetch the snippets again to update the list
         }
     };
 
@@ -210,7 +194,7 @@ const FollowingCards: React.FC = () => {
             userId: user.uid,
             userName: user.displayName || 'Anonymous',
             text: commentText,
-            timestamp: new Date(), // Use local date until Firestore timestamp is available
+            timestamp: new Date(),
         };
 
         setComments(prevState => ({
@@ -223,7 +207,6 @@ const FollowingCards: React.FC = () => {
             [snippetId]: '',
         }));
 
-        // Fetch and update user icon for the new comment
         if (!userIcons[user.uid]) {
             fetchUserIcon(user.uid);
         }
@@ -263,8 +246,49 @@ const FollowingCards: React.FC = () => {
         }
     };
 
+    const fetchCodeSnippets = async () => {
+        const q = query(collection(db, 'codes'), orderBy('timestamp', 'desc'));
+        const querySnapshot = await getDocs(q);
+        const snippets = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as CodeSnippet))
+            .filter((snippet) => userFollowing[snippet.userId]);
+        setCodeSnippets(snippets);
+        snippets.forEach((snippet) => {
+            const userId = snippet.userId;
+            if (!userIcons[userId]) {
+                fetchUserIcon(userId);
+            }
+            if (user) {
+                fetchUserLikes(snippet.id);
+            }
+            fetchComments(snippet.id);
+        });
+        setNewSnippetsCount(0); // Reset new snippets count after reloading
+    };
+
+    const checkForNewSnippets = async () => {
+        const q = query(collection(db, 'codes'), orderBy('timestamp', 'desc'));
+        const querySnapshot = await getDocs(q);
+        const snippets = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as CodeSnippet))
+            .filter((snippet) => userFollowing[snippet.userId]);
+        if (snippets.length > codeSnippets.length) {
+            setNewSnippetsCount(snippets.length - codeSnippets.length);
+        }
+    };
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            checkForNewSnippets();
+        }, 60000); // 1 minute interval to check for new snippets
+        return () => clearInterval(interval);
+    }, [codeSnippets]);
+
     return (
         <div className="flex-1 space-y-[15px]">
+            {newSnippetsCount > 0 && (
+                <Button onClick={fetchCodeSnippets} className="bg-yellow-200 hover:bg-yellow-200 text-yellow-800 text-center mb-3 w-full font-normal">
+                    New post available.
+                </Button>
+            )}
             {codeSnippets.length === 0 && (
                 <div className="text-center text-gray-500">I can&apos;t find anyone you&apos;re following.</div>
             )}
