@@ -314,15 +314,10 @@ const Codes: React.FC = () => {
     return (
         <div className="flex-1 space-y-[15px]">
             {newSnippetsCount > 0 && (
-                <>
-                    <div className="bg-yellow-200 text-yellow-800 px-4 py-2 rounded-md text-center mb-4">
-                        {newSnippetsCount}件の新しい投稿があります
-                    </div>
-                    <Button onClick={fetchCodeSnippets} className="bg-blue-500 text-white px-4 py-2 rounded-md mb-4 flex items-center">
-                        <FiRefreshCcw className="mr-2" />
-                        リロード
-                    </Button>
-                </>
+                <Button onClick={fetchCodeSnippets} className="bg-yellow-200 hover:bg-yellow-200 text-yellow-800 text-center mb-3 w-full">
+                    <FiRefreshCcw className="mr-2.5" />
+                    {newSnippetsCount}件の新しい投稿があります
+                </Button>
             )}
             {codeSnippets.map((snippet) => (
                 <SnippetCard
