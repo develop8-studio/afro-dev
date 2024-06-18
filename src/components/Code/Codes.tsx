@@ -7,7 +7,6 @@ import { onAuthStateChanged, User } from 'firebase/auth';
 import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import SnippetCard from '../SnippetCard';
 import { Button } from '@/components/ui/button';
-import { FiRefreshCcw } from 'react-icons/fi';
 
 interface CodeSnippet {
     id: string;
@@ -232,6 +231,9 @@ const Codes: React.FC = () => {
                     await deleteDoc(likeDoc.ref);
                 }
             });
+
+            // 更新のためにコードスニペットを再取得
+            fetchCodeSnippets();
         }
     };
 
@@ -314,9 +316,9 @@ const Codes: React.FC = () => {
     return (
         <div className="flex-1 space-y-[15px]">
             {newSnippetsCount > 0 && (
-                <Button onClick={fetchCodeSnippets} className="bg-yellow-200 hover:bg-yellow-200 text-yellow-800 text-center mb-3 w-full">
-                    <FiRefreshCcw className="mr-2.5" />
-                    {newSnippetsCount}件の新しい投稿があります
+                <Button onClick={fetchCodeSnippets} className="bg-yellow-200 hover:bg-yellow-200 text-yellow-800 text-center mb-3 w-full font-normal">
+                    {/* There is {newSnippetsCount} new post. */}
+                    New post available.
                 </Button>
             )}
             {codeSnippets.map((snippet) => (
