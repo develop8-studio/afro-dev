@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import React, { useEffect, useState } from 'react';
 import {
-    collection, doc, addDoc, updateDoc, query, orderBy, onSnapshot, serverTimestamp, getDoc, setDoc, deleteDoc, getDocs
+    collection, doc, addDoc, updateDoc, query, orderBy, onSnapshot, serverTimestamp, getDoc, setDoc, deleteDoc, getDocs, increment
 } from 'firebase/firestore';
 import { db, auth } from '@/firebase/firebaseConfig';
 import { onAuthStateChanged, User } from 'firebase/auth';
@@ -95,10 +95,10 @@ const UserProfile: React.FC = () => {
         setUserFollowing(followingData);
     };
 
-    const fetchFollowerCount = async (userId: string) => {
-        const followersSnapshot = await getDocs(collection(db, 'users', userId, 'followers'));
-        setFollowerCount(followersSnapshot.size);
-    };
+    // const fetchFollowerCount = async (userId: string) => {
+    //     const followersSnapshot = await getDocs(collection(db, 'users', userId, 'followers'));
+    //     setFollowerCount(followersSnapshot.size);
+    // };
 
     const followUser = async (userIdToFollow: string) => {
         if (!user) return;
@@ -111,6 +111,10 @@ const UserProfile: React.FC = () => {
             ...prevState,
             [userIdToFollow]: true,
         }));
+        // 正しくフォロワー数を更新
+        await updateDoc(doc(db, 'users', userIdToFollow), {
+            followerCount: increment(1),
+        });
         setFollowerCount((prevCount) => prevCount + 1);
     };
 
@@ -125,7 +129,19 @@ const UserProfile: React.FC = () => {
             ...prevState,
             [userIdToUnfollow]: false,
         }));
+        // 正しくフォロワー数を更新
+        await updateDoc(doc(db, 'users', userIdToUnfollow), {
+            followerCount: increment(-1),
+        });
         setFollowerCount((prevCount) => prevCount - 1);
+    };
+
+    const fetchFollowerCount = async (userId: string) => {
+        const userDoc = await getDoc(doc(db, 'users', userId));
+        if (userDoc.exists()) {
+            const userData = userDoc.data();
+            setFollowerCount(userData.followerCount || 0);
+        }
     };
 
     useEffect(() => {
@@ -411,7 +427,7 @@ const UserProfile: React.FC = () => {
                         ))
                     ) : (
                         <div className="text-center text-gray-500 mt-10">
-                            {profileUserName ? `${profileUserName} has no snippets.` : 'This user has no snippets.'}
+                            {profileUserName ? `${profileUserName} has no codes.` : 'This user has no codes.'}
                         </div>
                     )}
                 </div>
