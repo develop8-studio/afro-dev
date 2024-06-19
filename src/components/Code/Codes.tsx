@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import {
-    collection, doc, addDoc, updateDoc, query, orderBy, serverTimestamp, getDoc, setDoc, deleteDoc, getDocs
+    collection, doc, addDoc, updateDoc, query, orderBy, serverTimestamp, getDoc, setDoc, deleteDoc, getDocs, limit, startAfter
 } from 'firebase/firestore';
 import { db, auth } from '@/firebase/firebaseConfig';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import SnippetCard from '../SnippetCard';
 import { Button } from '@/components/ui/button';
+import { FaArrowDown } from "react-icons/fa6";
 
 interface CodeSnippet {
     id: string;
@@ -40,6 +41,8 @@ const Codes: React.FC = () => {
     const [userBookmarks, setUserBookmarks] = useState<{ [snippetId: string]: boolean }>({});
     const [userFollowing, setUserFollowing] = useState<{ [userId: string]: boolean }>({});
     const [newSnippetsCount, setNewSnippetsCount] = useState<number>(0);
+    const [lastVisible, setLastVisible] = useState<any>(null); // Track the last visible document
+    const [loadingMore, setLoadingMore] = useState<boolean>(false); // Track loading state for "Load More" button
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -62,10 +65,11 @@ const Codes: React.FC = () => {
     };
 
     const fetchCodeSnippets = async () => {
-        const q = query(collection(db, 'codes'), orderBy('timestamp', 'desc'));
+        const q = query(collection(db, 'codes'), orderBy('timestamp', 'desc'), limit(15));
         const querySnapshot = await getDocs(q);
         const snippets = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as CodeSnippet));
         setCodeSnippets(snippets);
+        setLastVisible(querySnapshot.docs[querySnapshot.docs.length - 1]); // Save the last visible document
         snippets.forEach((snippet) => {
             const userId = snippet.userId;
             if (!userIcons[userId]) {
@@ -77,6 +81,32 @@ const Codes: React.FC = () => {
             fetchComments(snippet.id);
         });
         setNewSnippetsCount(0); // Reset new snippets count after reloading
+    };
+
+    const loadMoreSnippets = async () => {
+        if (!lastVisible) return;
+        setLoadingMore(true);
+        const q = query(
+            collection(db, 'codes'),
+            orderBy('timestamp', 'desc'),
+            startAfter(lastVisible),
+            limit(15)
+        );
+        const querySnapshot = await getDocs(q);
+        const snippets = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as CodeSnippet));
+        setCodeSnippets((prevSnippets) => [...prevSnippets, ...snippets]);
+        setLastVisible(querySnapshot.docs[querySnapshot.docs.length - 1]); // Update the last visible document
+        snippets.forEach((snippet) => {
+            const userId = snippet.userId;
+            if (!userIcons[userId]) {
+                fetchUserIcon(userId);
+            }
+            if (user) {
+                fetchUserLikes(snippet.id);
+            }
+            fetchComments(snippet.id);
+        });
+        setLoadingMore(false);
     };
 
     const checkForNewSnippets = async () => {
@@ -138,15 +168,15 @@ const Codes: React.FC = () => {
 
     const likeSnippet = async (snippetId: string) => {
         if (!user) return;
-    
+
         const likeDocRef = doc(db, 'likes', `${user.uid}_${snippetId}`);
         const snippetRef = doc(db, 'codes', snippetId);
         const likeDoc = await getDoc(likeDocRef);
         const snippetDoc = await getDoc(snippetRef);
-    
+
         if (snippetDoc.exists()) {
             const snippetData = snippetDoc.data();
-    
+
             if (likeDoc.exists()) {
                 await deleteDoc(likeDocRef);
                 await updateDoc(snippetRef, {
@@ -170,10 +200,10 @@ const Codes: React.FC = () => {
                     ...prevState,
                     [snippetId]: true,
                 }));
-                setCodeSnippets((prevState) => prevState.map(snippet => 
+                setCodeSnippets((prevState) => prevState.map(snippet =>
                     snippet.id === snippetId ? { ...snippet, likes: (snippet.likes || 0) + 1 } : snippet
                 ));
-    
+
                 if (user.uid !== snippetData.userId) {
                     await addDoc(collection(db, 'notifications'), {
                         type: 'like',
@@ -188,7 +218,6 @@ const Codes: React.FC = () => {
             }
         }
     };
-    
 
     const deleteSnippet = async (snippetId: string) => {
         if (!user) return;
@@ -296,11 +325,13 @@ const Codes: React.FC = () => {
 
     return (
         <div className="flex-1 space-y-[15px]">
-            {newSnippetsCount > 0 && (
-                <Button onClick={fetchCodeSnippets} className="bg-yellow-200 hover:bg-yellow-200 text-yellow-800 text-center mb-3 w-full font-normal">
-                    {/* There is {newSnippetsCount} new post. */}
+                {/* <Button onClick={fetchCodeSnippets} className="bg-blue-500 hover:bg-blue-500 w-full rounded-md font-normal">
                     New post available.
-                </Button>
+                </Button> */}
+            {newSnippetsCount > 0 && (
+                <Button onClick={fetchCodeSnippets} className="bg-blue-500 hover:bg-blue-500 w-full rounded-md font-normal">
+                New post available.
+            </Button>
             )}
             {codeSnippets.map((snippet) => (
                 <SnippetCard
@@ -337,6 +368,11 @@ const Codes: React.FC = () => {
                         </AlertDialogFooter>
                     </AlertDialogContent>
                 </AlertDialog>
+            )}
+            {lastVisible && (
+                <Button onClick={loadMoreSnippets} disabled={loadingMore} className="bg-transparent hover:bg-transparent text-blue-500 w-full">
+                    {loadingMore ? 'Loading...' : 'Load More'}<FaArrowDown className="ml-1.5" />
+                </Button>
             )}
         </div>
     );
