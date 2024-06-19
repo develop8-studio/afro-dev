@@ -329,7 +329,7 @@ const Codes: React.FC = () => {
                     New post available.
                 </Button> */}
             {newSnippetsCount > 0 && (
-                <Button onClick={fetchCodeSnippets} className="bg-blue-500 hover:bg-blue-500 w-full rounded-md font-normal">
+                <Button onClick={fetchCodeSnippets} className="bg-blue-500 hover:bg-blue-500 w-full rounded-md">
                 New post available.
             </Button>
             )}
