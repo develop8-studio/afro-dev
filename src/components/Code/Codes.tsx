@@ -61,32 +61,6 @@ const Codes: React.FC = () => {
         setUserFollowing(followingData);
     };
 
-    const followUser = async (userIdToFollow: string) => {
-        if (!user) return;
-        const followRef = doc(db, 'users', user.uid, 'following', userIdToFollow);
-        const followerRef = doc(db, 'users', userIdToFollow, 'followers', user.uid);
-
-        await setDoc(followRef, {});
-        await setDoc(followerRef, {});
-        setUserFollowing((prevState) => ({
-            ...prevState,
-            [userIdToFollow]: true,
-        }));
-    };
-
-    const unfollowUser = async (userIdToUnfollow: string) => {
-        if (!user) return;
-        const followRef = doc(db, 'users', user.uid, 'following', userIdToUnfollow);
-        const followerRef = doc(db, 'users', userIdToUnfollow, 'followers', user.uid);
-
-        await deleteDoc(followRef);
-        await deleteDoc(followerRef);
-        setUserFollowing((prevState) => ({
-            ...prevState,
-            [userIdToUnfollow]: false,
-        }));
-    };
-
     const fetchCodeSnippets = async () => {
         const q = query(collection(db, 'codes'), orderBy('timestamp', 'desc'));
         const querySnapshot = await getDocs(q);
@@ -164,15 +138,15 @@ const Codes: React.FC = () => {
 
     const likeSnippet = async (snippetId: string) => {
         if (!user) return;
-
+    
         const likeDocRef = doc(db, 'likes', `${user.uid}_${snippetId}`);
         const snippetRef = doc(db, 'codes', snippetId);
         const likeDoc = await getDoc(likeDocRef);
         const snippetDoc = await getDoc(snippetRef);
-
+    
         if (snippetDoc.exists()) {
             const snippetData = snippetDoc.data();
-
+    
             if (likeDoc.exists()) {
                 await deleteDoc(likeDocRef);
                 await updateDoc(snippetRef, {
@@ -182,6 +156,9 @@ const Codes: React.FC = () => {
                     ...prevState,
                     [snippetId]: false,
                 }));
+                setCodeSnippets((prevState) => prevState.map(snippet => 
+                    snippet.id === snippetId ? { ...snippet, likes: (snippet.likes || 0) - 1 } : snippet
+                ));
             } else {
                 await setDoc(likeDocRef, {
                     count: 1,
@@ -193,7 +170,10 @@ const Codes: React.FC = () => {
                     ...prevState,
                     [snippetId]: true,
                 }));
-
+                setCodeSnippets((prevState) => prevState.map(snippet => 
+                    snippet.id === snippetId ? { ...snippet, likes: (snippet.likes || 0) + 1 } : snippet
+                ));
+    
                 if (user.uid !== snippetData.userId) {
                     await addDoc(collection(db, 'notifications'), {
                         type: 'like',
@@ -208,6 +188,7 @@ const Codes: React.FC = () => {
             }
         }
     };
+    
 
     const deleteSnippet = async (snippetId: string) => {
         if (!user) return;
