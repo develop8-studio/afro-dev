@@ -99,13 +99,13 @@ const SnippetCard: React.FC<SnippetCardProps> = ({
             {snippet.language && (
                 <>
                     <CodeBlock language={snippet.language}>
-                        <pre className="bg-slate-100 dark:bg-slate-900 p-2.5 rounded-md text-sm whitespace-pre-wrap">{snippet.code}</pre>
+                        <pre className="whitespace-pre-wrap">{snippet.code}</pre>
                     </CodeBlock>
                     <pre className="hidden dark:block bg-slate-100 dark:bg-slate-900 p-2.5 text-sm whitespace-pre-wrap">{snippet.code}</pre>
                 </>
             )}
             {!snippet.language && (
-                <pre className="bg-[#F3F3F3] dark:bg-slate-900 p-2.5 text-sm whitespace-pre-wrap">{snippet.code}</pre>
+                <pre className="text-white bg-[#282c34] p-2.5 text-sm whitespace-pre-wrap">{snippet.code}</pre>
             )}
             {snippet.imageUrl && (
                 <img src={snippet.imageUrl} alt="Snippet Image" className="mt-[15px] max-w-full md:max-w-[250px] h-auto rounded-md" />

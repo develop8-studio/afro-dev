@@ -3,6 +3,7 @@ import type { AppProps } from "next/app";
 import { ThemeProvider } from '@/components/theme-provider'
 import Head from "next/head";
 
+
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <ThemeProvider
