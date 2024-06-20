@@ -368,7 +368,7 @@ const UserProfile: React.FC = () => {
                             </div>
                             {user && userQuery !== user.uid && (
                                 userFollowing[userQuery as string] ? (
-                                    <Button onClick={() => unfollowUser(userQuery as string)} className="w-[80px] h-[35px] ml-auto" variant="secondary">
+                                    <Button onClick={() => unfollowUser(userQuery as string)} className="w-[80px] h-[35px] ml-auto bg-slate-100" variant="outline">
                                         Unfollow
                                     </Button>
                                 ) : (

@@ -65,7 +65,9 @@ const SnippetCard: React.FC<SnippetCardProps> = ({
     return (
         <Card key={snippet.id} className="px-5 py-[17.5px] shadow-none">
             <div className="flex items-center mb-2.5">
+                <Link href={`/profile?user=${snippet.userId}`}>
                 <img src={userIcons[snippet.userId]} alt="" className="w-10 h-10 rounded-full border" />
+                </Link>
                 <span className="font-bold ml-2.5">
                     <Link href={`/profile?user=${snippet.userId}`}>
                         {snippet.userName}
